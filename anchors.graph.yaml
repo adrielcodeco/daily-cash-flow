@@ -1,0 +1,1096 @@
+# anchors.graph.yaml — o mapa de dependências (gerado por `anchors map build`)
+# Material e versionado. Fonte de verdade do grafo; índices em memória são cache.
+version: 8
+generated_by: v0.1.381
+config_rev: a97bc1d1eb6b
+nodes:
+    - id: AGENTS.md
+      kind: doc
+      rev: 2f840871dc77
+      layer: guidance
+      tags:
+        - guidance
+      regime: declarativo
+    - id: CLAUDE.md
+      kind: doc
+      rev: 0013dfdc8adc
+      layer: guidance
+      tags:
+        - guidance
+      regime: declarativo
+    - id: CONTRIBUTING.md
+      kind: doc
+      rev: f6599d987ff6
+      layer: guidance
+      tags:
+        - guidance
+      regime: declarativo
+    - id: guides/HEADER_GUIDE.md
+      kind: guide
+      rev: e527119ddc42
+      code: HDGDH
+      file_code: HDGDH
+      layer: guide
+      code_declared: true
+      tags:
+        - guide
+      no_propagation: true
+      shared_code: true
+      evidence_rev: becdc30421e3
+      line_rev: bd3d5c33dd2b
+    - id: plans/01-fluxo-ponta-a-ponta.md
+      kind: plan
+      rev: 70951766c207
+      code: FPAPL
+      file_code: FPAPL
+      layer: plan
+      code_declared: true
+      tags:
+        - plan
+      evidence_rev: ade282b1a7c1
+      line_rev: c33de3dc8216
+    - id: product/ledger-immutability.doctrine.md
+      kind: product
+      rev: 22a9942c1d5a
+      code: LDIMM
+      file_code: LDIMM
+      layer: product
+      code_declared: true
+      tags:
+        - product
+        - doctrine
+      evidence_rev: b1607dff5310
+      line_rev: 5f533298f678
+    - id: product/merchant-isolation.doctrine.md
+      kind: product
+      rev: 46bc7d73ab0c
+      code: MRISO
+      file_code: MRISO
+      layer: product
+      code_declared: true
+      tags:
+        - product
+        - doctrine
+      evidence_rev: 0e2fda352966
+      line_rev: 6d8d5b616694
+    - id: product/write-independence.doctrine.md
+      kind: product
+      rev: 67a0c8114a8c
+      code: WRIND
+      file_code: WRIND
+      layer: product
+      code_declared: true
+      tags:
+        - product
+        - doctrine
+      evidence_rev: b2ffc9e9fdfe
+      line_rev: 6bf710f6e25b
+    - id: services/consolidation/src/Consolidation.Api/Program.cs
+      kind: code
+      rev: 9e8e7a2d6cbb
+      code: CNAPI
+      file_code: CNAPI
+      layer: host
+      code_declared: true
+      tags:
+        - code
+        - host
+      regime: declarativo
+      evidence_rev: a796b0dbd4ac
+      line_rev: daf31f28d1f8
+    - id: services/consolidation/src/Consolidation.Consumer/EntryRecordedWorker.cs
+      kind: code
+      rev: e71f66f0735d
+      code: CNWRK
+      file_code: CNWRK
+      layer: host
+      code_declared: true
+      tags:
+        - code
+        - host
+      regime: declarativo
+      evidence_rev: e1ad0bc79447
+      line_rev: 57650cd1b64f
+    - id: services/consolidation/src/Consolidation.Consumer/Program.cs
+      kind: code
+      rev: 7786c8fc99a2
+      code: CNCSM
+      file_code: CNCSM
+      layer: host
+      code_declared: true
+      tags:
+        - code
+        - host
+      regime: declarativo
+      evidence_rev: da1d999f51ea
+      line_rev: 6fac25ec053c
+    - id: services/consolidation/src/Consolidation.Core/ApplyEntryRecorded.cs
+      kind: code
+      rev: 699d23b0200e
+      code: APENT
+      file_code: APECD
+      layer: core
+      tags:
+        - code
+        - core
+      evidence_rev: 39bbda617827
+      line_rev: d62aec6dcde9
+    - id: services/consolidation/src/Consolidation.Core/ApplyEntryRecorded.feature
+      kind: feature
+      rev: 74dca6815903
+      code: APENT
+      file_code: APEFT
+      layer: feature
+      tags:
+        - feature
+      evidence_rev: 0d9597d8e3e9
+      line_rev: def0b938fd08
+    - id: services/consolidation/src/Consolidation.Core/ApplyEntryRecorded.spec.md
+      kind: spec
+      rev: aa673063a3ad
+      code: APENT
+      file_code: APENT
+      layer: spec
+      code_declared: true
+      tags:
+        - spec
+      evidence_rev: a06797f062b2
+      rule_revs: {APENT-R01: 0e72c6f38beb, APENT-R02: bb3f140b04f7, APENT-R03: 1434490499ac, APENT-R04: fd7815ae284d}
+      rest_rev: 9932eb324f20
+    - id: services/consolidation/src/Consolidation.Core/ApplyEntryRecorded.test.cs
+      kind: test
+      rev: 6bda1662c646
+      code: APENT
+      file_code: APETS
+      layer: test
+      tags:
+        - test
+      evidence_rev: f9b28b2fcf63
+      line_rev: 25bff7e10877
+    - id: services/consolidation/src/Consolidation.Core/DailyBalance.cs
+      kind: code
+      rev: 72961d6056e0
+      code: DYBAL
+      file_code: DYBCD
+      layer: core
+      tags:
+        - code
+        - core
+      evidence_rev: 5bce5afd6e66
+      line_rev: cf72ece631ce
+    - id: services/consolidation/src/Consolidation.Core/DailyBalance.feature
+      kind: feature
+      rev: 7f4055e2042d
+      code: DYBAL
+      file_code: DYBFT
+      layer: feature
+      tags:
+        - feature
+      evidence_rev: fba2c259cb71
+      line_rev: 831237e794fd
+    - id: services/consolidation/src/Consolidation.Core/DailyBalance.spec.md
+      kind: spec
+      rev: a7854d4e6a72
+      code: DYBAL
+      file_code: DYBAL
+      layer: spec
+      code_declared: true
+      tags:
+        - spec
+      evidence_rev: 58a757cdd901
+      rule_revs: {DYBAL-R01: 8d6c21a8f766, DYBAL-R02: 453fff245bdf}
+      rest_rev: 031b8b5f9c13
+    - id: services/consolidation/src/Consolidation.Core/DailyBalance.test.cs
+      kind: test
+      rev: 8587cc7f7be3
+      code: DYBAL
+      file_code: DYBTS
+      layer: test
+      tags:
+        - test
+      evidence_rev: 0a8c361b34e3
+      line_rev: fd2e0b83b7b4
+    - id: services/consolidation/src/Consolidation.Core/EntryRecorded.cs
+      kind: code
+      rev: b9905c19b322
+      code: APENT
+      file_code: CERCD
+      layer: core
+      tags:
+        - code
+        - core
+      evidence_rev: b0937b4db406
+      line_rev: af6f575b2fe6
+    - id: services/consolidation/src/Consolidation.Core/GetDailyBalance.cs
+      kind: code
+      rev: c5664663b813
+      code: GTBAL
+      file_code: GTBCD
+      layer: core
+      tags:
+        - code
+        - core
+      evidence_rev: 3d4ef0f2ba2b
+      line_rev: 90fcaf2a5484
+    - id: services/consolidation/src/Consolidation.Core/GetDailyBalance.feature
+      kind: feature
+      rev: 7fe99e06f93a
+      code: GTBAL
+      file_code: GTBFT
+      layer: feature
+      tags:
+        - feature
+      evidence_rev: cfadd7559351
+      line_rev: 139f819d52e5
+    - id: services/consolidation/src/Consolidation.Core/GetDailyBalance.spec.md
+      kind: spec
+      rev: b873f357bcbb
+      code: GTBAL
+      file_code: GTBAL
+      layer: spec
+      code_declared: true
+      tags:
+        - spec
+      evidence_rev: fb3334e0eb9a
+      rule_revs: {GTBAL-R01: be53c287107b, GTBAL-R02: 17f41f369a90, GTBAL-R03: 6ab1471d8e0d, GTBAL-R04: 0264dd23d1de}
+      rest_rev: b0904f5fa914
+    - id: services/consolidation/src/Consolidation.Core/GetDailyBalance.test.cs
+      kind: test
+      rev: a2cccb79f865
+      code: GTBAL
+      file_code: GTBTS
+      layer: test
+      tags:
+        - test
+      evidence_rev: d1725f6adb79
+      line_rev: bdeb22e6b8e8
+    - id: services/consolidation/src/Consolidation.Core/IBalanceStore.cs
+      kind: code
+      rev: 326c4b28886e
+      code: APENT
+      file_code: IBSTR
+      layer: core
+      tags:
+        - code
+        - core
+      evidence_rev: c4faf9027f4c
+      line_rev: 5f02050e72c0
+    - id: services/consolidation/src/Consolidation.Infrastructure/DatabaseMigrator.cs
+      kind: code
+      rev: a2cdf2d93c4d
+      code: CNMIG
+      file_code: CNMIG
+      layer: infrastructure
+      code_declared: true
+      tags:
+        - code
+        - infrastructure
+      regime: declarativo
+      evidence_rev: 72eb29657bd9
+      line_rev: 968e58b6cfe5
+    - id: services/consolidation/src/Consolidation.Infrastructure/PostgresBalanceStore.cs
+      kind: code
+      rev: b09944420f13
+      code: APENT
+      file_code: PGBST
+      layer: infrastructure
+      tags:
+        - code
+        - infrastructure
+      regime: declarativo
+      evidence_rev: b40ab0739132
+      line_rev: 1dd1074ffd1d
+    - id: services/consolidation/src/Consolidation.Infrastructure/PubSubProvisioner.cs
+      kind: code
+      rev: f7cc410e2d00
+      code: PSPRV
+      file_code: PSPRV
+      layer: infrastructure
+      code_declared: true
+      tags:
+        - code
+        - infrastructure
+      regime: declarativo
+      evidence_rev: f29fefd5f926
+      line_rev: "422143459e10"
+    - id: services/ledger/src/Ledger.Api/EntryEndpoints.cs
+      kind: code
+      rev: 4e077451ed42
+      code: LDEPT
+      file_code: LDEPT
+      layer: host
+      code_declared: true
+      tags:
+        - code
+        - host
+      regime: declarativo
+      evidence_rev: 28c6c1f2baa3
+      line_rev: 3023391610ee
+    - id: services/ledger/src/Ledger.Api/MerchantContext.cs
+      kind: code
+      rev: f4c4d666aae3
+      code: LDMCT
+      file_code: LDMCT
+      layer: host
+      code_declared: true
+      tags:
+        - code
+        - host
+      regime: declarativo
+      evidence_rev: 5c976304637f
+      line_rev: e5d00ba13cf0
+    - id: services/ledger/src/Ledger.Api/Program.cs
+      kind: code
+      rev: ea1d7dcfb6fc
+      code: LDAPI
+      file_code: LDAPI
+      layer: host
+      code_declared: true
+      tags:
+        - code
+        - host
+      regime: declarativo
+      evidence_rev: dc8a7e422886
+      line_rev: 2dd5ddef2830
+    - id: services/ledger/src/Ledger.Core/DomainRuleException.cs
+      kind: code
+      rev: 678adb34aea5
+      code: LEDEN
+      file_code: DREXC
+      layer: core
+      tags:
+        - code
+        - core
+      evidence_rev: 9520f60616cb
+      line_rev: 100e900aea0e
+    - id: services/ledger/src/Ledger.Core/EntryRecorded.cs
+      kind: code
+      rev: 91e8084f0ce5
+      code: RCENT
+      file_code: ERECD
+      layer: core
+      tags:
+        - code
+        - core
+      evidence_rev: e88e70348401
+      line_rev: b3f59f73155f
+    - id: services/ledger/src/Ledger.Core/EntryType.cs
+      kind: code
+      rev: d93b5639debd
+      code: LEDEN
+      file_code: ETYCD
+      layer: core
+      tags:
+        - code
+        - core
+      evidence_rev: 56a43f286838
+      line_rev: 93a2cddb556d
+    - id: services/ledger/src/Ledger.Core/IEntryStore.cs
+      kind: code
+      rev: fdc8207bc10b
+      code: RCENT
+      file_code: IESTR
+      layer: core
+      tags:
+        - code
+        - core
+      evidence_rev: c1f1ccf3c7ec
+      line_rev: 7b8dbaac67bf
+    - id: services/ledger/src/Ledger.Core/LedgerEntry.cs
+      kind: code
+      rev: 03b311a6c799
+      code: LEDEN
+      file_code: LEDCD
+      layer: core
+      tags:
+        - code
+        - core
+      evidence_rev: cfa6feb62df9
+      line_rev: c9d952cd87d4
+    - id: services/ledger/src/Ledger.Core/LedgerEntry.feature
+      kind: feature
+      rev: dedf06ad8025
+      code: LEDEN
+      file_code: LEDFT
+      layer: feature
+      tags:
+        - feature
+      evidence_rev: e9faef1555f0
+      line_rev: 5d9d0a6d9b1d
+    - id: services/ledger/src/Ledger.Core/LedgerEntry.spec.md
+      kind: spec
+      rev: d2935974260d
+      code: LEDEN
+      file_code: LEDEN
+      layer: spec
+      code_declared: true
+      tags:
+        - spec
+      evidence_rev: ee47ef57af84
+      rule_revs: {LEDEN-R01: fcd633fc4ae6, LEDEN-R02: 23653f0f8946, LEDEN-R03: 877ab1475f06, LEDEN-R04: f38f0e326220, LEDEN-R05: ae1cced75198}
+      rest_rev: 9b2920e40c35
+    - id: services/ledger/src/Ledger.Core/LedgerEntry.test.cs
+      kind: test
+      rev: 7050a7bf7ad5
+      code: LEDEN
+      file_code: LEDTS
+      layer: test
+      tags:
+        - test
+      evidence_rev: 5c349fef8bff
+      line_rev: 70bddac4cdad
+    - id: services/ledger/src/Ledger.Core/OutboxRelay.cs
+      kind: code
+      rev: b0977b4809a4
+      code: OBRLY
+      file_code: OBRCD
+      layer: core
+      tags:
+        - code
+        - core
+      evidence_rev: 6b03170cd9a1
+      line_rev: 175bbdb968b4
+    - id: services/ledger/src/Ledger.Core/OutboxRelay.feature
+      kind: feature
+      rev: f2e1e1975aa6
+      code: OBRLY
+      file_code: OBRFT
+      layer: feature
+      tags:
+        - feature
+      evidence_rev: 9e1739fe3e98
+      line_rev: d5afc1969308
+    - id: services/ledger/src/Ledger.Core/OutboxRelay.spec.md
+      kind: spec
+      rev: 6f67a26ba8ff
+      code: OBRLY
+      file_code: OBRLY
+      layer: spec
+      code_declared: true
+      tags:
+        - spec
+      evidence_rev: 3de8f394d242
+      rule_revs: {OBRLY-R01: 5136e7bb45d6, OBRLY-R02: f9c5263f0a83, OBRLY-R03: 578345b6e901}
+      rest_rev: 6458ebc22a0d
+    - id: services/ledger/src/Ledger.Core/OutboxRelay.test.cs
+      kind: test
+      rev: 82047e4c712e
+      code: OBRLY
+      file_code: OBRTS
+      layer: test
+      tags:
+        - test
+      evidence_rev: 6574dd7bcbe2
+      line_rev: a6866a39d134
+    - id: services/ledger/src/Ledger.Core/RecordEntry.cs
+      kind: code
+      rev: 95acac6c123c
+      code: RCENT
+      file_code: RCECD
+      layer: core
+      tags:
+        - code
+        - core
+      evidence_rev: efbe4b3ea197
+      line_rev: c1dce5d92f95
+    - id: services/ledger/src/Ledger.Core/RecordEntry.feature
+      kind: feature
+      rev: b7b22d0d0b7e
+      code: RCENT
+      file_code: RCEFT
+      layer: feature
+      tags:
+        - feature
+      evidence_rev: aa86badf3886
+      line_rev: 4106247b4333
+    - id: services/ledger/src/Ledger.Core/RecordEntry.spec.md
+      kind: spec
+      rev: 89d8677cec63
+      code: RCENT
+      file_code: RCENT
+      layer: spec
+      code_declared: true
+      tags:
+        - spec
+      evidence_rev: "723257461924"
+      rule_revs: {RCENT-R01: d4481aa97a22, RCENT-R02: c85f06fcc418, RCENT-R03: 1f7060a3f2c0}
+      rest_rev: 7c3723c7753d
+    - id: services/ledger/src/Ledger.Core/RecordEntry.test.cs
+      kind: test
+      rev: 9b5e244be3d9
+      code: RCENT
+      file_code: RCETS
+      layer: test
+      tags:
+        - test
+      evidence_rev: 4471f71f200f
+      line_rev: 4348681ef379
+    - id: services/ledger/src/Ledger.Infrastructure/DatabaseMigrator.cs
+      kind: code
+      rev: fe473d028ad1
+      code: LDMIG
+      file_code: LDMIG
+      layer: infrastructure
+      code_declared: true
+      tags:
+        - code
+        - infrastructure
+      regime: declarativo
+      evidence_rev: e1eafb0d6b85
+      line_rev: 2d235e8d1894
+    - id: services/ledger/src/Ledger.Infrastructure/PostgresEntryStore.cs
+      kind: code
+      rev: 2889f73507d5
+      code: RCENT
+      file_code: PGEST
+      layer: infrastructure
+      tags:
+        - code
+        - infrastructure
+      regime: declarativo
+      evidence_rev: 135200fda7d7
+      line_rev: 34f34d817f35
+    - id: services/ledger/src/Ledger.Infrastructure/PostgresOutbox.cs
+      kind: code
+      rev: 851822c7d994
+      code: OBRLY
+      file_code: PGOBX
+      layer: infrastructure
+      tags:
+        - code
+        - infrastructure
+      regime: declarativo
+      evidence_rev: b59464d17f78
+      line_rev: 28d0cb278eed
+    - id: services/ledger/src/Ledger.Infrastructure/PubSubEventPublisher.cs
+      kind: code
+      rev: 40437f54d4d5
+      code: OBRLY
+      file_code: PSEPB
+      layer: infrastructure
+      tags:
+        - code
+        - infrastructure
+      regime: declarativo
+      evidence_rev: 69cb8c6f5f82
+      line_rev: b095ddbb55cd
+    - id: services/ledger/src/Ledger.Publisher/OutboxWorker.cs
+      kind: code
+      rev: 405fa8e6fccb
+      code: LDOWK
+      file_code: LDOWK
+      layer: host
+      code_declared: true
+      tags:
+        - code
+        - host
+      regime: declarativo
+      evidence_rev: 4ca3ebf726ca
+      line_rev: 2f28839262da
+    - id: services/ledger/src/Ledger.Publisher/Program.cs
+      kind: code
+      rev: 015d737b6bad
+      code: LDPUB
+      file_code: LDPUB
+      layer: host
+      code_declared: true
+      tags:
+        - code
+        - host
+      regime: declarativo
+      evidence_rev: 425001a1d4a8
+      line_rev: c7d768d25143
+edges:
+    - from: guides/HEADER_GUIDE.md
+      to: services/consolidation/src/Consolidation.Core/ApplyEntryRecorded.feature
+      type: governs
+      origin: declared
+      stamp:
+        validated_from_rev: e527119ddc42
+        validated_to_rev: 74dca6815903
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: guides/HEADER_GUIDE.md
+      to: services/consolidation/src/Consolidation.Core/ApplyEntryRecorded.spec.md
+      type: governs
+      origin: declared
+      stamp:
+        validated_from_rev: e527119ddc42
+        validated_to_rev: aa673063a3ad
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: guides/HEADER_GUIDE.md
+      to: services/consolidation/src/Consolidation.Core/ApplyEntryRecorded.test.cs
+      type: governs
+      origin: declared
+      stamp:
+        validated_from_rev: e527119ddc42
+        validated_to_rev: 6bda1662c646
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: guides/HEADER_GUIDE.md
+      to: services/consolidation/src/Consolidation.Core/DailyBalance.feature
+      type: governs
+      origin: declared
+      stamp:
+        validated_from_rev: e527119ddc42
+        validated_to_rev: 7f4055e2042d
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: guides/HEADER_GUIDE.md
+      to: services/consolidation/src/Consolidation.Core/DailyBalance.spec.md
+      type: governs
+      origin: declared
+      stamp:
+        validated_from_rev: e527119ddc42
+        validated_to_rev: a7854d4e6a72
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: guides/HEADER_GUIDE.md
+      to: services/consolidation/src/Consolidation.Core/DailyBalance.test.cs
+      type: governs
+      origin: declared
+      stamp:
+        validated_from_rev: e527119ddc42
+        validated_to_rev: 8587cc7f7be3
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: guides/HEADER_GUIDE.md
+      to: services/consolidation/src/Consolidation.Core/GetDailyBalance.feature
+      type: governs
+      origin: declared
+      stamp:
+        validated_from_rev: e527119ddc42
+        validated_to_rev: 7fe99e06f93a
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: guides/HEADER_GUIDE.md
+      to: services/consolidation/src/Consolidation.Core/GetDailyBalance.spec.md
+      type: governs
+      origin: declared
+      stamp:
+        validated_from_rev: e527119ddc42
+        validated_to_rev: b873f357bcbb
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: guides/HEADER_GUIDE.md
+      to: services/consolidation/src/Consolidation.Core/GetDailyBalance.test.cs
+      type: governs
+      origin: declared
+      stamp:
+        validated_from_rev: e527119ddc42
+        validated_to_rev: a2cccb79f865
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: guides/HEADER_GUIDE.md
+      to: services/ledger/src/Ledger.Core/LedgerEntry.feature
+      type: governs
+      origin: declared
+      stamp:
+        validated_from_rev: e527119ddc42
+        validated_to_rev: dedf06ad8025
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: guides/HEADER_GUIDE.md
+      to: services/ledger/src/Ledger.Core/LedgerEntry.spec.md
+      type: governs
+      origin: declared
+      stamp:
+        validated_from_rev: e527119ddc42
+        validated_to_rev: d2935974260d
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: guides/HEADER_GUIDE.md
+      to: services/ledger/src/Ledger.Core/LedgerEntry.test.cs
+      type: governs
+      origin: declared
+      stamp:
+        validated_from_rev: e527119ddc42
+        validated_to_rev: 7050a7bf7ad5
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: guides/HEADER_GUIDE.md
+      to: services/ledger/src/Ledger.Core/OutboxRelay.feature
+      type: governs
+      origin: declared
+      stamp:
+        validated_from_rev: e527119ddc42
+        validated_to_rev: f2e1e1975aa6
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: guides/HEADER_GUIDE.md
+      to: services/ledger/src/Ledger.Core/OutboxRelay.spec.md
+      type: governs
+      origin: declared
+      stamp:
+        validated_from_rev: e527119ddc42
+        validated_to_rev: 6f67a26ba8ff
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: guides/HEADER_GUIDE.md
+      to: services/ledger/src/Ledger.Core/OutboxRelay.test.cs
+      type: governs
+      origin: declared
+      stamp:
+        validated_from_rev: e527119ddc42
+        validated_to_rev: 82047e4c712e
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: guides/HEADER_GUIDE.md
+      to: services/ledger/src/Ledger.Core/RecordEntry.feature
+      type: governs
+      origin: declared
+      stamp:
+        validated_from_rev: e527119ddc42
+        validated_to_rev: b7b22d0d0b7e
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: guides/HEADER_GUIDE.md
+      to: services/ledger/src/Ledger.Core/RecordEntry.spec.md
+      type: governs
+      origin: declared
+      stamp:
+        validated_from_rev: e527119ddc42
+        validated_to_rev: 89d8677cec63
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: guides/HEADER_GUIDE.md
+      to: services/ledger/src/Ledger.Core/RecordEntry.test.cs
+      type: governs
+      origin: declared
+      stamp:
+        validated_from_rev: e527119ddc42
+        validated_to_rev: 9b5e244be3d9
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: plans/01-fluxo-ponta-a-ponta.md
+      to: product/ledger-immutability.doctrine.md
+      type: seeds
+      origin: declared
+      stamp:
+        validated_from_rev: 70951766c207
+        validated_to_rev: 22a9942c1d5a
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: plans/01-fluxo-ponta-a-ponta.md
+      to: product/merchant-isolation.doctrine.md
+      type: seeds
+      origin: declared
+      stamp:
+        validated_from_rev: 70951766c207
+        validated_to_rev: 46bc7d73ab0c
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: plans/01-fluxo-ponta-a-ponta.md
+      to: product/write-independence.doctrine.md
+      type: seeds
+      origin: declared
+      stamp:
+        validated_from_rev: 70951766c207
+        validated_to_rev: 67a0c8114a8c
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: plans/01-fluxo-ponta-a-ponta.md
+      to: services/consolidation/src/Consolidation.Core/ApplyEntryRecorded.spec.md
+      type: seeds
+      origin: declared
+      stamp:
+        validated_from_rev: 70951766c207
+        validated_to_rev: aa673063a3ad
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: plans/01-fluxo-ponta-a-ponta.md
+      to: services/consolidation/src/Consolidation.Core/DailyBalance.spec.md
+      type: seeds
+      origin: declared
+      stamp:
+        validated_from_rev: 70951766c207
+        validated_to_rev: a7854d4e6a72
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: plans/01-fluxo-ponta-a-ponta.md
+      to: services/consolidation/src/Consolidation.Core/GetDailyBalance.spec.md
+      type: seeds
+      origin: declared
+      stamp:
+        validated_from_rev: 70951766c207
+        validated_to_rev: b873f357bcbb
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: plans/01-fluxo-ponta-a-ponta.md
+      to: services/ledger/src/Ledger.Core/LedgerEntry.spec.md
+      type: seeds
+      origin: declared
+      stamp:
+        validated_from_rev: 70951766c207
+        validated_to_rev: d2935974260d
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: plans/01-fluxo-ponta-a-ponta.md
+      to: services/ledger/src/Ledger.Core/OutboxRelay.spec.md
+      type: seeds
+      origin: declared
+      stamp:
+        validated_from_rev: 70951766c207
+        validated_to_rev: 6f67a26ba8ff
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: plans/01-fluxo-ponta-a-ponta.md
+      to: services/ledger/src/Ledger.Core/RecordEntry.spec.md
+      type: seeds
+      origin: declared
+      stamp:
+        validated_from_rev: 70951766c207
+        validated_to_rev: 89d8677cec63
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/consolidation/src/Consolidation.Core/ApplyEntryRecorded.feature
+      to: services/consolidation/src/Consolidation.Core/ApplyEntryRecorded.test.cs
+      type: tested-by
+      origin: convention
+      stamp:
+        validated_from_rev: 74dca6815903
+        validated_to_rev: 6bda1662c646
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/consolidation/src/Consolidation.Core/ApplyEntryRecorded.spec.md
+      to: product/merchant-isolation.doctrine.md
+      type: realizes
+      origin: declared
+      method: MRISO-R01
+      dep: APENT-R04
+      stamp:
+        validated_from_rev: aa673063a3ad
+        validated_to_rev: 46bc7d73ab0c
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/consolidation/src/Consolidation.Core/ApplyEntryRecorded.spec.md
+      to: services/consolidation/src/Consolidation.Core/ApplyEntryRecorded.cs
+      type: specifies
+      origin: convention
+      stamp:
+        validated_from_rev: aa673063a3ad
+        validated_to_rev: 699d23b0200e
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/consolidation/src/Consolidation.Core/ApplyEntryRecorded.spec.md
+      to: services/consolidation/src/Consolidation.Core/ApplyEntryRecorded.feature
+      type: covered-by
+      origin: convention
+      stamp:
+        validated_from_rev: aa673063a3ad
+        validated_to_rev: 74dca6815903
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/consolidation/src/Consolidation.Core/DailyBalance.feature
+      to: services/consolidation/src/Consolidation.Core/DailyBalance.test.cs
+      type: tested-by
+      origin: convention
+      stamp:
+        validated_from_rev: 7f4055e2042d
+        validated_to_rev: 8587cc7f7be3
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/consolidation/src/Consolidation.Core/DailyBalance.spec.md
+      to: product/ledger-immutability.doctrine.md
+      type: realizes
+      origin: declared
+      method: LDIMM-R02
+      dep: DYBAL-R01
+      stamp:
+        validated_from_rev: a7854d4e6a72
+        validated_to_rev: 22a9942c1d5a
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/consolidation/src/Consolidation.Core/DailyBalance.spec.md
+      to: services/consolidation/src/Consolidation.Core/DailyBalance.cs
+      type: specifies
+      origin: convention
+      stamp:
+        validated_from_rev: a7854d4e6a72
+        validated_to_rev: 72961d6056e0
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/consolidation/src/Consolidation.Core/DailyBalance.spec.md
+      to: services/consolidation/src/Consolidation.Core/DailyBalance.feature
+      type: covered-by
+      origin: convention
+      stamp:
+        validated_from_rev: a7854d4e6a72
+        validated_to_rev: 7f4055e2042d
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/consolidation/src/Consolidation.Core/GetDailyBalance.feature
+      to: services/consolidation/src/Consolidation.Core/GetDailyBalance.test.cs
+      type: tested-by
+      origin: convention
+      stamp:
+        validated_from_rev: 7fe99e06f93a
+        validated_to_rev: a2cccb79f865
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/consolidation/src/Consolidation.Core/GetDailyBalance.spec.md
+      to: product/merchant-isolation.doctrine.md
+      type: realizes
+      origin: declared
+      method: MRISO-R02
+      dep: GTBAL-R01
+      stamp:
+        validated_from_rev: b873f357bcbb
+        validated_to_rev: 46bc7d73ab0c
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/consolidation/src/Consolidation.Core/GetDailyBalance.spec.md
+      to: services/consolidation/src/Consolidation.Core/GetDailyBalance.cs
+      type: specifies
+      origin: convention
+      stamp:
+        validated_from_rev: b873f357bcbb
+        validated_to_rev: c5664663b813
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/consolidation/src/Consolidation.Core/GetDailyBalance.spec.md
+      to: services/consolidation/src/Consolidation.Core/GetDailyBalance.feature
+      type: covered-by
+      origin: convention
+      stamp:
+        validated_from_rev: b873f357bcbb
+        validated_to_rev: 7fe99e06f93a
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/ledger/src/Ledger.Core/LedgerEntry.feature
+      to: services/ledger/src/Ledger.Core/LedgerEntry.test.cs
+      type: tested-by
+      origin: convention
+      stamp:
+        validated_from_rev: dedf06ad8025
+        validated_to_rev: 7050a7bf7ad5
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/ledger/src/Ledger.Core/LedgerEntry.spec.md
+      to: product/ledger-immutability.doctrine.md
+      type: realizes
+      origin: declared
+      method: LDIMM-R02
+      dep: LEDEN-R02
+      stamp:
+        validated_from_rev: d2935974260d
+        validated_to_rev: 22a9942c1d5a
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/ledger/src/Ledger.Core/LedgerEntry.spec.md
+      to: product/ledger-immutability.doctrine.md
+      type: realizes
+      origin: declared
+      method: LDIMM-R01
+      dep: LEDEN-R05
+      stamp:
+        validated_from_rev: d2935974260d
+        validated_to_rev: 22a9942c1d5a
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/ledger/src/Ledger.Core/LedgerEntry.spec.md
+      to: product/merchant-isolation.doctrine.md
+      type: realizes
+      origin: declared
+      method: MRISO-R01
+      dep: LEDEN-R01
+      stamp:
+        validated_from_rev: d2935974260d
+        validated_to_rev: 46bc7d73ab0c
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/ledger/src/Ledger.Core/LedgerEntry.spec.md
+      to: services/ledger/src/Ledger.Core/LedgerEntry.cs
+      type: specifies
+      origin: convention
+      stamp:
+        validated_from_rev: d2935974260d
+        validated_to_rev: 03b311a6c799
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/ledger/src/Ledger.Core/LedgerEntry.spec.md
+      to: services/ledger/src/Ledger.Core/LedgerEntry.feature
+      type: covered-by
+      origin: convention
+      stamp:
+        validated_from_rev: d2935974260d
+        validated_to_rev: dedf06ad8025
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/ledger/src/Ledger.Core/OutboxRelay.feature
+      to: services/ledger/src/Ledger.Core/OutboxRelay.test.cs
+      type: tested-by
+      origin: convention
+      stamp:
+        validated_from_rev: f2e1e1975aa6
+        validated_to_rev: 82047e4c712e
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/ledger/src/Ledger.Core/OutboxRelay.spec.md
+      to: services/ledger/src/Ledger.Core/OutboxRelay.cs
+      type: specifies
+      origin: convention
+      stamp:
+        validated_from_rev: 6f67a26ba8ff
+        validated_to_rev: b0977b4809a4
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/ledger/src/Ledger.Core/OutboxRelay.spec.md
+      to: services/ledger/src/Ledger.Core/OutboxRelay.feature
+      type: covered-by
+      origin: convention
+      stamp:
+        validated_from_rev: 6f67a26ba8ff
+        validated_to_rev: f2e1e1975aa6
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/ledger/src/Ledger.Core/RecordEntry.feature
+      to: services/ledger/src/Ledger.Core/RecordEntry.test.cs
+      type: tested-by
+      origin: convention
+      stamp:
+        validated_from_rev: b7b22d0d0b7e
+        validated_to_rev: 9b5e244be3d9
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/ledger/src/Ledger.Core/RecordEntry.spec.md
+      to: product/write-independence.doctrine.md
+      type: realizes
+      origin: declared
+      method: WRIND-R02
+      dep: RCENT-R01
+      stamp:
+        validated_from_rev: 89d8677cec63
+        validated_to_rev: 67a0c8114a8c
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/ledger/src/Ledger.Core/RecordEntry.spec.md
+      to: product/write-independence.doctrine.md
+      type: realizes
+      origin: declared
+      method: WRIND-R01
+      dep: RCENT-R02
+      stamp:
+        validated_from_rev: 89d8677cec63
+        validated_to_rev: 67a0c8114a8c
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/ledger/src/Ledger.Core/RecordEntry.spec.md
+      to: services/ledger/src/Ledger.Core/RecordEntry.cs
+      type: specifies
+      origin: convention
+      stamp:
+        validated_from_rev: 89d8677cec63
+        validated_to_rev: 95acac6c123c
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: services/ledger/src/Ledger.Core/RecordEntry.spec.md
+      to: services/ledger/src/Ledger.Core/RecordEntry.feature
+      type: covered-by
+      origin: convention
+      stamp:
+        validated_from_rev: 89d8677cec63
+        validated_to_rev: b7b22d0d0b7e
+        changed_at: "2026-11-05"
+        verdict: ok

@@ -1,0 +1,164 @@
+name: daily-cash-flow
+
+x-pubsub-env: &pubsub-env
+  Logging__LogLevel__Default: Information
+  Logging__LogLevel__Npgsql: Warning
+  PUBSUB_EMULATOR_HOST: pubsub:8085
+  PubSub__ProjectId: daily-cash-flow
+  PubSub__TopicId: entries-recorded-v1
+  PubSub__SubscriptionId: consolidation-entries-recorded-v1
+
+x-ledger-db-env: &ledger-db-env
+  ConnectionStrings__Ledger: Host=ledger-db;Database=ledger;Username=ledger;Password=local-only
+
+x-consolidation-db-env: &consolidation-db-env
+  ConnectionStrings__Consolidation: Host=consolidation-db;Database=consolidation;Username=consolidation;Password=local-only
+
+x-ledger-api-build: &ledger-api-build
+  context: .
+  dockerfile: services/ledger/Dockerfile
+  args:
+    PROJECT: services/ledger/src/Ledger.Api/Ledger.Api.csproj
+    ENTRYPOINT_DLL: Ledger.Api.dll
+
+x-consolidation-api-build: &consolidation-api-build
+  context: .
+  dockerfile: services/consolidation/Dockerfile
+  args:
+    PROJECT: services/consolidation/src/Consolidation.Api/Consolidation.Api.csproj
+    ENTRYPOINT_DLL: Consolidation.Api.dll
+
+x-consumer-build: &consumer-build
+  context: .
+  dockerfile: services/consolidation/Dockerfile
+  args:
+    PROJECT: services/consolidation/src/Consolidation.Consumer/Consolidation.Consumer.csproj
+    ENTRYPOINT_DLL: Consolidation.Consumer.dll
+
+services:
+  ledger-db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ledger
+      POSTGRES_USER: ledger
+      POSTGRES_PASSWORD: local-only
+    volumes:
+      - ledger-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, pg_isready -U ledger]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    mem_limit: 256m
+
+  consolidation-db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: consolidation
+      POSTGRES_USER: consolidation
+      POSTGRES_PASSWORD: local-only
+    volumes:
+      - consolidation-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, pg_isready -U consolidation]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    mem_limit: 256m
+
+  pubsub:
+    image: gcr.io/google.com/cloudsdktool/google-cloud-cli:emulators
+    command: gcloud beta emulators pubsub start --project=daily-cash-flow --host-port=0.0.0.0:8085
+    healthcheck:
+      test: [CMD-SHELL, curl -sf http://localhost:8085 || exit 1]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+    mem_limit: 512m
+
+  messaging-init:
+    build: *consumer-build
+    image: daily-cash-flow/consolidation-consumer
+    command: [--provision]
+    environment: *pubsub-env
+    depends_on:
+      pubsub:
+        condition: service_healthy
+
+  ledger-migrate:
+    build: *ledger-api-build
+    image: daily-cash-flow/ledger-api
+    command: [--migrate]
+    environment: *ledger-db-env
+    depends_on:
+      ledger-db:
+        condition: service_healthy
+
+  consolidation-migrate:
+    build: *consolidation-api-build
+    image: daily-cash-flow/consolidation-api
+    command: [--migrate]
+    environment: *consolidation-db-env
+    depends_on:
+      consolidation-db:
+        condition: service_healthy
+
+  ledger-api:
+    image: daily-cash-flow/ledger-api
+    environment:
+      <<: *ledger-db-env
+      ASPNETCORE_URLS: http://+:8080
+      Logging__LogLevel__Default: Information
+      Logging__LogLevel__Npgsql: Warning
+    ports:
+      - 8081:8080
+    depends_on:
+      ledger-migrate:
+        condition: service_completed_successfully
+    mem_limit: 256m
+
+  outbox-publisher:
+    build:
+      context: .
+      dockerfile: services/ledger/Dockerfile
+      args:
+        PROJECT: services/ledger/src/Ledger.Publisher/Ledger.Publisher.csproj
+        ENTRYPOINT_DLL: Ledger.Publisher.dll
+    image: daily-cash-flow/outbox-publisher
+    environment:
+      <<: [*ledger-db-env, *pubsub-env]
+    depends_on:
+      ledger-migrate:
+        condition: service_completed_successfully
+      messaging-init:
+        condition: service_completed_successfully
+    mem_limit: 256m
+
+  consolidation-api:
+    image: daily-cash-flow/consolidation-api
+    environment:
+      <<: *consolidation-db-env
+      ASPNETCORE_URLS: http://+:8080
+      Logging__LogLevel__Default: Information
+      Logging__LogLevel__Npgsql: Warning
+    ports:
+      - 8082:8080
+    depends_on:
+      consolidation-migrate:
+        condition: service_completed_successfully
+    mem_limit: 256m
+
+  consolidation-consumer:
+    image: daily-cash-flow/consolidation-consumer
+    environment:
+      <<: [*consolidation-db-env, *pubsub-env]
+    depends_on:
+      consolidation-migrate:
+        condition: service_completed_successfully
+      messaging-init:
+        condition: service_completed_successfully
+    mem_limit: 256m
+
+volumes:
+  ledger-data:
+  consolidation-data:

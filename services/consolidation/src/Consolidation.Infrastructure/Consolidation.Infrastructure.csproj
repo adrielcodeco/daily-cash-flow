@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../Consolidation.Core/Consolidation.Core.csproj" />
+    <PackageReference Include="dbup-postgresql" />
+    <PackageReference Include="Google.Cloud.PubSub.V1" />
+    <PackageReference Include="Npgsql" />
+    <PackageReference Include="Npgsql.DependencyInjection" />
+    <EmbeddedResource Include="Migrations/*.sql" />
+  </ItemGroup>
+</Project>

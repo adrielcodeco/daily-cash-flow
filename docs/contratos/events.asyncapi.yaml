@@ -1,0 +1,54 @@
+asyncapi: 3.0.0
+info:
+  title: Eventos de Lançamentos
+  version: 1.0.0
+  description: Fatos publicados por Lançamentos. A entrega é at-least-once e sem garantia de ordem.
+defaultContentType: application/json
+servers:
+  gcp:
+    host: pubsub.googleapis.com
+    protocol: googlepubsub
+    description: Pub/Sub no GCP
+channels:
+  entries:
+    address: entries-recorded-v1
+    description: Tópico com os lançamentos registrados, incluindo estornos
+    messages:
+      entryRecorded:
+        $ref: '#/components/messages/entryRecorded'
+operations:
+  publishEntry:
+    action: send
+    summary: O publicador da outbox envia o evento
+    channel:
+      $ref: '#/channels/entries'
+    messages:
+      - $ref: '#/channels/entries/messages/entryRecorded'
+  consolidateEntry:
+    action: receive
+    summary: O consumidor do Consolidado aplica o evento ao saldo
+    channel:
+      $ref: '#/channels/entries'
+    messages:
+      - $ref: '#/channels/entries/messages/entryRecorded'
+components:
+  messages:
+    entryRecorded:
+      name: entry.recorded
+      title: Lançamento registrado
+      contentType: application/json
+      payload:
+        $ref: './entry-recorded.v1.schema.json'
+      examples:
+        - name: credit
+          payload:
+            eventId: 9f1c2e7a-6b1d-4c55-9a53-2f0b7c8e1d10
+            type: entry.recorded
+            version: 1
+            occurredAt: '2026-11-05T14:32:10-03:00'
+            merchantId: 3a7d1c44-0f6e-4f55-8d2a-1b9c2e6f7a10
+            entryId: 6e2b9f10-7d3c-4b21-9a44-5c1e8f0d2b77
+            entryType: CREDIT
+            amountCents: 35000
+            accountingDate: '2026-11-05'
+            reversalOf: null

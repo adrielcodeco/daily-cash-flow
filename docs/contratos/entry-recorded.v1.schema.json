@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "entry-recorded.v1.schema.json",
+  "title": "entry.recorded v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["eventId", "type", "version", "occurredAt", "merchantId", "entryId", "entryType", "amountCents", "accountingDate"],
+  "properties": {
+    "eventId": { "type": "string", "format": "uuid", "description": "Identidade usada na deduplicação" },
+    "type": { "const": "entry.recorded" },
+    "version": { "const": 1 },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "merchantId": { "type": "string", "format": "uuid" },
+    "entryId": { "type": "string", "format": "uuid" },
+    "entryType": { "enum": ["CREDIT", "DEBIT"] },
+    "amountCents": { "type": "integer", "minimum": 1 },
+    "accountingDate": { "type": "string", "format": "date" },
+    "reversalOf": { "type": ["string", "null"], "format": "uuid" }
+  }
+}

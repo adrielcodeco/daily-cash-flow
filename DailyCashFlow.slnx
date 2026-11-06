@@ -1,0 +1,23 @@
+<Solution>
+  <Folder Name="/services/" />
+  <Folder Name="/services/consolidation/" />
+  <Folder Name="/services/consolidation/src/">
+    <Project Path="services/consolidation/src/Consolidation.Api/Consolidation.Api.csproj" />
+    <Project Path="services/consolidation/src/Consolidation.Consumer/Consolidation.Consumer.csproj" />
+    <Project Path="services/consolidation/src/Consolidation.Core/Consolidation.Core.csproj" />
+    <Project Path="services/consolidation/src/Consolidation.Infrastructure/Consolidation.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/services/consolidation/tests/">
+    <Project Path="services/consolidation/tests/Consolidation.Tests/Consolidation.Tests.csproj" />
+  </Folder>
+  <Folder Name="/services/ledger/" />
+  <Folder Name="/services/ledger/src/">
+    <Project Path="services/ledger/src/Ledger.Api/Ledger.Api.csproj" />
+    <Project Path="services/ledger/src/Ledger.Core/Ledger.Core.csproj" />
+    <Project Path="services/ledger/src/Ledger.Infrastructure/Ledger.Infrastructure.csproj" />
+    <Project Path="services/ledger/src/Ledger.Publisher/Ledger.Publisher.csproj" />
+  </Folder>
+  <Folder Name="/services/ledger/tests/">
+    <Project Path="services/ledger/tests/Ledger.Tests/Ledger.Tests.csproj" />
+  </Folder>
+</Solution>

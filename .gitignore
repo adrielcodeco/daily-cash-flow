@@ -1,0 +1,17 @@
+# Private planning and challenge material
+docs/planejamento/
+desafio-arquiteto-solucao-jun25.pdf
+
+# .NET
+bin/
+obj/
+*.user
+TestResults/
+
+# Tooling
+node_modules/
+.DS_Store
+.playwright-mcp/
+.anchors/
+.env
+issues/

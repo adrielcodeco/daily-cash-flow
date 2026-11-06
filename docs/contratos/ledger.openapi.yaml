@@ -1,0 +1,236 @@
+openapi: 3.1.0
+info:
+  title: API de Lançamentos
+  version: 1.0.0
+  description: Registra, consulta e estorna débitos e créditos. O comerciante vem do token.
+  license:
+    name: MIT
+    identifier: MIT
+servers:
+  - url: http://localhost:8081
+    description: Ambiente local
+security:
+  - oidc: []
+tags:
+  - name: Lançamentos
+    description: Operações sobre lançamentos
+paths:
+  /v1/entries:
+    post:
+      tags: [Lançamentos]
+      operationId: recordEntry
+      summary: Registra um lançamento
+      security:
+        - oidc: [entries.write]
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewEntry'
+      responses:
+        '201':
+          description: Lançamento registrado
+          headers:
+            Location:
+              description: Endereço do lançamento
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entry'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '409':
+          $ref: '#/components/responses/Error'
+        '422':
+          $ref: '#/components/responses/Error'
+        '429':
+          $ref: '#/components/responses/Error'
+    get:
+      tags: [Lançamentos]
+      operationId: listEntries
+      summary: Lista os lançamentos de um dia
+      security:
+        - oidc: [entries.read]
+      parameters:
+        - name: date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: cursor
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 200
+            default: 50
+      responses:
+        '200':
+          description: Página de lançamentos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntryPage'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '429':
+          $ref: '#/components/responses/Error'
+  /v1/entries/{id}:
+    get:
+      tags: [Lançamentos]
+      operationId: getEntry
+      summary: Consulta um lançamento
+      security:
+        - oidc: [entries.read]
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Lançamento encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entry'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+        '429':
+          $ref: '#/components/responses/Error'
+  /v1/entries/{id}/reversal:
+    post:
+      tags: [Lançamentos]
+      operationId: reverseEntry
+      summary: Estorna um lançamento
+      security:
+        - oidc: [entries.write]
+      parameters:
+        - $ref: '#/components/parameters/Id'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '201':
+          description: Estorno registrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entry'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+        '409':
+          $ref: '#/components/responses/Error'
+        '429':
+          $ref: '#/components/responses/Error'
+components:
+  securitySchemes:
+    oidc:
+      type: openIdConnect
+      openIdConnectUrl: http://localhost:8080/realms/cash-flow/.well-known/openid-configuration
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      description: Chave única da operação. Repetir a chave devolve a resposta original.
+      schema:
+        type: string
+        minLength: 8
+        maxLength: 128
+  responses:
+    Error:
+      description: Erro no formato Problem Details
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+  schemas:
+    EntryType:
+      type: string
+      enum: [CREDIT, DEBIT]
+    NewEntry:
+      type: object
+      required: [entryType, amountCents, accountingDate]
+      properties:
+        entryType:
+          $ref: '#/components/schemas/EntryType'
+        amountCents:
+          type: integer
+          format: int64
+          minimum: 1
+          examples: [35000]
+        accountingDate:
+          type: string
+          format: date
+          examples: ['2026-11-05']
+        description:
+          type: string
+          maxLength: 200
+    Entry:
+      allOf:
+        - $ref: '#/components/schemas/NewEntry'
+        - type: object
+          required: [id, createdAt]
+          properties:
+            id:
+              type: string
+              format: uuid
+            reversalOf:
+              type: [string, 'null']
+              format: uuid
+            createdAt:
+              type: string
+              format: date-time
+    EntryPage:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Entry'
+        nextCursor:
+          type: [string, 'null']
+    Problem:
+      type: object
+      required: [title, status]
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        traceId:
+          type: string

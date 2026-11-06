@@ -1,0 +1,46 @@
+<!-- @anchors
+  code: APENT
+  updated_at: 2026-11-05
+-->
+
+# ApplyEntryRecorded — a aplicação idempotente do evento ao saldo
+
+> **Código**: `APENT`
+
+## Visão Geral
+
+A entrega de eventos pode repetir e pode vir fora de ordem. Esta unidade transforma cada evento em uma alteração do agregado do dia, e o armazenamento aplica cada evento uma única vez.
+
+## Domínio
+
+| Entrada | Aceita | Fora do domínio | Quem garante |
+| --- | --- | --- | --- |
+| `EventId` | identidade única do evento | — | o contrato do evento |
+| `MerchantId` | comerciante dono do lançamento | — | o contrato do evento |
+| `EntryType` | crédito ou débito | — | o contrato do evento |
+| `AmountCents` | inteiro maior que zero | — | o contrato do evento |
+
+## Regras
+
+### APENT-R01 — um crédito soma nos créditos do dia, e um débito soma nos débitos do dia
+
+### APENT-R02 — um evento repetido não altera o saldo
+
+### APENT-R03 — a ordem de chegada não altera o resultado
+
+Somas não dependem da ordem, por isso o consumidor não precisa ordenar eventos.
+
+### APENT-R04 — o agregado pertence ao comerciante do evento @realizes MRISO-R01
+
+## Uso das regras
+
+| Regra | Usa |
+| --- | --- |
+| `APENT-R01` | `EntryType`, `AmountCents` |
+| `APENT-R02` | `EventId` |
+| `APENT-R03` | `AmountCents` |
+| `APENT-R04` | `MerchantId` |
+
+## Decisões em aberto
+
+nenhuma

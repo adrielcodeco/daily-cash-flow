@@ -1,0 +1,147 @@
+openapi: 3.1.0
+info:
+  title: API do Consolidado
+  version: 1.0.0
+  description: Informa o saldo diário consolidado. O comerciante vem do token.
+  license:
+    name: MIT
+    identifier: MIT
+servers:
+  - url: http://localhost:8082
+    description: Ambiente local
+security:
+  - oidc: []
+tags:
+  - name: Consolidado
+    description: Consultas de saldo
+paths:
+  /v1/balances/daily:
+    get:
+      tags: [Consolidado]
+      operationId: getDailyBalance
+      summary: Consulta o saldo de um dia
+      security:
+        - oidc: [balances.read]
+      parameters:
+        - name: date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Saldo do dia
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DailyBalance'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '429':
+          $ref: '#/components/responses/Error'
+  /v1/balances/period:
+    get:
+      tags: [Consolidado]
+      operationId: getPeriodBalance
+      summary: Consulta o saldo de cada dia de um período
+      description: O período tem no máximo 366 dias.
+      security:
+        - oidc: [balances.read]
+      parameters:
+        - name: start
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: end
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Saldos do período
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PeriodBalance'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '429':
+          $ref: '#/components/responses/Error'
+components:
+  securitySchemes:
+    oidc:
+      type: openIdConnect
+      openIdConnectUrl: http://localhost:8080/realms/cash-flow/.well-known/openid-configuration
+  responses:
+    Error:
+      description: Erro no formato Problem Details
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+  schemas:
+    DailyBalance:
+      type: object
+      required: [date, openingCents, creditsCents, debitsCents, closingCents, updatedThrough]
+      properties:
+        date:
+          type: string
+          format: date
+        openingCents:
+          type: integer
+          format: int64
+          examples: [100000]
+        creditsCents:
+          type: integer
+          format: int64
+          examples: [35000]
+        debitsCents:
+          type: integer
+          format: int64
+          examples: [12000]
+        closingCents:
+          type: integer
+          format: int64
+          examples: [123000]
+        updatedThrough:
+          type: [string, 'null']
+          format: date-time
+          description: Momento do último evento aplicado para o comerciante
+    PeriodBalance:
+      type: object
+      required: [items, updatedThrough]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DailyBalance'
+        updatedThrough:
+          type: [string, 'null']
+          format: date-time
+    Problem:
+      type: object
+      required: [title, status]
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        traceId:
+          type: string
