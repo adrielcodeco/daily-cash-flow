@@ -634,6 +634,7 @@ nodes:
     - id: services/ledger/src/Ledger.Core/EntryStoreIntegration.test.cs
       kind: test
       rev: 73016fcc32e6
+      updated_at: "2026-11-05"
       code: ESITS
       file_code: ESITS
       layer: test

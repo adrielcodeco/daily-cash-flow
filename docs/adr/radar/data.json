@@ -9,6 +9,7 @@
     {"id": "ADR-0006", "file": "0006-computacao.md", "title": "Plataforma de computação", "options": [{"name": "Cloud Run", "scores": [4, 4, 5, 4, 4, 5, 5]}, {"name": "GKE Autopilot", "scores": [4, 5, 5, 5, 3, 2, 3]}, {"name": "Compute Engine", "scores": [3, 4, 3, 3, 3, 3, 2]}]},
     {"id": "ADR-0007", "file": "0007-linguagem.md", "title": "Linguagem e plataforma", "options": [{"name": "C# com .NET 10", "scores": [4, 4, 4, 4, 3, 4, 5]}, {"name": "TypeScript com Node.js", "scores": [3, 3, 3, 3, 3, 4, 3]}, {"name": "Go", "scores": [4, 5, 4, 4, 4, 4, 3]}]},
     {"id": "ADR-0008", "file": "0008-autenticacao-e-autorizacao.md", "title": "Autenticação e autorização", "options": [{"name": "Gateway, OIDC e JWT", "scores": [5, 4, 5, 4, 4, 3, 4]}, {"name": "Chaves de API", "scores": [2, 5, 4, 4, 5, 5, 3]}, {"name": "mTLS para todo cliente", "scores": [5, 3, 3, 3, 3, 2, 2]}]},
-    {"id": "ADR-0009", "file": "0009-observabilidade.md", "title": "Observabilidade", "options": [{"name": "OpenTelemetry", "scores": [4, 4, 4, 4, 4, 3, 5]}, {"name": "SDK do provedor", "scores": [4, 4, 5, 5, 4, 4, 3]}, {"name": "APM comercial", "scores": [3, 4, 4, 4, 2, 4, 4]}]}
+    {"id": "ADR-0009", "file": "0009-observabilidade.md", "title": "Observabilidade", "options": [{"name": "OpenTelemetry", "scores": [4, 4, 4, 4, 4, 3, 5]}, {"name": "SDK do provedor", "scores": [4, 4, 5, 5, 4, 4, 3]}, {"name": "APM comercial", "scores": [3, 4, 4, 4, 2, 4, 4]}]},
+    {"id": "ADR-0010", "file": "0010-estrategia-de-migracao.md", "title": "Estratégia de migração", "options": [{"name": "Strangler fig", "scores": [4, 4, 4, 5, 2, 3, 4]}, {"name": "Migração de uma vez", "scores": [3, 4, 4, 1, 4, 4, 2]}, {"name": "Escrita dupla", "scores": [3, 3, 3, 2, 3, 2, 2]}]}
   ]
 }

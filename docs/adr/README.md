@@ -13,6 +13,7 @@ Cada ADR registra o contexto, as opções, a decisão, as consequências e o gat
 | [0007](0007-linguagem.md) | Linguagem e plataforma | C# com .NET 10 |
 | [0008](0008-autenticacao-e-autorizacao.md) | Autenticação e autorização | Gateway, OIDC e JWT |
 | [0009](0009-observabilidade.md) | Observabilidade | OpenTelemetry |
+| [0010](0010-estrategia-de-migracao.md) | Estratégia de migração | Strangler fig |
 
 ## Como ler os radares
 
