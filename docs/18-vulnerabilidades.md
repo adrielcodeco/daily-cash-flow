@@ -11,7 +11,7 @@ Este registro acompanha as fraquezas conhecidas da solução, do achado à corre
 | Crítica | 0 | 0 |
 | Alta | 1 | 0 |
 | Média | 8 | 0 |
-| Baixa | 6 | 2 |
+| Baixa | 5 | 2 |
 
 Já foram corrigidos V-01 a V-05. A V-06 está parcial e ainda bloqueia produção.
 
@@ -66,7 +66,7 @@ Já foram corrigidos V-01 a V-05. A V-06 está parcial e ainda bloqueia produç�
 | V-20 | Keycloak local em modo de desenvolvimento, com senha fixa de administrador | CWE-798 | Baixa | Código | Aberta | Só no ambiente local. Em produção, usar o provedor de identidade do cliente |
 | V-21 | A API aceita `traceparent` de quem chama | CWE-345 | Baixa | Testada | Aberta | Remover o cabeçalho no gateway |
 | V-22 | Resultados do k6 guardavam tokens de teste | CWE-312 | Baixa | Testada | Corrigida | `load-test.sh` remove o `setup_data`, e `gitleaks` verifica o histórico |
-| V-23 | `sbom.json` gerado entrou no Git, com caminhos locais | CWE-200 | Baixa | Código | Parcial | Fora do versionamento. Falta tirar do histórico antes de publicar |
+| V-23 | `sbom.json` gerado entrou no Git, com caminhos locais | CWE-200 | Baixa | Código | Corrigida | Fora do versionamento e removido do histórico, que foi reescrito antes da publicação |
 
 As classes usam a [OWASP API Security Top 10 2023](https://owasp.org/API-Security/editions/2023/en/0x11-t10/) e a [CWE](https://cwe.mitre.org/).
 

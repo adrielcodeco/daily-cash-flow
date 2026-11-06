@@ -143,6 +143,10 @@ Em cada serviço, `*.Core` é o domínio, sem dependência de banco ou mensageri
 
 Para alterar o projeto, leia o [guia de contribuição](CONTRIBUTING.md).
 
+## Uso de IA
+
+O código e a documentação foram escritos com o Claude Code. O escopo, as decisões e a revisão são do autor. `CLAUDE.md` e `AGENTS.md` guardam as instruções usadas.
+
 ## O que não está pronto para produção
 
 Tudo roda localmente, e nada foi implantado no GCP. A arquitetura-alvo é uma proposta.

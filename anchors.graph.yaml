@@ -30,7 +30,7 @@ nodes:
       regime: declarativo
     - id: README.md
       kind: doc
-      rev: fc0b3768126e
+      rev: 9421430b05c8
       updated_at: "2026-11-06"
       layer: guidance
       tags:
