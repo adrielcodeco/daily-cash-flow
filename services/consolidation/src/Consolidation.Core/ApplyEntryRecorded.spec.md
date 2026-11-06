@@ -1,6 +1,6 @@
 <!-- @anchors
   code: APENT
-  updated_at: 2026-11-05
+  updated_at: 2026-11-06
 -->
 
 # ApplyEntryRecorded — a aplicação idempotente do evento ao saldo
@@ -17,7 +17,7 @@ A entrega de eventos pode repetir e pode vir fora de ordem. Esta unidade transfo
 | --- | --- | --- | --- |
 | `EventId` | identidade única do evento | — | o contrato do evento |
 | `MerchantId` | comerciante dono do lançamento | — | o contrato do evento |
-| `EntryType` | crédito ou débito | — | o contrato do evento |
+| `EntryType` | crédito ou débito | tipo desconhecido | esta unidade (`APENT-R07`) |
 | `AmountCents` | inteiro maior que zero | — | o contrato do evento |
 
 ## Regras
@@ -38,6 +38,10 @@ Somas não dependem da ordem, por isso o consumidor não precisa ordenar eventos
 
 O cache expira sozinho. Perder o evento por causa dele seria pior que servir um saldo antigo por alguns segundos.
 
+### APENT-R07 — um evento de tipo desconhecido é recusado, e não marcado como aplicado
+
+Ignorar o evento deixaria o saldo diferente dos lançamentos, sem nenhum aviso. Recusado, ele segue para as mensagens mortas, que geram alerta.
+
 ## Uso das regras
 
 | Regra | Usa |
@@ -48,6 +52,7 @@ O cache expira sozinho. Perder o evento por causa dele seria pior que servir um 
 | `APENT-R04` | `MerchantId` |
 | `APENT-R05` | `MerchantId` |
 | `APENT-R06` | `MerchantId` |
+| `APENT-R07` | `EntryType` |
 
 ## Decisões em aberto
 

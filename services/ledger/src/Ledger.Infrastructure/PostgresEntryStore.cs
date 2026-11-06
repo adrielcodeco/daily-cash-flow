@@ -1,7 +1,7 @@
 // @anchors
 //   code: PGEST
 //   ref: RCENT
-//   updated_at: 2026-11-05
+//   updated_at: 2026-11-06
 using System.Text.Json;
 using Ledger.Core;
 using Npgsql;
@@ -157,7 +157,17 @@ public sealed class PostgresEntryStore(NpgsqlDataSource dataSource) : IEntryStor
         return entries;
     }
 
-    private static string ToColumn(EntryType type) => type == EntryType.Credit ? "CREDIT" : "DEBIT";
+    private static string ToColumn(EntryType type) => type switch
+    {
+        EntryType.Credit => "CREDIT",
+        EntryType.Debit => "DEBIT",
+        _ => throw new ArgumentOutOfRangeException(nameof(type), type, "Unknown entry type."),
+    };
 
-    private static EntryType FromColumn(string value) => value == "CREDIT" ? EntryType.Credit : EntryType.Debit;
+    private static EntryType FromColumn(string value) => value switch
+    {
+        "CREDIT" => EntryType.Credit,
+        "DEBIT" => EntryType.Debit,
+        _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown entry type."),
+    };
 }

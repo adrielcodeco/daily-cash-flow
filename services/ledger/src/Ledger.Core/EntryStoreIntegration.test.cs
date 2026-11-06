@@ -1,7 +1,7 @@
 // @anchors
 //   code: ESITS
 //   layer: test
-//   updated_at: 2026-11-05
+//   updated_at: 2026-11-06
 using Ledger.Core;
 using Ledger.Infrastructure;
 using Npgsql;
@@ -52,6 +52,31 @@ public sealed class EntryStoreIntegrationTests : IAsyncLifetime
         Assert.Equal(1, await CountAsync("ledger_entry"));
         Assert.Equal(1, await CountAsync("outbox"));
         Assert.Equal(1, await CountAsync("idempotency_key"));
+    }
+
+    [Fact(DisplayName = "LEDEN-R08 the database also refuses an amount above the limit")]
+    public async Task DatabaseRefusesAmountAboveLimit()
+    {
+        var valid = LedgerEntry.Record(merchant, EntryType.Credit, 100, Today, null, Clock);
+        var entry = valid with { AmountCents = LedgerEntry.MaxAmountCents + 1 };
+
+        await Assert.ThrowsAsync<PostgresException>(() => store.AddAsync(
+            entry, EntryRecorded.From(entry), new IdempotencyClaim("request-0001", "hash"), CancellationToken.None));
+
+        Assert.Equal(0, await CountAsync("ledger_entry"));
+        Assert.Equal(0, await CountAsync("outbox"));
+    }
+
+    [Fact(DisplayName = "LEDEN-R09 the store refuses an unknown type instead of guessing")]
+    public async Task StoreRefusesUnknownType()
+    {
+        var valid = LedgerEntry.Record(merchant, EntryType.Credit, 100, Today, null, Clock);
+        var entry = valid with { EntryType = (EntryType)7 };
+
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => store.AddAsync(
+            entry, EntryRecorded.From(entry), new IdempotencyClaim("request-0001", "hash"), CancellationToken.None));
+
+        Assert.Equal(0, await CountAsync("ledger_entry"));
     }
 
     [Fact(DisplayName = "RCENT-R01 a failed write leaves no event behind")]

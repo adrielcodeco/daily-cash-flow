@@ -1,11 +1,12 @@
 // @anchors
 //   code: LEDTS
 //   ref: LEDEN
-//   updated_at: 2026-11-05
+//   updated_at: 2026-11-06
 //   layer: test
 // Refs:
 //   feature : services/ledger/src/Ledger.Core/LedgerEntry.feature
 //   spec    : services/ledger/src/Ledger.Core/LedgerEntry.spec.md
+using System.Text.Json;
 using Ledger.Core;
 
 namespace Ledger.Tests;
@@ -94,4 +95,37 @@ public sealed class LedgerEntryTests
 
         Assert.Equal("reversal_not_allowed", RefusalCode(() => LedgerEntry.Reverse(reversal, clock)));
     }
+
+    [Fact(DisplayName = "LEDEN-R08 an amount above one billion reais is refused")]
+    public void RefusesAmountAboveLimit() =>
+        Assert.Equal("amount_too_large", RefusalCode(() =>
+            LedgerEntry.Record(Merchant, EntryType.Credit, LedgerEntry.MaxAmountCents + 1, Today, null, At("2026-11-05T15:00:00Z"))));
+
+    [Fact(DisplayName = "LEDEN-R08 an amount of exactly one billion reais is accepted")]
+    public void AcceptsAmountAtLimit()
+    {
+        var entry = LedgerEntry.Record(Merchant, EntryType.Credit, 100_000_000_000, Today, null, At("2026-11-05T15:00:00Z"));
+
+        Assert.Equal(100_000_000_000, entry.AmountCents);
+    }
+
+    [Theory(DisplayName = "LEDEN-R09 a missing or unknown type is refused")]
+    [InlineData(0)]
+    [InlineData(7)]
+    public void RefusesUnknownType(int type) =>
+        Assert.Equal("invalid_entry_type", RefusalCode(() =>
+            LedgerEntry.Record(Merchant, (EntryType)type, 100, Today, null, At("2026-11-05T15:00:00Z"))));
+
+    [Theory(DisplayName = "LEDEN-R09 a type sent as a number is not read")]
+    [InlineData("1")]
+    [InlineData("7")]
+    [InlineData("\"1\"")]
+    public void RefusesNumericType(string json) =>
+        Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<EntryType>(json));
+
+    [Theory(DisplayName = "LEDEN-R09 a type is read by name")]
+    [InlineData("\"CREDIT\"", EntryType.Credit)]
+    [InlineData("\"DEBIT\"", EntryType.Debit)]
+    public void ReadsTypeByName(string json, EntryType expected) =>
+        Assert.Equal(expected, JsonSerializer.Deserialize<EntryType>(json));
 }

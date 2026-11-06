@@ -2,7 +2,7 @@
 # @anchors
 #   code: DYBFT
 #   ref: DYBAL
-#   updated_at: 2026-11-05
+#   updated_at: 2026-11-06
 #   layer: feature
 
 @DYBAL @consolidation
@@ -24,3 +24,10 @@ Funcionalidade: DailyBalance — como o saldo fecha
     E nenhum movimento no dia
     Quando o saldo é calculado
     Então o fechamento é 100000 centavos
+
+  @DYBAL-R03 @nivel-unit @P1
+  Cenário: o estouro do fechamento gera erro
+    Dado uma abertura no maior valor possível
+    E um crédito de 1 centavo
+    Quando o saldo é calculado
+    Então o cálculo falha

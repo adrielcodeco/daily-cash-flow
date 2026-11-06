@@ -1,7 +1,7 @@
 // @anchors
 //   code: CNFKS
 //   layer: test
-//   updated_at: 2026-11-05
+//   updated_at: 2026-11-06
 using Consolidation.Core;
 
 namespace Consolidation.Tests;
@@ -10,6 +10,8 @@ internal sealed class InMemoryBalanceStore : IBalanceStore
 {
     private readonly HashSet<Guid> applied = [];
     private readonly Dictionary<(Guid, DateOnly), (long Credits, long Debits)> totals = [];
+
+    public int AppliedEvents => applied.Count;
 
     public int DailyQueries { get; private set; }
 

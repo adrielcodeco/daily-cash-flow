@@ -2,7 +2,7 @@
 # @anchors
 #   code: LEDFT
 #   ref: LEDEN
-#   updated_at: 2026-11-05
+#   updated_at: 2026-11-06
 #   layer: feature
 
 @LEDEN @ledger
@@ -61,3 +61,33 @@ Funcionalidade: LedgerEntry — o que é um lançamento válido
     Dado um estorno já registrado
     Quando o estorno dele é criado
     Então o lançamento é recusado com o código "reversal_not_allowed"
+
+  @LEDEN-R08 @nivel-unit @P1
+  Cenário: o valor acima de R$ 1 bilhão é recusado
+    Dado um movimento de 100000000001 centavos
+    Quando o lançamento é criado
+    Então o lançamento é recusado com o código "amount_too_large"
+
+  @LEDEN-R08 @nivel-unit @P1
+  Cenário: o valor de exatamente R$ 1 bilhão é aceito
+    Dado um movimento de 100000000000 centavos
+    Quando o lançamento é criado
+    Então o lançamento tem identidade e momento de criação
+
+  @LEDEN-R09 @nivel-unit @P1
+  Cenário: o tipo ausente é recusado
+    Dado um movimento sem tipo
+    Quando o lançamento é criado
+    Então o lançamento é recusado com o código "invalid_entry_type"
+
+  @LEDEN-R09 @nivel-unit @P1
+  Cenário: o tipo desconhecido é recusado
+    Dado um movimento com o tipo 7
+    Quando o lançamento é criado
+    Então o lançamento é recusado com o código "invalid_entry_type"
+
+  @LEDEN-R09 @nivel-unit @P1
+  Cenário: o tipo em número não é lido
+    Dado o tipo enviado como o número 1
+    Quando o tipo é lido
+    Então a leitura falha

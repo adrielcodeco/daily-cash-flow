@@ -114,4 +114,16 @@ for _ in $(seq 1 60); do
 done
 expect 5600 "$REBUILT" 'rebuilt closing, without cache'
 
+echo '10. Invalid entries are refused and never reach the balance'
+post_body() { # json
+  curl -s -o /dev/null -w '%{http_code}' -X POST "$LEDGER/v1/entries" \
+    -H 'Content-Type: application/json' -H "X-Merchant-Id: $MERCHANT" -H "Idempotency-Key: $(new_key)" -d "$1"
+}
+NUMERIC_TYPE="{\"entryType\":7,\"amountCents\":500,\"accountingDate\":\"$TODAY\"}"
+MISSING_TYPE="{\"amountCents\":500,\"accountingDate\":\"$TODAY\"}"
+expect 400 "$(post_body "$NUMERIC_TYPE")" 'numeric type'
+expect 422 "$(post_body "$MISSING_TYPE")" 'missing type'
+expect 422 "$(post_entry CREDIT 100000000001)" 'amount above the limit'
+expect 5600 "$(period_closing)" 'closing after refused entries'
+
 echo 'smoke test passed'

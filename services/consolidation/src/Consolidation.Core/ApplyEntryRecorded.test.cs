@@ -1,11 +1,12 @@
 // @anchors
 //   code: APETS
 //   ref: APENT
-//   updated_at: 2026-11-05
+//   updated_at: 2026-11-06
 //   layer: test
 // Refs:
 //   feature : services/consolidation/src/Consolidation.Core/ApplyEntryRecorded.feature
 //   spec    : services/consolidation/src/Consolidation.Core/ApplyEntryRecorded.spec.md
+using System.Text.Json;
 using Consolidation.Core;
 
 namespace Consolidation.Tests;
@@ -22,6 +23,22 @@ public sealed class ApplyEntryRecordedTests
         new(Guid.NewGuid(), DateTimeOffset.Parse("2026-11-05T14:32:00-03:00"), merchant ?? Merchant, type, amount, Day);
 
     private Task Apply(EntryRecorded recorded) => new ApplyEntryRecorded(store, cache).ExecuteAsync(recorded, CancellationToken.None);
+
+    [Theory(DisplayName = "APENT-R07 an event of unknown type is refused and not marked as applied")]
+    [InlineData(0)]
+    [InlineData(7)]
+    public async Task RefusesUnknownType(int type)
+    {
+        var recorded = Event((EntryType)type, 500);
+
+        await Assert.ThrowsAsync<InvalidEventException>(() => Apply(recorded));
+
+        Assert.Equal(0, store.AppliedEvents);
+    }
+
+    [Fact(DisplayName = "APENT-R07 a type sent as a number is not read")]
+    public void RefusesNumericType() =>
+        Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<EntryType>("7"));
 
     [Fact(DisplayName = "APENT-R01 a credit adds to the day's credits")]
     public async Task AppliesCredit()

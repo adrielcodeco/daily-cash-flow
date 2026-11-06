@@ -1,7 +1,7 @@
 // @anchors
 //   code: LEDCD
 //   ref: LEDEN
-//   updated_at: 2026-11-05
+//   updated_at: 2026-11-06
 namespace Ledger.Core;
 
 public sealed record LedgerEntry(
@@ -15,6 +15,7 @@ public sealed record LedgerEntry(
     DateTimeOffset CreatedAt)
 {
     public const int MaxDescriptionLength = 200;
+    public const long MaxAmountCents = 100_000_000_000;
 
     private static readonly TimeZoneInfo BusinessTimeZone = TimeZoneInfo.FindSystemTimeZoneById("America/Sao_Paulo");
 
@@ -31,9 +32,19 @@ public sealed record LedgerEntry(
             throw new DomainRuleException("merchant_required", "The merchant is required.");
         }
 
+        if (!Enum.IsDefined(entryType))
+        {
+            throw new DomainRuleException("invalid_entry_type", "The entry type must be CREDIT or DEBIT.");
+        }
+
         if (amountCents <= 0)
         {
             throw new DomainRuleException("invalid_amount", "The amount must be greater than zero.");
+        }
+
+        if (amountCents > MaxAmountCents)
+        {
+            throw new DomainRuleException("amount_too_large", "The amount cannot exceed 100000000000 cents.");
         }
 
         var now = clock.GetUtcNow();

@@ -8,10 +8,12 @@ Este registro acompanha as fraquezas conhecidas da solução, do achado à corre
 
 | Severidade | Sem correção | Riscos aceitos |
 |---|---:|---:|
-| Crítica | 2 | 0 |
-| Alta | 4 | 0 |
+| Crítica | 1 | 0 |
+| Alta | 2 | 0 |
 | Média | 7 | 0 |
 | Baixa | 3 | 2 |
+
+Três itens já foram corrigidos: V-02, V-03 e V-04.
 
 **Nenhuma vulnerabilidade Crítica ou Alta pode ir para produção.**
 
@@ -42,9 +44,9 @@ Este registro acompanha as fraquezas conhecidas da solução, do achado à corre
 | ID | Vulnerabilidade | Classe | Severidade | Evidência | Situação | Correção |
 |---|---|---|---|---|---|---|
 | V-01 | Quem chama escolhe o comerciante por `X-Merchant-Id` | API1, CWE-639 | Crítica | Código | Planejada: M6 | JWT, com `merchantId` vindo do token |
-| V-02 | `entryType` numérico inválido é aceito, e o débito some do saldo | CWE-20 | Crítica | Testada | Aberta | Recusar valor fora do enum e validar no domínio |
-| V-03 | Lançamento sem `entryType` vira crédito | CWE-20 | Alta | Testada | Aberta | Tornar o campo obrigatório na API |
-| V-04 | Valor sem limite estoura a soma do saldo | CWE-190 | Alta | Testada | Aberta | Limite máximo por lançamento e verificação de estouro |
+| V-02 | `entryType` numérico inválido é aceito, e o débito some do saldo | CWE-20 | Crítica | Testada | Corrigida | Número recusado na leitura, tipo validado no domínio e no consumidor. Regras `LEDEN-R09` e `APENT-R07` |
+| V-03 | Lançamento sem `entryType` vira crédito | CWE-20 | Alta | Testada | Corrigida | Enum começa em 1, então o valor ausente é recusado. Regra `LEDEN-R09` |
+| V-04 | Valor sem limite estoura a soma do saldo | CWE-190 | Alta | Testada | Corrigida | Limite de R$ 1 bilhão no domínio e no banco, e estouro gera erro. Regras `LEDEN-R08` e `DYBAL-R03` |
 | V-05 | Não há limite de requisições | API4, CWE-770 | Alta | Código | Planejada: M6 | Rate limiting e Cloud Armor |
 | V-06 | Não há trilha de auditoria | CWE-778 | Alta | Código | Planejada: M6 | Registro separado de operações e acessos negados |
 | V-07 | Contêineres rodam como root | CWE-250 | Média | Testada | Aberta | Declarar `USER` sem privilégio nas imagens |
@@ -62,7 +64,9 @@ Este registro acompanha as fraquezas conhecidas da solução, do achado à corre
 
 As classes usam a [OWASP API Security Top 10 2023](https://owasp.org/API-Security/editions/2023/en/0x11-t10/) e a [CWE](https://cwe.mitre.org/).
 
-## Detalhes das críticas e altas testadas
+## Detalhes dos defeitos corrigidos
+
+A descrição abaixo mostra o comportamento antes da correção. Os casos agora estão cobertos por testes e pelo passo 10 de `smoke.sh`.
 
 ### V-02: tipo inválido apaga um débito do saldo
 
@@ -78,7 +82,7 @@ As classes usam a [OWASP API Security Top 10 2023](https://owasp.org/API-Securit
 
 **Por que é crítica:** o saldo diverge dos lançamentos sem erro, sem mensagem morta e sem alerta. Uma reconstrução corrige o saldo, porque gera o evento de novo a partir do banco, mas nada avisa que ela é necessária. Os testes não pegaram isso, porque só exercitam `CREDIT` e `DEBIT`, e a mutação só avalia os testes existentes.
 
-**Causa:** o conversor de enum aceita números, e nada valida o valor no domínio.
+**Causa:** o conversor de enum aceitava números, nada validava o valor no domínio, e a gravação transformava qualquer valor desconhecido em débito.
 
 ### V-03: tipo ausente vira crédito
 
@@ -88,7 +92,7 @@ As classes usam a [OWASP API Security Top 10 2023](https://owasp.org/API-Securit
 
 **Reprodução:** dois créditos de `9223372036854775807` para o mesmo comerciante e dia. As duas escritas respondem 201. O primeiro evento é aplicado, e o segundo falha com `bigint out of range`. Depois disso, outro crédito de 1.000 também falha. Os eventos seguem para as mensagens mortas, e os créditos daquele dia param de entrar no saldo.
 
-Além disso, o cálculo do fechamento em C# não verifica estouro, então a soma pode virar um número incorreto sem erro. Essa parte foi vista no código, e não testada.
+Além disso, o cálculo do fechamento em C# não verifica estouro, então a soma pode virar um número incorreto sem erro. Essa parte foi vista no código, e não testada. Agora o cálculo gera erro.
 
 ## Controles verificados
 

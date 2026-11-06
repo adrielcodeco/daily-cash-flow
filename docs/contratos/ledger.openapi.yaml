@@ -187,6 +187,7 @@ components:
           type: integer
           format: int64
           minimum: 1
+          maximum: 100000000000
           examples: [35000]
         accountingDate:
           type: string

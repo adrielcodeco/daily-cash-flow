@@ -62,7 +62,7 @@ A coluna **Base** diz de onde veio cada escolha:
 | D-22 | Versão por comerciante na chave do cache | Invalidar dia a dia | Toda mudança descarta todo o cache daquele comerciante | Julgamento | A taxa de acerto cair demais |
 | D-23 | TTL de 60 s | Sem TTL, TTL maior | Se a invalidação falhar com o Redis fora, o saldo pode ficar até 60 s desatualizado | Valor inicial | O negócio exigir menos defasagem |
 | D-24 | Ignorar o cache enquanto estiver desconectado | Aguardar o tempo limite | Sem o cache, toda leitura vai ao banco | Medição | Não previsto: esperar elevou o p95 a 2,2 s |
-| D-25 | Manter o cache mesmo sem ganho medido de latência | Remover o Redis | Custo e um componente a mais, sem benefício medido nesta carga | Medição | Em revisão: a justificativa é proteger o banco em volumes maiores, o que não foi medido |
+| D-25 | Manter o cache mesmo sem ganho medido de latência | Remover o Redis | Custo e um componente a mais, sem benefício medido nesta carga | Autor | Uma carga no GCP mostrar que o banco não precisa dessa proteção |
 | D-26 | Redis local sem persistência, com 64 MB e `allkeys-lru` | Persistir | Reiniciar perde o cache | Julgamento | Não previsto: o dado é descartável |
 
 ## API e contratos
@@ -205,6 +205,10 @@ A coluna **Base** diz de onde veio cada escolha:
 | D-112 | IDs de vulnerabilidade não são reutilizados, e itens corrigidos ficam no registro | Apagar ao corrigir | Registro mais longo | Julgamento | Não previsto |
 | D-113 | Senha local e tempo no UUID v7 são riscos aceitos | Corrigir | Dois achados baixos ficam abertos | Julgamento | Mudança de uso |
 | D-114 | ROI como modelo gerado por script, com premissas explícitas | Número fechado em documento | Sem dados do cliente, o resultado é só um exemplo | Julgamento | Houver dados reais |
+| D-116 | Limite de R$ 1 bilhão por lançamento, no domínio e no banco | Sem limite, limite por comerciante | Um lançamento legítimo acima disso precisa ser dividido | Autor | O negócio definir outro limite ou limite por comerciante |
+| D-117 | Restrição do banco com `NOT VALID` | Validar linhas antigas | Linhas antigas fora do limite não são verificadas | Julgamento | Antes de produção, validar a restrição |
+| D-118 | Enum começa em 1, para o valor ausente nunca ser válido | Campo obrigatório só na API | Os números do enum mudaram, sem efeito externo: o tipo é gravado por nome | Julgamento | Não previsto |
+| D-119 | Consumidor recusa evento de tipo desconhecido | Ignorar o evento | Um evento ruim vai para as mensagens mortas e exige ação | Julgamento | Não previsto |
 | D-115 | Horizonte de 36 meses, sem impostos e sem cancelamento de clientes | Modelo completo | O resultado tende a ser otimista | Julgamento | Houver dados reais |
 
 ## Decisões revistas

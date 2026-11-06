@@ -1,6 +1,6 @@
 <!-- @anchors
   code: LEDEN
-  updated_at: 2026-11-05
+  updated_at: 2026-11-06
 -->
 
 # LedgerEntry — o registro imutável de um movimento do caixa
@@ -16,7 +16,8 @@ O lançamento é o fato central do sistema: um crédito ou um débito de um come
 | Entrada | Aceita | Fora do domínio | Quem garante |
 | --- | --- | --- | --- |
 | `merchantId` | identificador não vazio | identificador vazio | esta unidade (`LEDEN-R01`) |
-| `amountCents` | inteiro maior que zero | zero ou negativo | esta unidade (`LEDEN-R02`) |
+| `entryType` | crédito ou débito | valor ausente ou desconhecido | esta unidade (`LEDEN-R09`) |
+| `amountCents` | inteiro maior que zero, até 100.000.000.000 | zero, negativo ou acima do limite | esta unidade (`LEDEN-R02`, `LEDEN-R08`) |
 | `accountingDate` | hoje ou uma data passada | data futura | esta unidade (`LEDEN-R03`) |
 | `description` | até 200 caracteres, ou ausente | texto maior | esta unidade (`LEDEN-R04`) |
 | `original` | lançamento existente do comerciante | estorno | esta unidade (`LEDEN-R07`) |
@@ -39,6 +40,14 @@ O lançamento é o fato central do sistema: um crédito ou um débito de um come
 
 ### LEDEN-R07 — um estorno não pode ser estornado
 
+### LEDEN-R08 — o valor de um lançamento não passa de R$ 1 bilhão
+
+O limite impede que poucos lançamentos estourem a soma do saldo. O banco repete a regra, como última defesa.
+
+### LEDEN-R09 — o tipo é crédito ou débito, sem valor padrão
+
+Tratar um tipo ausente como crédito lançaria uma saída como entrada. O tipo chega por nome, e número não é aceito. O armazenamento recusa um tipo desconhecido, em vez de adivinhar.
+
 ## Uso das regras
 
 | Regra | Usa |
@@ -50,6 +59,8 @@ O lançamento é o fato central do sistema: um crédito ou um débito de um come
 | `LEDEN-R05` | `merchantId`, `amountCents`, `accountingDate` |
 | `LEDEN-R06` | `original` |
 | `LEDEN-R07` | `original` |
+| `LEDEN-R08` | `amountCents` |
+| `LEDEN-R09` | `entryType` |
 
 ## Decisões em aberto
 

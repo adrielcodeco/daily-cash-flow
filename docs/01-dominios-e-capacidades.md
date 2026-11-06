@@ -62,8 +62,8 @@ O estorno é um lançamento comum que aponta para o original. Por isso, o consum
 
 | ID | Regra |
 |---|---|
-| RN-01 | O valor é um inteiro maior que zero, em centavos |
-| RN-02 | O tipo é `CREDIT` ou `DEBIT` |
+| RN-01 | O valor é um inteiro maior que zero, em centavos, até R$ 1 bilhão |
+| RN-02 | O tipo é `CREDIT` ou `DEBIT`, sem valor padrão |
 | RN-03 | A data de competência não pode estar no futuro |
 | RN-04 | Lançamentos nunca são alterados nem excluídos |
 | RN-05 | Um lançamento só pode ser estornado uma vez |

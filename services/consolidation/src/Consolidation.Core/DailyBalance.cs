@@ -1,7 +1,7 @@
 // @anchors
 //   code: DYBCD
 //   ref: DYBAL
-//   updated_at: 2026-11-05
+//   updated_at: 2026-11-06
 namespace Consolidation.Core;
 
 public sealed record DailyBalance(
@@ -11,5 +11,5 @@ public sealed record DailyBalance(
     long DebitsCents,
     DateTimeOffset? UpdatedThrough)
 {
-    public long ClosingCents => OpeningCents + CreditsCents - DebitsCents;
+    public long ClosingCents => checked(OpeningCents + CreditsCents - DebitsCents);
 }

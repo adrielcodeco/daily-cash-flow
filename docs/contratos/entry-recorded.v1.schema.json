@@ -13,7 +13,7 @@
     "merchantId": { "type": "string", "format": "uuid" },
     "entryId": { "type": "string", "format": "uuid" },
     "entryType": { "enum": ["CREDIT", "DEBIT"] },
-    "amountCents": { "type": "integer", "minimum": 1 },
+    "amountCents": { "type": "integer", "minimum": 1, "maximum": 100000000000 },
     "accountingDate": { "type": "string", "format": "date" },
     "reversalOf": { "type": ["string", "null"], "format": "uuid" }
   }

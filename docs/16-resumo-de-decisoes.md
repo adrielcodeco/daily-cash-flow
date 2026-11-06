@@ -1,6 +1,6 @@
 # Resumo das decisões
 
-Lista de tudo o que ficou decidido, com 262 itens, sem os trade-offs. Os motivos estão nos [ADRs](adr/README.md) e no [registro de decisões](15-registro-de-decisoes.md).
+Lista de tudo o que ficou decidido, com 270 itens, sem os trade-offs. Os motivos estão nos [ADRs](adr/README.md) e no [registro de decisões](15-registro-de-decisoes.md).
 
 Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decisions/generate.mjs`.
 
@@ -288,14 +288,18 @@ Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decis
 | D-112 | IDs de vulnerabilidade não são reutilizados, e itens corrigidos ficam no registro |
 | D-113 | Senha local e tempo no UUID v7 são riscos aceitos |
 | D-114 | ROI como modelo gerado por script, com premissas explícitas |
+| D-116 | Limite de R$ 1 bilhão por lançamento, no domínio e no banco |
+| D-117 | Restrição do banco com `NOT VALID` |
+| D-118 | Enum começa em 1, para o valor ausente nunca ser válido |
+| D-119 | Consumidor recusa evento de tipo desconhecido |
 | D-115 | Horizonte de 36 meses, sem impostos e sem cancelamento de clientes |
 
 ## Regras de negócio
 
 | ID | Regra |
 |---|---|
-| RN-01 | O valor é um inteiro maior que zero, em centavos |
-| RN-02 | O tipo é `CREDIT` ou `DEBIT` |
+| RN-01 | O valor é um inteiro maior que zero, em centavos, até R$ 1 bilhão |
+| RN-02 | O tipo é `CREDIT` ou `DEBIT`, sem valor padrão |
 | RN-03 | A data de competência não pode estar no futuro |
 | RN-04 | Lançamentos nunca são alterados nem excluídos |
 | RN-05 | Um lançamento só pode ser estornado uma vez |
@@ -325,8 +329,10 @@ Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decis
 | APENT-R04 | o agregado pertence ao comerciante do evento |
 | APENT-R05 | um evento aplicado invalida o cache do comerciante |
 | APENT-R06 | uma falha do cache não impede a aplicação do evento |
+| APENT-R07 | um evento de tipo desconhecido é recusado, e não marcado como aplicado |
 | DYBAL-R01 | o fechamento é a abertura mais os créditos menos os débitos |
 | DYBAL-R02 | um dia sem movimento mantém a abertura como fechamento |
+| DYBAL-R03 | um estouro no fechamento gera erro, e nunca um saldo errado |
 | GTBAL-R01 | a consulta devolve apenas dados do comerciante da requisição |
 | GTBAL-R02 | a abertura é o acumulado de todos os dias anteriores |
 | GTBAL-R03 | a resposta informa o momento do último evento aplicado |
@@ -348,6 +354,8 @@ Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decis
 | LEDEN-R05 | um lançamento válido nasce com identidade e momento de criação |
 | LEDEN-R06 | o estorno tem o tipo inverso, o mesmo valor e a mesma data de competência do original |
 | LEDEN-R07 | um estorno não pode ser estornado |
+| LEDEN-R08 | o valor de um lançamento não passa de R$ 1 bilhão |
+| LEDEN-R09 | o tipo é crédito ou débito, sem valor padrão |
 | LSTEN-R01 | a lista traz apenas lançamentos do comerciante, na data pedida |
 | LSTEN-R02 | o limite vai de 1 a 200 |
 | LSTEN-R03 | a página informa a próxima posição só quando há mais lançamentos |

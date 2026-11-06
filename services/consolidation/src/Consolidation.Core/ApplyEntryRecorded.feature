@@ -2,7 +2,7 @@
 # @anchors
 #   code: APEFT
 #   ref: APENT
-#   updated_at: 2026-11-05
+#   updated_at: 2026-11-06
 #   layer: feature
 
 @APENT @consolidation
@@ -52,3 +52,16 @@ Funcionalidade: ApplyEntryRecorded — aplicar cada evento uma vez
     Dado um cache fora do ar
     Quando o evento é aplicado
     Então os créditos do dia aumentam mesmo assim
+
+  @APENT-R07 @nivel-unit @P1
+  Cenário: o evento de tipo desconhecido é recusado
+    Dado um evento com o tipo 7
+    Quando o evento é aplicado
+    Então a aplicação falha
+    E o evento não é marcado como aplicado
+
+  @APENT-R07 @nivel-unit @P1
+  Cenário: o tipo em número não é lido
+    Dado um evento com o tipo enviado como número
+    Quando o evento é lido
+    Então a leitura falha

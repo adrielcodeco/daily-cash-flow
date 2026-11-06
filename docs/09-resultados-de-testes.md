@@ -42,8 +42,8 @@ Comando: `./scripts/test.sh`.
 
 | Serviço | Testes | Resultado |
 |---|---:|---|
-| Ledger | 43 | Todos passaram |
-| Consolidation | 26 | Todos passaram |
+| Ledger | 54 | Todos passaram |
+| Consolidation | 31 | Todos passaram |
 
 Os testes de integração usam PostgreSQL real em contêiner, inclusive para chamadas concorrentes. O teste de ponta a ponta, em `./scripts/smoke.sh`, cobre 9 cenários no ambiente completo.
 
@@ -53,8 +53,8 @@ Comando: `./scripts/mutation.sh`, com Stryker.NET nos projetos de domínio. Mens
 
 | Projeto | Pontuação | Mortos | Sobreviventes |
 |---|---:|---:|---:|
-| `Ledger.Core` | 97,96% | 48 | 1 |
-| `Consolidation.Core` | 97,14% | 34 | 1 |
+| `Ledger.Core` | 98,21% | 55 | 1 |
+| `Consolidation.Core` | 97,44% | 38 | 1 |
 
 Os dois sobreviventes não indicam lacuna de regra: um é a mensagem de uma exceção interna, e o outro remove um bloco que tem o mesmo efeito do caminho normal. Outros 10 mutantes de `Ledger.Core` não compilaram e ficaram fora da pontuação.
 
@@ -82,7 +82,7 @@ Durante a reconstrução, a API respondeu 200 com saldo 0 e depois com saldo par
 
 ## Defeitos que os testes não encontraram
 
-A revisão de segurança achou entradas inválidas aceitas pela API, apesar de 69 testes e da mutação acima de 97%. A mutação avalia os testes que existem e não mostra os cenários que faltam. Os detalhes estão no [registro de vulnerabilidades](18-vulnerabilidades.md).
+A revisão de segurança achou entradas inválidas aceitas pela API, apesar dos 69 testes de então e da mutação acima de 97%. A mutação avalia os testes que existem e não mostra os cenários que faltam. Os defeitos foram corrigidos, e os detalhes estão no [registro de vulnerabilidades](18-vulnerabilidades.md).
 
 ## Limites destas medições
 
