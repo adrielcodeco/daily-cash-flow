@@ -43,6 +43,7 @@ scripts/                  testes, carga, resiliência, mutação e reconstruçã
 tools/radar/              gerador dos radares, do método e da avaliação
 tools/decisions/          gerador do resumo das decisões
 tools/roi/                gerador do modelo de ROI
+presentation/             apresentação em HTML, publicada no GitHub Pages
 ```
 
 ## Arquitetura

@@ -1,0 +1,916 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fluxo de caixa diário</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Apresentação do desafio de arquiteto de soluções: controle de lançamentos e saldo diário consolidado.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..800&family=Libre+Franklin:wght@400;600;700&display=swap">
+<style>
+/* Layout: each slide is a sheet of green accounting paper, with the red double margin and the sheet number of a cash book. */
+:root {
+  color-scheme: light;
+  --paper: #e4eee6;
+  --sheet: #f2f7f2;
+  --ink: #13283b;
+  --ink-soft: #46596a;
+  --rule: #b4c9bb;
+  --margin: #c2453b;
+  --credit: #0b6a4c;
+  --debit: #b3261e;
+  --held: #8a5a00;
+  --held-soft: #f3e3b8;
+  --down: #f6d9d5;
+  --display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --body: "Libre Franklin", "Helvetica Neue", Arial, sans-serif;
+  --code: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html { font-size: calc(min(100vw, 177.78dvh) / 64); height: 100%; }
+body { margin: 0; height: 100%; background: var(--ink); color: var(--ink); font-family: var(--body); line-height: 1.35; }
+a { color: inherit; text-underline-offset: .15em; }
+:focus-visible { outline: .14rem solid var(--margin); outline-offset: .12rem; }
+
+.deck { position: fixed; inset: 0; display: grid; place-items: center; }
+.slide { display: none; position: relative; width: 64rem; height: 36rem; background: var(--paper); overflow: hidden; grid-template-columns: 4.6rem minmax(0, 1fr); }
+.slide.active { display: grid; }
+.slide::before { content: ""; position: absolute; top: 0; bottom: 0; left: 4.6rem; width: .3rem; border-inline: .07rem solid var(--margin); }
+.folio { grid-column: 1; padding-top: 2.45rem; text-align: center; font-family: var(--display); font-stretch: 75%; font-weight: 600; font-size: .95rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.sheet { grid-column: 2; min-width: 0; min-height: 0; padding: 2.1rem 3rem 1.8rem 2.5rem; display: flex; flex-direction: column; gap: 1.15rem; }
+
+h1, h2 { margin: 0; font-family: var(--display); font-stretch: 75%; font-weight: 700; letter-spacing: -.005em; text-wrap: balance; }
+h1 { font-size: 6.4rem; line-height: .94; font-weight: 800; }
+h2 { font-size: 2.5rem; line-height: 1.06; }
+h3 { margin: 0; font-family: var(--display); font-stretch: 85%; font-weight: 700; font-size: 1.15rem; line-height: 1.2; }
+p { margin: 0; font-size: 1.05rem; max-width: 40rem; }
+ul { margin: 0; padding-left: 1.1rem; display: grid; gap: .4rem; font-size: 1rem; }
+code { font-family: var(--code); font-size: .92em; }
+.note { font-size: .82rem; color: var(--ink-soft); max-width: none; }
+.grow { flex: 1; min-height: 0; }
+.cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.2rem; }
+.cols > * { min-width: 0; }
+.radar-cols { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: center; }
+.margin-cols { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); }
+.three { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.8rem; }
+.stack { display: flex; flex-direction: column; gap: .75rem; min-width: 0; }
+.scroll { overflow-x: auto; min-width: 0; }
+
+table { width: 100%; border-collapse: collapse; font-size: .86rem; line-height: 1.28; }
+th { text-align: left; font-weight: 700; color: var(--ink-soft); padding: .3rem .8rem .3rem 0; border-bottom: .1rem solid var(--ink); vertical-align: bottom; }
+td { padding: .36rem .8rem .36rem 0; border-bottom: .05rem solid var(--rule); vertical-align: top; }
+td:last-child, th:last-child { padding-right: 0; }
+.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tag { display: inline-block; font-size: .76rem; font-weight: 700; padding: .02rem .4rem; border-radius: .15rem; white-space: nowrap; }
+.tag.done { background: #cfe5d8; color: var(--credit); }
+.tag.plan { background: var(--held-soft); color: var(--held); }
+
+table.big { font-size: 1rem; }
+table.big td { padding-block: .55rem; }
+
+/* Cover */
+.cover .sheet { display: grid; grid-template-columns: minmax(0, 1fr) 22.5rem; gap: 2.4rem; align-items: center; }
+.cover .who { display: grid; gap: .3rem; margin-top: 1.4rem; }
+.cover .who p { font-size: 1.15rem; }
+.book { background: var(--sheet); padding: 1rem 1.1rem 1.1rem; border: .05rem solid var(--rule); }
+.book h3 { font-size: 1rem; margin-bottom: .5rem; }
+.book table { font-size: .84rem; }
+.book td { padding-block: .42rem; }
+.book tfoot td { border-bottom: 0; border-top: .1rem solid var(--ink); font-weight: 700; font-size: .95rem; }
+.credit { color: var(--credit); }
+.debit { color: var(--debit); }
+
+/* Requirement quotes */
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .25rem; background: var(--margin); }
+.pair > div { background: var(--sheet); padding: 1.1rem 1.3rem 1.2rem; display: flex; flex-direction: column; gap: .55rem; min-width: 0; }
+blockquote { margin: 0; font-family: var(--display); font-stretch: 85%; font-weight: 600; font-size: 2rem; line-height: 1.14; }
+
+/* Value chain */
+.chain { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .25rem; list-style: none; padding: 0; counter-reset: step; }
+.chain li { background: var(--sheet); padding: .6rem .7rem .7rem; font-size: .95rem; line-height: 1.2; counter-increment: step; }
+.chain li::before { content: counter(step); display: block; font-family: var(--display); font-weight: 700; font-stretch: 75%; color: var(--margin); font-size: 1.1rem; margin-bottom: .1rem; }
+
+/* Thesis */
+.thesis { background: var(--ink); color: var(--sheet); }
+.thesis .folio { color: #a9bcc9; }
+.thesis h2 { font-size: 5rem; line-height: .98; font-weight: 800; }
+.thesis .sheet { justify-content: center; gap: 1.7rem; }
+.thesis p { color: #dbe6df; font-size: 1.2rem; }
+.thesis .cols { gap: 2.6rem; }
+.thesis h3 { color: #9fd8bf; margin-bottom: .3rem; font-size: 1.3rem; }
+.thesis .price h3 { color: #f2c9a0; }
+
+/* Diagram */
+svg { display: block; max-width: 100%; height: auto; }
+.dg text { font-family: var(--body); font-size: 15px; fill: var(--ink); }
+.dg .name { font-family: var(--display); font-stretch: 85%; font-weight: 700; font-size: 17px; }
+.dg .sub { font-size: 13.5px; fill: var(--ink-soft); }
+.dg .box { fill: var(--sheet); stroke: var(--ink); stroke-width: 1.4; }
+.dg .db { fill: #d6e6db; stroke: var(--ink); stroke-width: 1.4; }
+.dg .bus { fill: var(--held-soft); stroke: var(--held); stroke-width: 1.6; }
+.dg .opt { fill: none; stroke: var(--ink-soft); stroke-width: 1.3; stroke-dasharray: 5 4; }
+.dg .ln { fill: none; stroke: var(--ink); stroke-width: 1.7; marker-end: url(#arrow); }
+.dg .ln-opt { fill: none; stroke: var(--ink-soft); stroke-width: 1.3; stroke-dasharray: 5 4; }
+.dg .wall { stroke: var(--margin); stroke-width: 2; stroke-dasharray: 9 6; }
+.dg .wall-label { fill: var(--debit); font-weight: 700; font-size: 14px; }
+.dg .edge { fill: var(--paper); stroke: var(--ink-soft); stroke-width: 1.2; }
+#arrow path { fill: var(--ink); }
+
+/* Simulation */
+.sim { display: grid; grid-template-columns: minmax(0, 1fr) 2.6rem minmax(0, 1fr) 2.6rem minmax(0, 1fr) 2.6rem minmax(0, 1fr); align-items: stretch; }
+.node { background: var(--sheet); border: .07rem solid var(--ink); padding: .75rem .8rem .8rem; display: flex; flex-direction: column; justify-content: center; gap: .3rem; min-width: 0; transition: background-color .2s; }
+.node.down { background: var(--down); border-color: var(--debit); }
+.node.holding { background: var(--held-soft); border-color: var(--held); }
+.node h3 { font-size: 1.02rem; }
+.node .state { font-size: .8rem; font-weight: 700; color: var(--credit); }
+.node.down .state { color: var(--debit); }
+.node.holding .state { color: var(--held); }
+.node b { font-family: var(--display); font-stretch: 75%; font-weight: 700; font-size: 3.4rem; line-height: 1.02; font-variant-numeric: tabular-nums; }
+.node small { font-size: .8rem; color: var(--ink-soft); line-height: 1.2; }
+.track { position: relative; align-self: center; height: .12rem; background: var(--ink); }
+.track.cut { background: repeating-linear-gradient(90deg, var(--debit) 0 .3rem, transparent .3rem .55rem); }
+.dot { position: absolute; top: -.2rem; left: 0; width: .52rem; height: .52rem; border-radius: 50%; background: var(--credit); }
+.controls { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
+button { font: inherit; font-weight: 700; font-size: .95rem; color: var(--sheet); background: var(--ink); border: 0; padding: .45rem .9rem; cursor: pointer; }
+button[aria-pressed="true"] { background: var(--debit); }
+button.quiet { background: none; color: var(--ink); text-decoration: underline; padding-inline: .3rem; }
+.truth { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem; font-size: .98rem; }
+.truth strong { display: block; font-family: var(--display); font-stretch: 75%; font-size: 2rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+
+/* Sequence and phases */
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: step; font-size: 1rem; display: block; }
+.steps li { display: grid; grid-template-columns: 1.8rem minmax(0, 1.15fr) minmax(0, 1fr); gap: 1rem; padding: .62rem 0; border-bottom: .05rem solid var(--rule); counter-increment: step; }
+.steps li::before { content: counter(step); font-family: var(--display); font-stretch: 75%; font-weight: 700; font-size: 1.3rem; line-height: 1; color: var(--margin); }
+.steps .head { font-weight: 700; color: var(--ink-soft); border-bottom: .1rem solid var(--ink); padding-block: 0 .3rem; counter-increment: none; }
+.steps .head::before { content: ""; }
+.phases { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .25rem; list-style: none; margin: 0; padding: 0; }
+.phases li { background: var(--sheet); padding: .8rem .8rem .9rem; display: flex; flex-direction: column; gap: .7rem; font-size: 1rem; line-height: 1.25; min-width: 0; }
+.phases h3 { font-size: 1.25rem; }
+.phases span { color: var(--ink-soft); }
+
+/* Figures */
+.figures { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem; }
+.figure { display: flex; flex-direction: column; gap: .15rem; min-width: 0; }
+.figure b { font-family: var(--display); font-stretch: 75%; font-weight: 800; font-size: 4rem; line-height: 1; color: var(--credit); font-variant-numeric: tabular-nums; }
+.compact .figure b { font-size: 2.6rem; }
+.figure span { font-size: .98rem; line-height: 1.22; }
+.figure small { font-size: .82rem; color: var(--ink-soft); }
+
+/* Charts */
+.chart text { font-family: var(--body); fill: var(--ink); font-size: 14.5px; }
+.chart .soft { fill: var(--ink-soft); }
+.chart .grid { stroke: var(--rule); stroke-width: 1; fill: none; }
+#radar text { font-size: 17px; }
+.legend { display: grid; gap: .35rem; list-style: none; margin: 0; padding: 0; font-size: .92rem; }
+.legend li { display: grid; grid-template-columns: 1.5rem minmax(0, 1fr) auto; gap: .5rem; align-items: center; }
+.legend i { height: .22rem; display: block; }
+.legend s { text-decoration: line-through; color: var(--ink-soft); }
+.bar { display: flex; gap: .1rem; height: 2.5rem; }
+.bar i { display: block; }
+.barkey { display: grid; grid-template-columns: repeat(5, auto); gap: .4rem 1.1rem; font-size: .84rem; justify-content: start; }
+.barkey span { display: flex; gap: .35rem; align-items: center; }
+.barkey i { width: .75rem; height: .75rem; display: block; }
+
+/* Trace */
+.trace { display: grid; gap: .3rem; font-size: .84rem; }
+.span { display: grid; grid-template-columns: 11.5rem minmax(0, 1fr); gap: .6rem; align-items: center; }
+.span div { position: relative; height: 1.2rem; }
+.span i { position: absolute; top: 0; bottom: 0; background: var(--credit); }
+.span:nth-child(n+3) i { background: var(--held); }
+.span:nth-child(n+4) i { background: var(--ink); }
+
+pre { margin: 0; background: var(--ink); color: var(--sheet); padding: .7rem .9rem; font-family: var(--code); font-size: .88rem; overflow-x: auto; }
+
+.nav { position: fixed; right: max(.8rem, env(safe-area-inset-right, 0px)); bottom: .55rem; display: flex; gap: .15rem; z-index: 5; }
+.nav button { background: none; color: var(--ink-soft); padding: .1rem .55rem; font-size: 1.15rem; line-height: 1; }
+.nav button:hover { color: var(--ink); }
+.thesis-on .nav button { color: #a9bcc9; }
+
+@media (max-width: 760px), (max-aspect-ratio: 1/1) {
+  html { font-size: 16px; }
+  body { height: auto; background: var(--paper); }
+  .deck { position: static; display: block; place-items: normal; }
+  .slide, .slide.active { display: block; width: auto; height: auto; overflow: visible; border-bottom: .3rem double var(--margin); }
+  .slide::before { display: none; }
+  .folio { padding: 1.2rem 0 0; padding-left: max(16px, env(safe-area-inset-left, 0px)); text-align: left; }
+  .sheet { padding-block: .6rem 1.8rem; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  h1 { font-size: 4rem; }
+  h2, .thesis h2 { font-size: 2.1rem; }
+  .cover .sheet, .cols, .radar-cols, .margin-cols, .three, .pair, .figures, .truth, .chain, .phases { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+  .pair { gap: .25rem; }
+  .sim { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .track { justify-self: center; width: .12rem; height: 1.6rem; }
+  .track .dot { display: none; }
+  .barkey { grid-template-columns: repeat(2, auto); }
+  .steps li { grid-template-columns: 1.6rem minmax(0, 1fr); }
+  .steps li > :nth-child(2) { grid-column: 2; }
+  .steps .head { display: none; }
+  .nav { display: none; }
+}
+@media print {
+  @page { size: 1280px 720px; margin: 0; }
+  html { font-size: 20px; }
+  body { height: auto; background: none; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .deck { position: static; display: block; place-items: normal; }
+  .slide, .slide.active { display: grid; height: 719px; break-after: page; break-inside: avoid; }
+  .slide:last-child { break-after: auto; }
+  .nav, .controls { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .node { transition: none; } }
+</style>
+</head>
+<body>
+<main class="deck" id="deck">
+
+<section class="slide cover" aria-label="Capa">
+  <div class="sheet">
+    <div>
+      <h1>Fluxo de caixa diário</h1>
+      <div class="who">
+        <p>Desafio de arquiteto de soluções</p>
+        <p>Adriel Codeço</p>
+      </div>
+    </div>
+    <div class="book">
+      <h3>Caixa de 06/11/2026</h3>
+      <table>
+        <thead><tr><th>Lançamento</th><th class="num">Débito</th><th class="num">Crédito</th></tr></thead>
+        <tbody>
+          <tr><td>Saldo de abertura</td><td></td><td class="num">1.200,00</td></tr>
+          <tr><td>Venda no balcão</td><td></td><td class="num credit">350,00</td></tr>
+          <tr><td>Fornecedor</td><td class="num debit">180,00</td><td></td></tr>
+          <tr><td>Venda por encomenda</td><td></td><td class="num credit">95,00</td></tr>
+        </tbody>
+        <tfoot><tr><td colspan="2">Saldo do dia</td><td class="num">1.465,00</td></tr></tfoot>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="slide" aria-label="O problema">
+  <div class="sheet">
+    <h2>O comerciante precisa registrar o caixa mesmo quando o relatório cai</h2>
+    <p>Dois serviços: um controla os lançamentos de débito e crédito, e o outro entrega o saldo diário consolidado. O desafio impõe duas exigências, citadas aqui como estão no enunciado.</p>
+    <div class="pair grow">
+      <div>
+        <h3>Disponibilidade</h3>
+        <blockquote>“O serviço de controle de lançamento não deve ficar indisponível se o sistema de consolidado diário cair.”</blockquote>
+      </div>
+      <div>
+        <h3>Vazão</h3>
+        <blockquote>“Em dias de picos, o serviço de consolidado diário recebe 50 requisições por segundo, com no máximo 5% de perda de requisições.”</blockquote>
+      </div>
+    </div>
+    <p class="note">O enunciado também diz que o teste serve para demonstrar decisões sobre o que importa no problema de negócio. Esta apresentação segue essa ordem.</p>
+  </div>
+</section>
+
+<section class="slide" aria-label="O que foi pedido">
+  <div class="sheet">
+    <h2>Todo item pedido tem um lugar no repositório</h2>
+    <div class="cols grow">
+      <div class="scroll">
+        <table style="font-size:.97rem">
+          <thead><tr><th>Obrigatório</th><th>Onde está</th></tr></thead>
+          <tbody>
+            <tr><td>Domínios e capacidades</td><td>docs/01</td></tr>
+            <tr><td>Requisitos refinados</td><td>docs/02</td></tr>
+            <tr><td>Arquitetura-alvo</td><td>docs/03, com C4</td></tr>
+            <tr><td>Justificativa das escolhas</td><td>21 ADRs, com radar</td></tr>
+            <tr><td>Linguagem dominada</td><td>C# com .NET 10</td></tr>
+            <tr><td>Testes</td><td>129 testes, carga, resiliência e mutação</td></tr>
+            <tr><td>README</td><td>Como funciona e como rodar</td></tr>
+            <tr><td>Repositório público</td><td>GitHub</td></tr>
+            <tr><td>Documentação no repositório</td><td>Pasta docs</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="stack">
+        <div class="scroll">
+          <table style="font-size:.97rem">
+            <thead><tr><th>Diferencial</th><th>Onde está</th></tr></thead>
+            <tbody>
+              <tr><td>Arquitetura de transição</td><td>docs/04</td></tr>
+              <tr><td>Custos de infraestrutura e licenças</td><td>docs/05 e docs/19</td></tr>
+              <tr><td>Monitoramento e observabilidade</td><td>docs/06, com stack local</td></tr>
+              <tr><td>Segurança na integração</td><td>docs/07 e docs/18</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">Além do pedido: rede, RACI, operação, recuperação de desastres, riscos, revisão Well-Architected, contratos OpenAPI e AsyncAPI, e o registro de cada decisão.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" aria-label="Premissas">
+  <div class="sheet">
+    <h2>O enunciado deixa perguntas abertas, e cada resposta muda a arquitetura</h2>
+    <div class="scroll grow">
+      <table style="font-size:.95rem">
+        <thead><tr><th style="width:26%">Pergunta</th><th style="width:40%">Premissa adotada</th><th>O que ela muda</th></tr></thead>
+        <tbody>
+          <tr><td>As 50 req/s são leitura ou escrita?</td><td>Consultas ao relatório. A arquitetura também suporta 50 eventos por segundo</td><td>Saldo pré-calculado por dia</td></tr>
+          <tr><td>Os 5% de perda valem para quê?</td><td>Só para consultas. Lançamento confirmado tem perda zero</td><td>Outbox na mesma transação</td></tr>
+          <tr><td>Um comerciante ou vários?</td><td>Vários, com dados isolados</td><td>Comerciante vem do token, e o banco reforça com row-level security</td></tr>
+          <tr><td>Quando começa o dia?</td><td>Data de competência, em <code>America/Sao_Paulo</code>, com retroativo permitido</td><td>Acumulado calculado na consulta</td></tr>
+          <tr><td>Lançamento pode ser corrigido?</td><td>Não se altera: a correção é um estorno</td><td>Fatos imutáveis, e o banco recusa alteração pela API</td></tr>
+          <tr><td>Onde roda?</td><td>GCP, em <code>southamerica-east1</code>, com exigências de instituição financeira</td><td>Serviços gerenciados e dados no Brasil</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Premissas sem confirmação do negócio. A aplicabilidade regulatória precisa ser validada com a área de conformidade.</p>
+  </div>
+</section>
+
+<section class="slide" aria-label="Domínios">
+  <div class="sheet">
+    <h2>Dois domínios guardam o valor. O resto pode vir pronto</h2>
+    <ol class="chain">
+      <li>Registrar movimento</li><li>Publicar fato</li><li>Consolidar o dia</li><li>Consultar saldo</li><li>Decidir sobre o caixa</li>
+    </ol>
+    <div class="scroll grow">
+      <table style="font-size:.95rem">
+        <thead><tr><th>Domínio</th><th>Tipo</th><th>Por quê</th><th>Abordagem</th></tr></thead>
+        <tbody>
+          <tr><td><b>Lançamentos</b></td><td>Principal</td><td>Guarda a verdade financeira do comerciante</td><td>Código próprio</td></tr>
+          <tr><td><b>Consolidação</b></td><td>Principal</td><td>Transforma movimentos em informação de decisão</td><td>Código próprio</td></tr>
+          <tr><td>Identidade e acesso</td><td>Genérico</td><td>Necessário, sem diferencial</td><td>Produto pronto, por OIDC</td></tr>
+          <tr><td>Observabilidade</td><td>Suporte</td><td>Sustenta a operação</td><td>Padrão aberto e serviços gerenciados</td></tr>
+          <tr><td>Mensageria</td><td>Suporte</td><td>Conecta os domínios</td><td>Serviço gerenciado</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="slide thesis" aria-label="A decisão central">
+  <div class="sheet">
+    <h2>Quem escreve não pode depender de quem lê</h2>
+    <div class="cols">
+      <div>
+        <h3>O que isso exige</h3>
+        <p>Dois serviços, cada um com processo e banco próprios, sem nenhuma chamada síncrona entre eles. Lançamentos publica fatos, e o Consolidado os aplica no seu ritmo.</p>
+      </div>
+      <div class="price">
+        <h3>O preço aceito</h3>
+        <p>O saldo fica alguns segundos atrás dos lançamentos. A resposta informa até quando está atualizado, no campo <code>updatedThrough</code>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" aria-label="Arquitetura-alvo">
+  <div class="sheet">
+    <h2>Quatro processos, dois bancos e nenhuma chamada direta</h2>
+    <div class="grow">
+      <svg class="dg" viewBox="0 0 1110 450" role="img" aria-label="Arquitetura-alvo no GCP. A borda recebe o comerciante e encaminha para ledger-api e consolidation-api. Lançamentos e outbox ficam no mesmo banco, o publicador envia ao Pub/Sub, o consumidor grava o saldo diário em outro banco, e a API do consolidado lê esse banco.">
+        <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z"/></marker></defs>
+        <rect class="edge" x="0" y="20" width="150" height="410"/>
+        <text class="name" x="14" y="52">Borda</text>
+        <text class="sub" x="14" y="76">Comerciante,</text><text class="sub" x="14" y="94">por API, com JWT</text>
+        <text class="sub" x="14" y="340">Cloud Armor,</text><text class="sub" x="14" y="358">balanceador e</text><text class="sub" x="14" y="376">API Gateway</text>
+
+        <rect class="box" x="210" y="40" width="185" height="84"/>
+        <text class="name" x="224" y="74">ledger-api</text><text class="sub" x="224" y="98">Cloud Run</text>
+        <rect class="db" x="455" y="40" width="205" height="84"/>
+        <text class="name" x="469" y="74">Lançamentos e outbox</text><text class="sub" x="469" y="98">Cloud SQL, HA regional</text>
+        <rect class="box" x="720" y="40" width="210" height="84"/>
+        <text class="name" x="734" y="74">outbox-publisher</text><text class="sub" x="734" y="98">Cloud Run</text>
+
+        <rect class="bus" x="960" y="165" width="150" height="120"/>
+        <text class="name" x="974" y="214">Pub/Sub</text><text class="sub" x="974" y="238">Mensagens mortas</text><text class="sub" x="974" y="256">e reentrega</text>
+
+        <rect class="box" x="210" y="326" width="185" height="84"/>
+        <text class="name" x="224" y="360">consolidation-api</text><text class="sub" x="224" y="384">Cloud Run</text>
+        <rect class="db" x="455" y="326" width="205" height="84"/>
+        <text class="name" x="469" y="360">Saldo diário</text><text class="sub" x="469" y="384">Cloud SQL, HA regional</text>
+        <rect class="box" x="720" y="326" width="210" height="84"/>
+        <text class="name" x="734" y="360">consolidation-consumer</text><text class="sub" x="734" y="384">Cloud Run</text>
+
+        <rect class="opt" x="210" y="190" width="185" height="70"/>
+        <text class="name" x="224" y="219">Memorystore</text><text class="sub" x="224" y="241">Opcional, desligado</text>
+        <path class="ln-opt" d="M302 124V190M302 260V326"/>
+
+        <path class="ln" d="M150 82H208"/><path class="ln" d="M150 368H208"/>
+        <path class="ln" d="M395 82H453"/>
+        <path class="ln" d="M660 82H718"/>
+        <path class="ln" d="M930 82H1035V163"/>
+        <path class="ln" d="M1035 285V368H932"/>
+        <path class="ln" d="M720 368H662"/>
+        <path class="ln" d="M455 368H397"/>
+
+        <line class="wall" x1="415" y1="225" x2="950" y2="225"/>
+        <text class="wall-label" x="440" y="214">Sem chamada síncrona e sem banco compartilhado</text>
+      </svg>
+    </div>
+    <p class="note">Implementado e testado localmente com Docker Compose e o emulador do Pub/Sub. A implantação no GCP é proposta. O cache vem desligado e pode ser ligado por rota ou por tabela.</p>
+  </div>
+</section>
+
+<section class="slide" aria-label="Simulação de falha" id="sim-slide">
+  <div class="sheet">
+    <h2>Derrube o consolidado e veja os lançamentos continuarem</h2>
+    <div class="sim grow" aria-live="off">
+      <div class="node" id="n-ledger"><h3>Lançamentos</h3><span class="state">No ar</span><b id="v-written">0</b><small>aceitos, 0 recusados</small></div>
+      <div class="track" id="t1"></div>
+      <div class="node" id="n-outbox"><h3>Outbox</h3><span class="state">Enviando</span><b id="v-outbox">0</b><small>eventos aguardando</small></div>
+      <div class="track" id="t2"></div>
+      <div class="node" id="n-bus"><h3>Mensageria</h3><span class="state">No ar</span><b id="v-queue">0</b><small>eventos na fila</small></div>
+      <div class="track" id="t3"></div>
+      <div class="node" id="n-cons"><h3>Consolidado</h3><span class="state">No ar</span><b id="v-applied">0</b><small>eventos aplicados</small></div>
+    </div>
+    <div class="controls">
+      <button type="button" id="b-cons" aria-pressed="false">Derrubar o consolidado</button>
+      <button type="button" id="b-bus" aria-pressed="false">Congelar a mensageria</button>
+      <button type="button" class="quiet" id="b-reset">Recomeçar</button>
+    </div>
+    <div class="truth">
+      <div><strong id="v-sum">R$ 0,00</strong>Soma dos lançamentos</div>
+      <div><strong id="v-balance">R$ 0,00</strong>Saldo consolidado</div>
+      <div><strong id="v-lag">Em dia</strong>Situação do saldo</div>
+    </div>
+    <p class="note">Simulação didática, com R$ 1,00 por lançamento. A medição real parou o consolidado por 60 s e congelou a mensageria por 20 s, sob 50 escritas por segundo: 4.501 enviadas, 0 recusadas, saldo fechado em 2 s.</p>
+  </div>
+</section>
+
+<section class="slide" aria-label="Garantias">
+  <div class="sheet">
+    <h2>Cada etapa pode falhar sem perder dinheiro</h2>
+    <ol class="steps grow">
+      <li class="head"><span>O que acontece</span><span>Se falhar ou repetir</span></li>
+      <li><span>A API valida o token e as regras, e recebe uma <code>Idempotency-Key</code></span><span>Mesma chave devolve a resposta original. Mesma chave com outro conteúdo recebe 409</span></li>
+      <li><span>Lançamento e evento são gravados na mesma transação</span><span>Ou os dois existem, ou nenhum. Não há evento sem lançamento</span></li>
+      <li><span>O publicador lê a outbox com <code>SKIP LOCKED</code> e envia à mensageria</span><span>Mensageria fora: os eventos esperam na outbox. Entrega pelo menos uma vez</span></li>
+      <li><span>O consumidor registra o <code>eventId</code> e soma no agregado do dia, na mesma transação</span><span>Evento repetido é desfeito. Fora de ordem não importa, porque a soma comuta</span></li>
+      <li><span>A API do consolidado lê o saldo sem chamar Lançamentos</span><span>Saldo perdido pode ser refeito: 8.809 lançamentos reenviados em 126 s</span></li>
+    </ol>
+    <p class="note">Consumidor limitado a 16 eventos em processamento. Sem isso, a volta de uma queda esgotava as conexões e derrubava a API de saldo: o teste de resiliência mostrou o defeito.</p>
+  </div>
+</section>
+
+<section class="slide" aria-label="Decisões">
+  <div class="sheet">
+    <h2>Cada escolha registra o que foi descartado e o que se abriu mão</h2>
+    <div class="scroll grow">
+      <table style="font-size:.92rem">
+        <thead><tr><th>Decisão</th><th>Escolha</th><th>Descartado</th><th>O que se abriu mão</th></tr></thead>
+        <tbody>
+          <tr><td>Estilo</td><td>Dois serviços por eventos</td><td>Monolito modular, SOA, funções</td><td>Mais peças para operar</td></tr>
+          <tr><td>Integração</td><td>Outbox e mensageria</td><td>HTTP síncrono, publicar na requisição, CDC</td><td>Saldo com defasagem</td></tr>
+          <tr><td>Mensageria</td><td>Pub/Sub</td><td>Kafka gerenciado, RabbitMQ</td><td>Ordem garantida por padrão</td></tr>
+          <tr><td>Banco</td><td>Cloud SQL para PostgreSQL</td><td>AlloyDB, Spanner, Firestore</td><td>Escrita escala só na vertical</td></tr>
+          <tr><td>Leitura</td><td>Agregado diário</td><td>Consulta direta, event sourcing</td><td>Soma da abertura na consulta</td></tr>
+          <tr><td>Isolamento</td><td>Row-level security</td><td>Só filtro no código, banco por comerciante</td><td>Mais idas ao banco por leitura</td></tr>
+          <tr><td>Dados</td><td>Dapper com SQL explícito</td><td>EF Core, Npgsql puro</td><td>Mapeamento só falha em execução</td></tr>
+          <tr><td>Linguagem</td><td>C# com .NET 10</td><td>Go, Java, TypeScript</td><td>Imagens maiores que as de Go</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">São 21 ADRs, mais de 150 decisões menores no registro e mais de 320 itens no resumo, que junta todas as fontes. Decisão revertida atualiza o registro e mantém o histórico.</p>
+  </div>
+</section>
+
+<section class="slide" aria-label="Radares">
+  <div class="sheet">
+    <h2>A nota sai de perguntas de sim ou não, e o peso muda por decisão</h2>
+    <div class="cols radar-cols grow">
+      <div id="radar" class="chart"></div>
+      <div class="stack">
+        <h3>ADR-0001, estilo arquitetural</h3>
+        <ul class="legend">
+          <li><i style="background:var(--credit)"></i><span>Dois serviços por eventos</span><b>4,24</b></li>
+          <li><i style="background:var(--held)"></i><span>Funções serverless</span><b>4,06</b></li>
+          <li><i style="background:var(--ink-soft)"></i><span>SOA com barramento central</span><b>2,29</b></li>
+          <li><i></i><s>Monolito modular</s><span class="note">vetado</span></li>
+        </ul>
+        <ul style="font-size:.92rem;margin-top:.4rem">
+          <li>Cada critério tem 4 perguntas, e a nota é 1 mais os sins</li>
+          <li>Pesos de 1 a 3, e Alinhamento com o negócio sempre vale 4</li>
+          <li>Opção com veto é eliminada</li>
+          <li>Cada decisão usa de 4 a 10 critérios e de 2 a 4 opções</li>
+          <li>A avaliação foi feita às cegas, e todo ajuste do arquiteto fica registrado</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" aria-label="Margens">
+  <div class="sheet">
+    <h2>A escolhida vence as 21, e oito vitórias são apertadas</h2>
+    <div class="cols margin-cols grow">
+      <div id="margins" class="chart"></div>
+      <div class="stack">
+        <p style="font-size:.98rem">Nas oito decisões abaixo de 0,25, o gráfico não decide sozinho. A defesa é o argumento.</p>
+        <ul style="font-size:.92rem">
+          <li>Em 0004 e 0018, a escolhida só vence com o critério de negócio</li>
+          <li>Em 0004, o arquiteto ajustou AlloyDB de 5 para 4 em Alinhamento, com o motivo registrado</li>
+          <li>Em 0016, as alternativas caíram por veto, e não há margem</li>
+          <li>Com pesos iguais, a escolhida não perde em nenhuma</li>
+        </ul>
+        <p class="note">Quatro vitórias existem porque a avaliação mudou algo: a arquitetura em 0005, 0011 e 0012, e um ajuste em 0004.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" aria-label="Segurança">
+  <div class="sheet">
+    <h2>Um erro no código não entrega o dado de outro comerciante</h2>
+    <div class="scroll grow">
+      <table class="big">
+        <thead><tr><th>Barreira</th><th>Onde</th><th>O que foi verificado</th><th>Situação</th></tr></thead>
+        <tbody>
+          <tr><td>JWT, com o comerciante vindo do token</td><td>APIs</td><td>Sem token: 401. <code>X-Merchant-Id</code> é ignorado</td><td><span class="tag done">Testado</span></td></tr>
+          <tr><td>Escopo por operação</td><td>APIs</td><td>Sem o escopo: 403. Dado de outro comerciante: 404</td><td><span class="tag done">Testado</span></td></tr>
+          <tr><td>Limite de 100 req/s por comerciante</td><td>APIs</td><td>Um recebe 429, e outro segue com 200</td><td><span class="tag done">Testado</span></td></tr>
+          <tr><td>Row-level security</td><td>PostgreSQL</td><td>Sem comerciante definido, nenhuma linha volta</td><td><span class="tag done">Testado</span></td></tr>
+          <tr><td>Papéis separados para migração, API e worker</td><td>PostgreSQL</td><td>A API não altera nem exclui lançamento</td><td><span class="tag done">Testado</span></td></tr>
+          <tr><td>Cloud Armor e API Gateway</td><td>Borda</td><td>Nada: depende de implantação</td><td><span class="tag plan">Proposto</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Registro de vulnerabilidades: 0 críticas, 1 alta parcial (auditoria sem armazenamento separado), 8 médias e 5 baixas em aberto. Revisão por leitura e testes locais, sem pentest.</p>
+  </div>
+</section>
+
+<section class="slide" aria-label="Observabilidade">
+  <div class="sheet">
+    <h2>Um lançamento pode ser seguido da API até o saldo</h2>
+    <div class="cols grow">
+      <div class="stack">
+        <h3>Um traço atravessa a mensageria</h3>
+        <div class="trace" role="img" aria-label="Um traço com três trechos em sequência: API, publicador e consumidor.">
+          <div class="span"><span>ledger-api</span><div><i style="left:0;width:34%"></i></div></div>
+          <div class="span"><span>grava lançamento e outbox</span><div><i style="left:7%;width:22%"></i></div></div>
+          <div class="span"><span>outbox-publisher</span><div><i style="left:42%;width:20%"></i></div></div>
+          <div class="span"><span>consolidation-consumer</span><div><i style="left:70%;width:30%"></i></div></div>
+        </div>
+        <p class="note">Forma do traço, sem escala de tempo. O contexto viaja na outbox, na coluna <code>trace_context</code>.</p>
+        <p style="font-size:.98rem">OpenTelemetry leva métricas, traços e logs ao coletor, com Prometheus, Tempo e Grafana no ambiente local. No GCP, o destino muda sem tocar no código.</p>
+      </div>
+      <div class="stack">
+        <h3>Sete alertas, ligados a perguntas de operação</h3>
+        <div class="scroll">
+          <table>
+            <thead><tr><th>Alerta</th><th>Pergunta</th></tr></thead>
+            <tbody>
+              <tr><td><code>WritesFailing</code></td><td>Consigo registrar?</td></tr>
+              <tr><td><code>OutboxStuck</code></td><td>Os fatos estão saindo?</td></tr>
+              <tr><td><code>BalanceLagHigh</code></td><td>O saldo está atrasado?</td></tr>
+              <tr><td><code>EventsFailing</code></td><td>Algum valor ficou de fora?</td></tr>
+              <tr><td><code>CacheDisconnected</code></td><td>O cache caiu?</td></tr>
+              <tr><td><code>AccessDeniedHigh</code></td><td>Alguém está forçando acesso?</td></tr>
+              <tr><td><code>TelemetryMissing</code></td><td>Estou sem visão?</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">Com a mensageria congelada, <code>OutboxStuck</code> disparou em 137 s, e as escritas seguiram aceitas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" aria-label="Resultados">
+  <div class="sheet">
+    <h2>Os dois requisitos foram medidos, e as metas passaram com folga</h2>
+    <div class="figures">
+      <div class="figure"><b>0</b><span>escritas recusadas em 4.501, com o consolidado fora por 60 s</span><small>Meta: nenhuma</small></div>
+      <div class="figure"><b>50 req/s</b><span>de leitura por 5 minutos, com 10 escritas por segundo ao mesmo tempo</span><small>Meta: 50 req/s</small></div>
+      <div class="figure"><b>0%</b><span>de perda em 15.001 leituras</span><small>Meta: no máximo 5%</small></div>
+    </div>
+    <div class="scroll grow">
+      <table>
+        <thead><tr><th>Cenário de carga, cada um com 50 leituras por segundo</th><th class="num">Falhas</th><th class="num">Leitura p95</th><th class="num">Leitura máx.</th><th class="num">Escrita p95</th></tr></thead>
+        <tbody>
+          <tr><td>Cache desligado, 5 min</td><td class="num">0</td><td class="num">7,24 ms</td><td class="num">374,08 ms</td><td class="num">11,89 ms</td></tr>
+          <tr><td>Cache ligado, 5 min</td><td class="num">0</td><td class="num">7,69 ms</td><td class="num">408,55 ms</td><td class="num">13,22 ms</td></tr>
+          <tr><td>Cache ligado com o Redis fora, 2 min</td><td class="num">0</td><td class="num">7,26 ms</td><td class="num">20,72 ms</td><td class="num">11,83 ms</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Tudo na mesma máquina, com emulador do Pub/Sub e histórico pequeno: referência local, sem valor de previsão para o GCP. O cache não trouxe ganho nesta carga, por isso vem desligado. Os picos de 400 ms não têm causa investigada.</p>
+  </div>
+</section>
+
+<section class="slide" aria-label="Defeitos">
+  <div class="sheet">
+    <h2>Os testes acharam defeitos, e a revisão achou o que eles não viram</h2>
+    <div class="scroll grow">
+      <table style="font-size:.88rem">
+        <thead><tr><th>Quem achou</th><th>Defeito</th><th>Correção</th></tr></thead>
+        <tbody>
+          <tr><td>Integração</td><td>Evento com horário fora de UTC iria para mensagens mortas</td><td>Conversão para UTC na gravação</td></tr>
+          <tr><td>Resiliência</td><td>Na volta de uma queda, o consumidor esgotava as conexões</td><td>Limite de 16 eventos em processamento</td></tr>
+          <tr><td>Carga</td><td>Com o Redis fora, o p95 subia para 2,2 s</td><td>Cache ignorado enquanto desconectado</td></tr>
+          <tr><td>Mutação</td><td>Faltavam testes de limites exatos e de estorno de débito</td><td>Pontuação de 73% e 82% para acima de 97%</td></tr>
+          <tr><td><b>Revisão de segurança</b></td><td><code>entryType: 7</code> era aceito e gravado como débito, e o saldo o ignorava</td><td>Tipo estrito, verificação no domínio e no banco</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="figures compact">
+      <div class="figure"><b>129</b><span>testes, com PostgreSQL real em contêiner</span></div>
+      <div class="figure"><b>97,56%</b><span>de mutação em <code>Ledger.Core</code></span></div>
+      <div class="figure"><b>97,92%</b><span>de mutação em <code>Consolidation.Core</code></span></div>
+    </div>
+    <p class="note">Mutação avalia os testes que existem e não aponta os cenários que faltam: o último defeito passou por 69 testes e por mutação acima de 97%.</p>
+  </div>
+</section>
+
+<section class="slide" aria-label="Transição">
+  <div class="sheet">
+    <h2>Se houver legado, a migração avança por grupos e sempre tem volta</h2>
+    <p>O enunciado não descreve um legado. O cenário assumido é um sistema único, com banco compartilhado, em que o relatório disputa recursos com os lançamentos.</p>
+    <ol class="phases grow">
+      <li><h3>Preparar</h3>Gateway na frente do legado<span>Avança com latência e erros iguais</span></li>
+      <li><h3>Espelhar</h3>CDC alimenta o novo consolidado, sem atender ninguém<span>Avança com saldos iguais por 30 dias</span></li>
+      <li><h3>Migrar leituras</h3>Saldo vai para o consolidado, por grupos<span>Avança sem divergência por 2 semanas</span></li>
+      <li><h3>Migrar escritas</h3>Lançamentos vão para o novo serviço, por grupos<span>Avança com reconciliação diária sem diferença</span></li>
+      <li><h3>Desligar</h3>Legado fica somente leitura e depois sai<span>Termina com a retenção cumprida</span></li>
+    </ol>
+    <p class="note">Strangler fig (ADR-0010). Cada comerciante escreve em um único sistema por vez, e por isso a escrita dupla foi vetada. O comparador de saldos bloqueia o avanço quando há divergência.</p>
+  </div>
+</section>
+
+<section class="slide" aria-label="Custo e retorno">
+  <div class="sheet">
+    <h2>A equipe custa mais que a nuvem, e o retorno depende de adoção</h2>
+    <div class="stack">
+      <h3>Custo mensal de R$ 80.623 no cenário Início</h3>
+      <div class="bar" role="img" aria-label="Equipe de operação 74%, plantão 12%, infraestrutura 9%, não produção 3%, suporte 1%.">
+        <i style="flex:74;background:var(--ink)"></i><i style="flex:12;background:var(--ink-soft)"></i><i style="flex:9;background:var(--credit)"></i><i style="flex:3;background:var(--held)"></i><i style="flex:1;background:var(--margin)"></i>
+      </div>
+      <div class="barkey">
+        <span><i style="background:var(--ink)"></i>Equipe de operação, 74%</span>
+        <span><i style="background:var(--ink-soft)"></i>Plantão, 12%</span>
+        <span><i style="background:var(--credit)"></i>Produção, 9%</span>
+        <span><i style="background:var(--held)"></i>Não produção, 3%</span>
+        <span><i style="background:var(--margin)"></i>Suporte, 1%</span>
+      </div>
+    </div>
+    <div class="scroll grow">
+      <table style="font-size:.95rem">
+        <thead><tr><th>Medida</th><th class="num">Valor</th><th>Observação</th></tr></thead>
+        <tbody>
+          <tr><td>Nuvem, 50 req/s de pico</td><td class="num">US$ 1.254 por mês</td><td>Preços de lista de <code>southamerica-east1</code></td></tr>
+          <tr><td>Nuvem, 500 req/s de pico</td><td class="num">US$ 3.556 por mês</td><td>Volume 10 vezes maior, custo 2,8 vezes maior</td></tr>
+          <tr><td>Investimento inicial</td><td class="num">R$ 771 mil</td><td>Construção, ambiente e lançamento</td></tr>
+          <tr><td>Ponto de equilíbrio</td><td class="num">3.998 comerciantes</td><td>A R$ 19,90 por mês</td></tr>
+          <tr><td>Retorno no cenário Base</td><td class="num">Mês 21</td><td>ROI de 73% em 36 meses. O Conservador não se paga nesse prazo</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Só a infraestrutura vem de preços pesquisados. Equipe, câmbio, preço e adoção são premissas sem dados do cliente, editáveis em <code>tools/roi/generate.mjs</code>.</p>
+  </div>
+</section>
+
+<section class="slide" aria-label="Limites">
+  <div class="sheet">
+    <h2>O que foi provado, o que é proposta e o que vem depois</h2>
+    <div class="cols three grow">
+      <div class="stack">
+        <h3>Provado localmente</h3>
+        <ul style="font-size:1.08rem;gap:.7rem">
+          <li>Independência entre os serviços, sob falha e carga</li>
+          <li>Autenticação, isolamento e limite de taxa</li>
+          <li>Traço de ponta a ponta e alertas</li>
+          <li>Reconstrução do saldo, a cerca de 74 eventos por segundo</li>
+        </ul>
+      </div>
+      <div class="stack">
+        <h3>Proposta, nunca exercitada</h3>
+        <ul style="font-size:1.08rem;gap:.7rem">
+          <li>Cloud Run, Cloud SQL, Pub/Sub real e rede</li>
+          <li>Failover, restauração e exercícios de recuperação</li>
+          <li>RTO de 1 hora e RPO de 5 minutos em desastre regional</li>
+          <li>Custos e ROI, que usam premissas</li>
+        </ul>
+      </div>
+      <div class="stack">
+        <h3>Antes de produção</h3>
+        <ul style="font-size:1.08rem;gap:.7rem">
+          <li>Terraform e deploy no GCP</li>
+          <li>Auditoria em armazenamento separado</li>
+          <li>Limite de taxa global, hoje por instância</li>
+          <li>Reconciliação automática</li>
+          <li>Limpeza da outbox, de chaves e de eventos processados</li>
+          <li>Pentest</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note">Cada evolução em docs/08 tem um gatilho. Sem o gatilho, fazer agora custa mais do que o benefício.</p>
+  </div>
+</section>
+
+<section class="slide" aria-label="Como rodar">
+  <div class="sheet">
+    <h2>Tudo roda com um comando</h2>
+    <pre style="font-size:1.05rem;padding:1rem 1.2rem">docker compose up -d --build --wait
+./scripts/smoke.sh        # 14 verificações de ponta a ponta
+./scripts/resilience.sh   # derruba dependências durante a carga
+./scripts/load-test.sh    # 50 leituras por segundo</pre>
+    <div class="cols grow">
+      <div class="stack">
+        <h3>Por onde ler</h3>
+        <ul>
+          <li><a href="https://github.com/adrielcodeco/daily-cash-flow#readme">README</a></li>
+          <li><a href="https://github.com/adrielcodeco/daily-cash-flow/blob/main/docs/16-resumo-de-decisoes.md">Resumo das decisões</a></li>
+          <li><a href="https://github.com/adrielcodeco/daily-cash-flow/blob/main/docs/adr/README.md">ADRs e radares</a></li>
+          <li><a href="https://github.com/adrielcodeco/daily-cash-flow/blob/main/docs/03-arquitetura-alvo.md">Arquitetura-alvo</a></li>
+        </ul>
+      </div>
+      <div class="stack">
+        <h3>Uso de IA</h3>
+        <p style="font-size:.98rem">O código e a documentação foram escritos com o Claude Code. O escopo, as decisões e a revisão são do autor.</p>
+        <p style="font-size:.98rem">github.com/adrielcodeco/daily-cash-flow</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+<nav class="nav" aria-label="Navegação dos slides">
+  <button type="button" id="prev" aria-label="Slide anterior">‹</button>
+  <button type="button" id="next" aria-label="Próximo slide">›</button>
+</nav>
+<script>
+(() => {
+  const slides = [...document.querySelectorAll('.slide')];
+  const stacked = matchMedia('(max-width: 760px), (max-aspect-ratio: 1/1)');
+  let current = 0;
+
+  slides.forEach((slide, index) => {
+    const folio = document.createElement('div');
+    folio.className = 'folio';
+    folio.textContent = String(index + 1).padStart(2, '0');
+    folio.setAttribute('aria-hidden', 'true');
+    slide.prepend(folio);
+  });
+
+  const show = (index) => {
+    current = Math.max(0, Math.min(slides.length - 1, index));
+    slides.forEach((slide, i) => slide.classList.toggle('active', i === current));
+    document.body.classList.toggle('thesis-on', slides[current].classList.contains('thesis'));
+    if (location.hash !== `#${current + 1}`) history.replaceState(null, '', `#${current + 1}`);
+  };
+  const fromHash = () => (parseInt(location.hash.slice(1), 10) || 1) - 1;
+
+  addEventListener('hashchange', () => show(fromHash()));
+  document.getElementById('prev').addEventListener('click', () => show(current - 1));
+  document.getElementById('next').addEventListener('click', () => show(current + 1));
+  addEventListener('keydown', (event) => {
+    if (event.metaKey || event.ctrlKey || event.altKey) return;
+    const onButton = event.target instanceof HTMLButtonElement;
+    if (['ArrowRight', 'PageDown'].includes(event.key) || (event.key === ' ' && !onButton)) { event.preventDefault(); show(current + 1); }
+    if (['ArrowLeft', 'PageUp'].includes(event.key)) { event.preventDefault(); show(current - 1); }
+    if (event.key === 'Home') show(0);
+    if (event.key === 'End') show(slides.length - 1);
+    if (event.key === 'f') document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.().catch(() => {});
+  });
+  let touchStart = null;
+  addEventListener('touchstart', (event) => { touchStart = event.touches[0].clientX; }, { passive: true });
+  addEventListener('touchend', (event) => {
+    if (touchStart === null || stacked.matches) return;
+    const distance = event.changedTouches[0].clientX - touchStart;
+    if (Math.abs(distance) > 50) show(current + (distance < 0 ? 1 : -1));
+    touchStart = null;
+  }, { passive: true });
+  show(fromHash());
+
+  const svgNs = 'http://www.w3.org/2000/svg';
+  const el = (parent, name, attrs = {}, text) => {
+    const node = document.createElementNS(svgNs, name);
+    Object.entries(attrs).forEach(([key, value]) => node.setAttribute(key, value));
+    if (text !== undefined) node.textContent = text;
+    parent.append(node);
+    return node;
+  };
+
+  // Scores of ADR-0001, from docs/adr/radar/data.json.
+  const axes = ['Alinhamento (4)', 'Confiabilidade (3)', 'Operabilidade (3)', 'Desempenho (2)', 'Escalabilidade (2)', 'Simplicidade (2)', 'Economia (1)'];
+  const series = [
+    { color: 'var(--ink-soft)', width: 1.5, scores: [4, 2, 2, 2, 2, 1, 1] },
+    { color: 'var(--held)', width: 2, scores: [5, 5, 4, 2, 4, 3, 4] },
+    { color: 'var(--credit)', width: 2.6, scores: [5, 5, 4, 4, 5, 2, 3] },
+  ];
+  const radar = el(document.getElementById('radar'), 'svg', { viewBox: '-40 28 640 372', role: 'img', 'aria-label': 'Radar do ADR-0001 com três opções. Dois serviços por eventos tem a maior média, 4,24.' });
+  const cx = 280, cy = 215, radius = 155;
+  const point = (axis, score) => {
+    const angle = -Math.PI / 2 + axis * 2 * Math.PI / axes.length;
+    const distance = radius * (score - 1 + 0.5) / 4.5;
+    return [cx + distance * Math.cos(angle), cy + distance * Math.sin(angle)];
+  };
+  [1, 2, 3, 4, 5].forEach((score) => {
+    el(radar, 'polygon', { class: 'grid', points: axes.map((_, axis) => point(axis, score).join()).join(' ') });
+    el(radar, 'text', { class: 'soft', x: cx + 5, y: point(0, score)[1] + 4, 'font-size': 11 }, score);
+  });
+  axes.forEach((name, axis) => {
+    const [x, y] = point(axis, 5);
+    el(radar, 'line', { class: 'grid', x1: cx, y1: cy, x2: x, y2: y });
+    const [lx, ly] = point(axis, 5.55);
+    el(radar, 'text', { x: lx, y: ly + 4, 'text-anchor': Math.abs(lx - cx) < 20 ? 'middle' : lx > cx ? 'start' : 'end' }, name);
+  });
+  series.forEach(({ color, width, scores }) => {
+    el(radar, 'polygon', { points: scores.map((score, axis) => point(axis, score).join()).join(' '), fill: 'none', style: `stroke:${color}`, 'stroke-width': width, 'stroke-linejoin': 'round' });
+  });
+
+  // Margin of the chosen option over the best one left, from docs/adr/radar/data.json. ADR-0016 has no rival left.
+  const margins = [['0018', .05], ['0020', .09], ['0004', .12], ['0006', .15], ['0003', .16], ['0001', .18], ['0012', .18], ['0014', .24], ['0011', .53], ['0013', .69], ['0015', .79], ['0009', .86], ['0008', 1], ['0021', 1.08], ['0002', 1.1], ['0005', 1.11], ['0010', 1.2], ['0017', 1.59], ['0007', 1.67], ['0019', 2.14]];
+  const chart = el(document.getElementById('margins'), 'svg', { viewBox: '0 0 640 430', role: 'img', 'aria-label': 'Margem da escolhida sobre a melhor alternativa, em 20 decisões, de 0,05 no ADR-0018 a 2,14 no ADR-0019. Oito ficam abaixo de 0,25.' });
+  const left = 34, bottom = 386, top = 16, right = 636, max = 2.25;
+  const y = (value) => bottom - (bottom - top) * value / max;
+  [0, .5, 1, 1.5, 2].forEach((value) => {
+    el(chart, 'line', { class: 'grid', x1: left, x2: right, y1: y(value), y2: y(value) });
+    el(chart, 'text', { class: 'soft', x: left - 6, y: y(value) + 4, 'text-anchor': 'end', 'font-size': 12 }, value.toLocaleString('pt-BR', { minimumFractionDigits: 1 }));
+  });
+  const step = (right - left) / margins.length;
+  margins.forEach(([id, value], index) => {
+    const x = left + index * step + 3;
+    const bar = el(chart, 'rect', { x, y: y(value), width: step - 6, height: bottom - y(value), rx: 2, style: `fill:${value < .25 ? 'var(--margin)' : 'var(--credit)'}` });
+    el(bar, 'title', {}, `ADR-${id}: ${value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`);
+    el(chart, 'text', { class: 'soft', x: x + (step - 6) / 2, y: bottom + 16, 'text-anchor': 'middle', 'font-size': 11.5 }, id.slice(2));
+  });
+  el(chart, 'line', { x1: left, x2: right, y1: y(.25), y2: y(.25), style: 'stroke:var(--ink)', 'stroke-dasharray': '5 4' });
+  el(chart, 'text', { x: left + 4, y: y(.25) - 10, 'font-weight': 700 }, 'Abaixo de 0,25: apertada');
+  el(chart, 'text', { x: right, y: y(2.14) + 4, 'text-anchor': 'end', 'font-weight': 700, dx: -step - 4 }, 'ADR-0019: 2,14');
+  el(chart, 'text', { class: 'soft', x: left, y: bottom + 36 }, 'Margem sobre a melhor alternativa, por ADR. Peso e veto já aplicados.');
+
+  // Failure simulation: every delivered event moves R$ 1,00 from the ledger to the balance.
+  const $ = (id) => document.getElementById(id);
+  const money = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  const calm = matchMedia('(prefers-reduced-motion: reduce)');
+  const sim = { written: 0, outbox: 0, queue: 0, applied: 0, consDown: false, busDown: false, dots: [], lastEntry: 0, lastSend: 0, lastApply: 0 };
+  const entryEvery = 260, drainEvery = 70, travel = 420;
+
+  const paint = () => {
+    $('v-written').textContent = sim.written.toLocaleString('pt-BR');
+    $('v-outbox').textContent = sim.outbox.toLocaleString('pt-BR');
+    $('v-queue').textContent = sim.queue.toLocaleString('pt-BR');
+    $('v-applied').textContent = sim.applied.toLocaleString('pt-BR');
+    $('v-sum').textContent = money(sim.written);
+    $('v-balance').textContent = money(sim.applied);
+    const late = sim.written - sim.applied;
+    $('v-lag').textContent = sim.consDown ? 'Saldo atrasado' : late > 6 ? `${late} eventos para alcançar` : 'Em dia';
+    const set = (id, cls, on, state) => { const node = $(id); node.classList.toggle(cls, on); node.querySelector('.state').textContent = state; };
+    set('n-cons', 'down', sim.consDown, sim.consDown ? 'Fora do ar' : 'No ar');
+    set('n-bus', 'down', sim.busDown, sim.busDown ? 'Congelada' : sim.queue > 6 ? 'Retendo eventos' : 'No ar');
+    $('n-bus').classList.toggle('holding', !sim.busDown && sim.queue > 6);
+    set('n-outbox', 'holding', sim.busDown, sim.busDown ? 'Retendo eventos' : 'Enviando');
+    $('t2').classList.toggle('cut', sim.busDown);
+    $('t3').classList.toggle('cut', sim.consDown || sim.busDown);
+    $('b-cons').textContent = sim.consDown ? 'Religar o consolidado' : 'Derrubar o consolidado';
+    $('b-bus').textContent = sim.busDown ? 'Soltar a mensageria' : 'Congelar a mensageria';
+    $('b-cons').setAttribute('aria-pressed', sim.consDown);
+    $('b-bus').setAttribute('aria-pressed', sim.busDown);
+  };
+
+  const launch = (trackId, arrive, now) => {
+    if (calm.matches || stacked.matches) { arrive(); return; }
+    const node = document.createElement('span');
+    node.className = 'dot';
+    $(trackId).append(node);
+    sim.dots.push({ node, start: now, arrive });
+  };
+
+  const tick = (now) => {
+    if (document.hidden || !$('sim-slide').classList.contains('active') && !stacked.matches) { requestAnimationFrame(tick); return; }
+    if (now - sim.lastEntry > entryEvery) {
+      sim.lastEntry = now;
+      launch('t1', () => { sim.written++; sim.outbox++; }, now);
+    }
+    if (!sim.busDown && sim.outbox > 0 && now - sim.lastSend > drainEvery) {
+      sim.lastSend = now;
+      sim.outbox--;
+      launch('t2', () => { sim.queue++; }, now);
+    }
+    if (!sim.busDown && !sim.consDown && sim.queue > 0 && now - sim.lastApply > drainEvery) {
+      sim.lastApply = now;
+      sim.queue--;
+      launch('t3', () => { sim.applied++; }, now);
+    }
+    sim.dots = sim.dots.filter((dot) => {
+      const progress = (now - dot.start) / travel;
+      if (progress >= 1) { dot.node.remove(); dot.arrive(); return false; }
+      dot.node.style.left = `calc(${progress * 100}% - .26rem)`;
+      return true;
+    });
+    paint();
+    requestAnimationFrame(tick);
+  };
+
+  $('b-cons').addEventListener('click', () => { sim.consDown = !sim.consDown; paint(); });
+  $('b-bus').addEventListener('click', () => { sim.busDown = !sim.busDown; paint(); });
+  $('b-reset').addEventListener('click', () => {
+    sim.dots.forEach((dot) => dot.node.remove());
+    Object.assign(sim, { written: 0, outbox: 0, queue: 0, applied: 0, consDown: false, busDown: false, dots: [] });
+    paint();
+  });
+  paint();
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

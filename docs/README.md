@@ -26,6 +26,7 @@
 | [Método dos radares](20-metodo-dos-radares.md) | Régua, pesos, vetos, ajustes do arquiteto e limites |
 | [Avaliação dos radares](21-avaliacao-dos-radares.md) | Evidência de cada nota, por decisão e opção |
 | [Contratos](contratos/README.md) | OpenAPI, AsyncAPI e esquema do evento |
+| [Apresentação](../presentation/index.html) | O desafio em 20 slides, publicado no GitHub Pages |
 
 ## Implementado e proposto
 

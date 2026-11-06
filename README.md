@@ -34,7 +34,7 @@ Medidos localmente, com autenticação, rate limiting e telemetria ativos. Os de
 |---|---|---|
 | Lançamentos disponível com o consolidado fora | Nenhuma escrita recusada | 0 falhas em 4.501 escritas |
 | Vazão do consolidado | 50 req/s | 50 req/s por 5 minutos |
-| Perda de requisições | No máximo 5% | 0%, com p95 de 7,55 ms |
+| Perda de requisições | No máximo 5% | 0%, com p95 de 7,24 ms |
 
 ## Executar
 
@@ -143,6 +143,7 @@ infra/                    Keycloak, coletor, Tempo, Prometheus e Grafana locais
 load-tests/               cenários k6
 scripts/                  testes, carga, resiliência, mutação e reconstrução
 tools/                    geradores de radares, resumo de decisões e ROI
+presentation/             apresentação em HTML, publicada no GitHub Pages
 ```
 
 Em cada serviço, `*.Core` é o domínio, sem dependência de banco ou mensageria. As regras ficam em `.spec.md`, ao lado do código, com cenários em `.feature` e testes em `.test.cs`. O código está em inglês, e a documentação, em português.
@@ -151,6 +152,7 @@ Em cada serviço, `*.Core` é o domínio, sem dependência de banco ou mensageri
 
 | Para entender | Leia |
 |---|---|
+| O desafio em 20 slides | [Apresentação](https://adrielcodeco.github.io/daily-cash-flow/) |
 | O que foi decidido | [Resumo das decisões](docs/16-resumo-de-decisoes.md) |
 | Por que foi decidido | [ADRs](docs/adr/README.md) e [método dos radares](docs/20-metodo-dos-radares.md) |
 | A arquitetura | [Arquitetura-alvo](docs/03-arquitetura-alvo.md) e [transição](docs/04-arquitetura-transicao.md) |

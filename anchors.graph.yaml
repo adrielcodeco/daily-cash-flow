@@ -1,7 +1,7 @@
 # anchors.graph.yaml — o mapa de dependências (gerado por `anchors map build`)
 # Material e versionado. Fonte de verdade do grafo; índices em memória são cache.
 version: 8
-generated_by: v0.1.381
+generated_by: v0.1.385
 config_rev: bee02f372e49
 nodes:
     - id: AGENTS.md
@@ -30,7 +30,7 @@ nodes:
       regime: declarativo
     - id: README.md
       kind: doc
-      rev: 34bc1036140d
+      rev: 74cba2d561f1
       updated_at: "2026-11-06"
       layer: guidance
       tags:

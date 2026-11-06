@@ -8,7 +8,6 @@ Cada item traz o que motivaria a mudança. Sem esse gatilho, o custo de fazer ag
 | Interface web | Comerciantes sem integração por API |
 | Exportação do relatório em CSV ou PDF | Pedido de contabilidade ou fiscal |
 | Fotografias mensais do saldo | Abertura acima da meta de latência |
-| Isolamento por segurança no nível da linha | Exigência de auditoria ou aumento do número de equipes |
 | Particionamento por comerciante | Banco de lançamentos perto do limite de escrita |
 | Kafka no lugar de Pub/Sub | Vários consumidores precisando reprocessar histórico longo |
 | CDC no lugar do publicador da outbox | Leitura da outbox virar gargalo |

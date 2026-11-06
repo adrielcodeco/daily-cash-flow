@@ -74,7 +74,7 @@ Comando: `./scripts/test.sh`.
 | Ledger | 80 | Todos passaram |
 | Consolidation | 49 | Todos passaram |
 
-Os testes de integração usam PostgreSQL real em contêiner, inclusive para chamadas concorrentes. O teste de ponta a ponta, em `./scripts/smoke.sh`, cobre 9 cenários no ambiente completo.
+Os testes de integração usam PostgreSQL real em contêiner, inclusive para chamadas concorrentes. O teste de ponta a ponta, em `./scripts/smoke.sh`, faz 14 verificações no ambiente completo.
 
 ## Testes de mutação
 
