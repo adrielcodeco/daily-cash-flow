@@ -17,6 +17,7 @@
 | [Operação](12-operacao.md) | Recuperação de desastres e runbooks |
 | [Revisão Well-Architected](13-revisao-well-architected.md) | Autoavaliação pelos pilares do GCP |
 | [Riscos](14-riscos.md) | Registro e mapa de exposição |
+| [Registro de decisões](15-registro-de-decisoes.md) | Decisões menores, parâmetros e o que foi revisto |
 | [ADRs](adr/README.md) | Decisões, com radar de trade-offs |
 | [Contratos](contratos/README.md) | OpenAPI, AsyncAPI e esquema do evento |
 
@@ -24,5 +25,6 @@
 
 | Situação | Itens |
 |---|---|
-| Será implementado e testado localmente | Serviços, outbox, consumidor, saldo, cache, autenticação, telemetria e dashboards |
+| Implementado e testado localmente | Serviços, outbox, consumidor, saldo e cache |
+| Previsto para o M6 | Autenticação, limite de taxa, telemetria e dashboards |
 | Proposto para o GCP, sem deploy | Cloud Run, Cloud SQL, Pub/Sub, Memorystore, Cloud Armor, balanceador e rede |

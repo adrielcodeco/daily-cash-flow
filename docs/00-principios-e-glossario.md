@@ -13,6 +13,7 @@
 | P7 | Afirmações de qualidade precisam de prova | Cada meta tem medição ou teste |
 | P8 | O domínio não conhece a infraestrutura | Banco e mensageria ficam atrás de portas |
 | P9 | Documentação em pt-BR e código em en-US | O glossário liga cada termo de negócio ao nome usado no código |
+| P10 | Toda decisão e todo trade-off ficam registrados | Cada escolha entra no mesmo commit, em um ADR ou no [registro de decisões](15-registro-de-decisoes.md) |
 
 ## Glossário
 

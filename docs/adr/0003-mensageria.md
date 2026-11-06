@@ -9,7 +9,7 @@ O alvo é GCP. A mensageria precisa de durabilidade, retentativas e fila de mens
 
 ## Decisão
 
-Usar Pub/Sub, com tópico de mensagens mortas. O ambiente local usa o emulador, com RabbitMQ como plano B, atrás da mesma interface.
+Usar Pub/Sub, com tópico de mensagens mortas. O ambiente local usa o emulador. O RabbitMQ era o plano B e foi descartado depois que o emulador validou a entrega e as mensagens mortas.
 
 ## Opções
 

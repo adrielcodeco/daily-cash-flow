@@ -58,3 +58,4 @@ tools/radar/              gerador dos gráficos de radar
 - Rotas versionadas em `/v1`
 - Dinheiro sempre em `long`, em centavos (`AmountCents`)
 - Formatação por `.editorconfig` e `dotnet format`
+- Toda decisão e todo trade-off ficam registrados no mesmo commit, em um ADR ou em `docs/15-registro-de-decisoes.md`

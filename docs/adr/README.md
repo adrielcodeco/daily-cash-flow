@@ -1,6 +1,6 @@
 # Decisões de arquitetura
 
-Cada ADR registra o contexto, as opções, a decisão, as consequências e o gatilho para rever a escolha.
+Cada ADR registra o contexto, as opções, a decisão, as consequências e o gatilho para rever a escolha. As decisões menores e os parâmetros ficam no [registro de decisões](../15-registro-de-decisoes.md).
 
 | ADR | Decisão | Escolha |
 |---|---|---|
@@ -14,6 +14,17 @@ Cada ADR registra o contexto, as opções, a decisão, as consequências e o gat
 | [0008](0008-autenticacao-e-autorizacao.md) | Autenticação e autorização | Gateway, OIDC e JWT |
 | [0009](0009-observabilidade.md) | Observabilidade | OpenTelemetry |
 | [0010](0010-estrategia-de-migracao.md) | Estratégia de migração | Strangler fig |
+| [0011](0011-isolamento-de-comerciantes.md) | Isolamento entre comerciantes | Tabelas compartilhadas com `merchant_id` |
+| [0012](0012-acesso-a-dados.md) | Acesso a dados | Npgsql com SQL explícito |
+| [0013](0013-migracoes-de-esquema.md) | Migrações de esquema | DbUp, em execução separada |
+| [0014](0014-separacao-de-processos.md) | Separação de processos | Quatro processos, dois por serviço |
+| [0015](0015-envio-da-outbox.md) | Envio da outbox | Consulta periódica com `SKIP LOCKED` |
+| [0016](0016-idempotencia-da-escrita.md) | Idempotência da escrita | `Idempotency-Key` guardada no banco |
+| [0017](0017-vazao-do-consumidor.md) | Vazão do consumidor | Limite fixo de eventos em processamento |
+| [0018](0018-reconstrucao-do-saldo.md) | Reconstrução do saldo | Reenvio pela outbox |
+| [0019](0019-paginacao.md) | Paginação de lançamentos | Keyset, com cursor |
+| [0020](0020-estilo-da-api-http.md) | Estilo da API HTTP | Minimal APIs com REST |
+| [0021](0021-estrategia-de-testes.md) | Estratégia de testes | Domínio, banco real e mutação |
 
 ## Como ler os radares
 
