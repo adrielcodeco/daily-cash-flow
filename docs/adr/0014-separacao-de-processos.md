@@ -17,15 +17,18 @@ Separar `ledger-api`, `outbox-publisher`, `consolidation-api` e `consolidation-c
 <!-- radar:start -->
 ![Radar de Separação de processos](radar/ADR-0014.svg)
 
-| Pilar | **Processos separados** | Worker dentro da API | Job agendado |
-|---|---:|---:|---:|
-| Segurança | 4 | 4 | 4 |
-| Desempenho | 4 | 3 | 2 |
-| Escalabilidade | 5 | 3 | 3 |
-| Confiabilidade | 5 | 3 | 4 |
-| Custo | 3 | 5 | 4 |
-| Simplicidade | 3 | 5 | 4 |
-| Operabilidade | 4 | 3 | 3 |
+| Critério | Peso | **Processos separados** | Job agendado | Worker dentro da API |
+|---|---:|---:|---:|---:|
+| Alinhamento com o negócio | 4 | 5 | 4 | 4 |
+| Confiabilidade | 3 | 5 | 5 | 4 |
+| Desempenho | 2 | 5 | 5 | 3 |
+| Economia | 2 | 4 | 4 | 4 |
+| Escalabilidade | 2 | 4 | 4 | 2 |
+| Operabilidade | 2 | 5 | 5 | 5 |
+| Simplicidade | 2 | 4 | 4 | 5 |
+| **Resultado** | | **4,65** | **4,41** | **3,88** |
+
+As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0014).
 <!-- radar:end -->
 
 ## Leitura do radar

@@ -1,62 +1,44 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 528" role="img" aria-label="Paginação de lançamentos" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 525" role="img" aria-label="Paginação de lançamentos" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
 <title>ADR-0019: Paginação de lançamentos</title>
-<rect width="680" height="528" fill="#fcfcfb"/>
+<rect width="760" height="525" fill="#fcfcfb"/>
 <text x="24" y="30" font-size="16" font-weight="600" fill="#0b0b0b">Paginação de lançamentos</text>
-<polygon points="340.0,202.0 365.8,214.4 372.2,242.3 354.3,264.7 325.7,264.7 307.8,242.3 314.2,214.4" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="214.0" font-size="10" fill="#52514e">1</text>
-<polygon points="340.0,169.0 391.6,193.8 404.3,249.7 368.6,294.5 311.4,294.5 275.7,249.7 288.4,193.8" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="181.0" font-size="10" fill="#52514e">2</text>
-<polygon points="340.0,136.0 417.4,173.3 436.5,257.0 383.0,324.2 297.0,324.2 243.5,257.0 262.6,173.3" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="148.0" font-size="10" fill="#52514e">3</text>
-<polygon points="340.0,103.0 443.2,152.7 468.7,264.4 397.3,353.9 282.7,353.9 211.3,264.4 236.8,152.7" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="115.0" font-size="10" fill="#52514e">4</text>
-<polygon points="340.0,70.0 469.0,132.1 500.9,271.7 411.6,383.7 268.4,383.7 179.1,271.7 211.0,132.1" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="82.0" font-size="10" fill="#52514e">5</text>
-<line x1="340" y1="235" x2="340.0" y2="70.0" stroke="#d9d8d3" stroke-width="1"/>
-<text x="340.0" y="59.2" text-anchor="middle" font-size="13" fill="#0b0b0b">Segurança</text>
-<line x1="340" y1="235" x2="469.0" y2="132.1" stroke="#d9d8d3" stroke-width="1"/>
-<text x="480.6" y="126.9" text-anchor="start" font-size="13" fill="#0b0b0b">Desempenho</text>
-<line x1="340" y1="235" x2="500.9" y2="271.7" stroke="#d9d8d3" stroke-width="1"/>
-<text x="515.3" y="279.0" text-anchor="start" font-size="13" fill="#0b0b0b">Escalabilidade</text>
-<line x1="340" y1="235" x2="411.6" y2="383.7" stroke="#d9d8d3" stroke-width="1"/>
-<text x="418.0" y="401.0" text-anchor="start" font-size="13" fill="#0b0b0b">Confiabilidade</text>
-<line x1="340" y1="235" x2="268.4" y2="383.7" stroke="#d9d8d3" stroke-width="1"/>
-<text x="262.0" y="401.0" text-anchor="end" font-size="13" fill="#0b0b0b">Custo</text>
-<line x1="340" y1="235" x2="179.1" y2="271.7" stroke="#d9d8d3" stroke-width="1"/>
-<text x="164.7" y="279.0" text-anchor="end" font-size="13" fill="#0b0b0b">Simplicidade</text>
-<line x1="340" y1="235" x2="211.0" y2="132.1" stroke="#d9d8d3" stroke-width="1"/>
-<text x="199.4" y="126.9" text-anchor="end" font-size="13" fill="#0b0b0b">Operabilidade</text>
-<polygon points="340.0,136.0 365.8,214.4 372.2,242.3 368.6,294.5 282.7,353.9 179.1,271.7 262.6,173.3" fill="#1baf7a" fill-opacity="0.08" stroke="#1baf7a" stroke-width="2" stroke-linejoin="round" stroke-dasharray="2 4"/>
-<polygon points="340.0,129.0 347.0,136.0 340.0,143.0 333.0,136.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Sem paginação, Segurança: 3</title></polygon>
-<polygon points="365.8,207.4 372.8,214.4 365.8,221.4 358.8,214.4" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Sem paginação, Desempenho: 1</title></polygon>
-<polygon points="372.2,235.3 379.2,242.3 372.2,249.3 365.2,242.3" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Sem paginação, Escalabilidade: 1</title></polygon>
-<polygon points="368.6,287.5 375.6,294.5 368.6,301.5 361.6,294.5" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Sem paginação, Confiabilidade: 2</title></polygon>
-<polygon points="282.7,346.9 289.7,353.9 282.7,360.9 275.7,353.9" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Sem paginação, Custo: 4</title></polygon>
-<polygon points="179.1,264.7 186.1,271.7 179.1,278.7 172.1,271.7" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Sem paginação, Simplicidade: 5</title></polygon>
-<polygon points="262.6,166.3 269.6,173.3 262.6,180.3 255.6,173.3" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Sem paginação, Operabilidade: 3</title></polygon>
-<polygon points="340.0,103.0 391.6,193.8 404.3,249.7 383.0,324.2 282.7,353.9 179.1,271.7 236.8,152.7" fill="#eb6834" fill-opacity="0.08" stroke="#eb6834" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 4"/>
-<rect x="335.0" y="98.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Offset e limite, Segurança: 4</title></rect>
-<rect x="386.6" y="188.8" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Offset e limite, Desempenho: 2</title></rect>
-<rect x="399.3" y="244.7" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Offset e limite, Escalabilidade: 2</title></rect>
-<rect x="378.0" y="319.2" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Offset e limite, Confiabilidade: 3</title></rect>
-<rect x="277.7" y="348.9" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Offset e limite, Custo: 4</title></rect>
-<rect x="174.1" y="266.7" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Offset e limite, Simplicidade: 5</title></rect>
-<rect x="231.8" y="147.7" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Offset e limite, Operabilidade: 4</title></rect>
-<polygon points="340.0,103.0 469.0,132.1 500.9,271.7 411.6,383.7 282.7,353.9 243.5,257.0 236.8,152.7" fill="#2a78d6" fill-opacity="0.08" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
-<circle cx="340.0" cy="103.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Keyset com cursor, Segurança: 4</title></circle>
-<circle cx="469.0" cy="132.1" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Keyset com cursor, Desempenho: 5</title></circle>
-<circle cx="500.9" cy="271.7" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Keyset com cursor, Escalabilidade: 5</title></circle>
-<circle cx="411.6" cy="383.7" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Keyset com cursor, Confiabilidade: 5</title></circle>
-<circle cx="282.7" cy="353.9" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Keyset com cursor, Custo: 4</title></circle>
-<circle cx="243.5" cy="257.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Keyset com cursor, Simplicidade: 3</title></circle>
-<circle cx="236.8" cy="152.7" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Keyset com cursor, Operabilidade: 4</title></circle>
-<line x1="24" y1="450" x2="60" y2="450" stroke="#2a78d6" stroke-width="2"/>
-<circle cx="42.0" cy="450.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"></circle>
-<text x="70" y="454" font-size="13" fill="#0b0b0b">Keyset com cursor (escolhida)</text>
-<line x1="24" y1="476" x2="60" y2="476" stroke="#eb6834" stroke-width="2" stroke-dasharray="7 4"/>
-<rect x="37.0" y="471.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"></rect>
-<text x="70" y="480" font-size="13" fill="#0b0b0b">Offset e limite</text>
-<line x1="24" y1="502" x2="60" y2="502" stroke="#1baf7a" stroke-width="2" stroke-dasharray="2 4"/>
-<polygon points="42.0,495.0 49.0,502.0 42.0,509.0 35.0,502.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"></polygon>
-<text x="70" y="506" font-size="13" fill="#0b0b0b">Sem paginação</text>
+<text x="24" y="50" font-size="12" fill="#52514e">Quanto mais longe do centro, melhor</text>
+<polygon points="380.0,215.0 408.5,235.7 397.6,269.3 362.4,269.3 351.5,235.7" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="227.0" font-size="10" fill="#52514e">1</text>
+<polygon points="380.0,185.0 437.1,226.5 415.3,293.5 344.7,293.5 322.9,226.5" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="197.0" font-size="10" fill="#52514e">2</text>
+<polygon points="380.0,155.0 465.6,217.2 432.9,317.8 327.1,317.8 294.4,217.2" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="167.0" font-size="10" fill="#52514e">3</text>
+<polygon points="380.0,125.0 494.1,207.9 450.5,342.1 309.5,342.1 265.9,207.9" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="137.0" font-size="10" fill="#52514e">4</text>
+<polygon points="380.0,95.0 522.7,198.6 468.2,366.4 291.8,366.4 237.3,198.6" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="107.0" font-size="10" fill="#52514e">5</text>
+<line x1="380" y1="245" x2="380.0" y2="95.0" stroke="#d9d8d3" stroke-width="1"/>
+<text x="380.0" y="87.0" text-anchor="middle" font-size="12" fill="#0b0b0b">Alinhamento com o negócio (4)</text>
+<line x1="380" y1="245" x2="522.7" y2="198.6" stroke="#d9d8d3" stroke-width="1"/>
+<text x="534.1" y="198.9" text-anchor="start" font-size="12" fill="#0b0b0b">Aderência ao problema (3)</text>
+<line x1="380" y1="245" x2="468.2" y2="366.4" stroke="#d9d8d3" stroke-width="1"/>
+<text x="475.2" y="380.1" text-anchor="start" font-size="12" fill="#0b0b0b">Desempenho (3)</text>
+<line x1="380" y1="245" x2="291.8" y2="366.4" stroke="#d9d8d3" stroke-width="1"/>
+<text x="284.8" y="380.1" text-anchor="end" font-size="12" fill="#0b0b0b">Escalabilidade (2)</text>
+<line x1="380" y1="245" x2="237.3" y2="198.6" stroke="#d9d8d3" stroke-width="1"/>
+<text x="225.9" y="198.9" text-anchor="end" font-size="12" fill="#0b0b0b">Simplicidade (2)</text>
+<polygon points="380.0,155.0 437.1,226.5 415.3,293.5 344.7,293.5 237.3,198.6" fill="#eb6834" fill-opacity="0.08" stroke="#eb6834" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 4"/>
+<rect x="375.0" y="150.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Offset e limite, Alinhamento com o negócio: 3</title></rect>
+<rect x="432.1" y="221.5" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Offset e limite, Aderência ao problema: 2</title></rect>
+<rect x="410.3" y="288.5" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Offset e limite, Desempenho: 2</title></rect>
+<rect x="339.7" y="288.5" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Offset e limite, Escalabilidade: 2</title></rect>
+<rect x="232.3" y="193.6" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Offset e limite, Simplicidade: 5</title></rect>
+<polygon points="380.0,95.0 522.7,198.6 468.2,366.4 291.8,366.4 265.9,207.9" fill="#2a78d6" fill-opacity="0.08" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="380.0" cy="95.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Keyset com cursor, Alinhamento com o negócio: 5</title></circle>
+<circle cx="522.7" cy="198.6" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Keyset com cursor, Aderência ao problema: 5</title></circle>
+<circle cx="468.2" cy="366.4" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Keyset com cursor, Desempenho: 5</title></circle>
+<circle cx="291.8" cy="366.4" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Keyset com cursor, Escalabilidade: 5</title></circle>
+<circle cx="265.9" cy="207.9" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Keyset com cursor, Simplicidade: 4</title></circle>
+<line x1="24" y1="465" x2="60" y2="465" stroke="#2a78d6" stroke-width="2"/>
+<circle cx="42.0" cy="465.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"></circle>
+<text x="70" y="469" font-size="13" fill="#0b0b0b">Keyset com cursor (escolhida): 4,86</text>
+<line x1="24" y1="491" x2="60" y2="491" stroke="#eb6834" stroke-width="2" stroke-dasharray="7 4"/>
+<rect x="37.0" y="486.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"></rect>
+<text x="70" y="495" font-size="13" fill="#0b0b0b">Offset e limite: 2,71</text>
 </svg>

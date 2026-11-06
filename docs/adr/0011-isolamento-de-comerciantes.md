@@ -19,20 +19,24 @@ As aplicações usam papéis próprios, sem superusuário. A API não tem permis
 <!-- radar:start -->
 ![Radar de Isolamento entre comerciantes](radar/ADR-0011.svg)
 
-| Pilar | **Tabelas compartilhadas** | Esquema por comerciante | Banco por comerciante |
-|---|---:|---:|---:|
-| Segurança | 3 | 4 | 5 |
-| Desempenho | 5 | 4 | 4 |
-| Escalabilidade | 5 | 3 | 2 |
-| Confiabilidade | 4 | 4 | 5 |
-| Custo | 5 | 3 | 1 |
-| Simplicidade | 5 | 2 | 1 |
-| Operabilidade | 4 | 2 | 1 |
+| Critério | Peso | **Tabelas compartilhadas com row-level security** | Tabelas compartilhadas com filtro no código | Esquema por comerciante | Banco por comerciante |
+|---|---:|---:|---:|---:|---:|
+| Alinhamento com o negócio | 4 | 5 | 3 | 3 | 3 |
+| Operabilidade | 3 | 4 | 5 | 3 | 3 |
+| Segurança | 3 | 3 | 2 | 3 | 3 |
+| Aderência ao problema | 2 | 5 | 3 | 3 | 3 |
+| Economia | 2 | 5 | 5 | 4 | 3 |
+| Escalabilidade | 2 | 4 | 4 | 2 | 1 |
+| Simplicidade | 2 | 4 | 5 | 4 | 4 |
+| Desempenho | 1 | 5 | 5 | 3 | 2 |
+| **Resultado** | | **4,32** | **3,79** | **3,11** | **2,84** |
+
+As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0011).
 <!-- radar:end -->
 
 ## Leitura do radar
 
-Banco por comerciante dá o isolamento mais forte, mas o custo e a operação crescem com cada cliente. Esquema por comerciante melhora pouco e multiplica migrações. Tabelas compartilhadas têm a pior nota em segurança, porque o isolamento depende do código. Por isso, o RLS foi acrescentado depois, conforme a revisão abaixo.
+Banco por comerciante dá o isolamento mais forte, mas o custo e a operação crescem com cada cliente. Esquema por comerciante melhora pouco e multiplica migrações. Tabelas compartilhadas só com filtro no código deixam o isolamento depender de cada consulta. Com RLS, o banco aplica o isolamento, e o modelo continua simples e barato.
 
 ## Consequências
 
@@ -50,8 +54,6 @@ Banco por comerciante dá o isolamento mais forte, mas o custo e a operação cr
 ## Revisão de 2026-11-06
 
 A decisão original deixava o isolamento só no código. A reavaliação às cegas favoreceu o RLS, porque esse modelo é fraco para uma instituição financeira, e o RLS foi adotado.
-
-O radar acima mostra a avaliação original. A nova avaliação ainda não foi oficializada.
 
 ## Gatilho de revisão
 

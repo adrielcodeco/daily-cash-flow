@@ -16,20 +16,24 @@ Usar transactional outbox. O lançamento e o evento são gravados na mesma trans
 <!-- radar:start -->
 ![Radar de Integração entre serviços](radar/ADR-0002.svg)
 
-| Pilar | **Outbox e mensageria** | HTTP síncrono | CDC do banco |
-|---|---:|---:|---:|
-| Segurança | 4 | 4 | 3 |
-| Desempenho | 4 | 3 | 4 |
-| Escalabilidade | 5 | 2 | 5 |
-| Confiabilidade | 5 | 1 | 4 |
-| Custo | 4 | 5 | 2 |
-| Simplicidade | 3 | 5 | 2 |
-| Operabilidade | 3 | 4 | 2 |
+| Critério | Peso | **Outbox na transação e mensageria** | CDC do banco | Publicar na mensageria durante a requisição | HTTP síncrono entre os serviços |
+|---|---:|---:|---:|---:|---:|
+| Alinhamento com o negócio | 4 | 5 | 3 | 5 | Veto |
+| Aderência ao problema | 3 | 5 | 4 | Veto | Veto |
+| Confiabilidade | 3 | 5 | 3 | 1 | Veto |
+| Operabilidade | 3 | 4 | 3 | 4 | 5 |
+| Desempenho | 2 | 5 | 5 | 4 | 2 |
+| Escalabilidade | 2 | 5 | 3 | 5 | 3 |
+| Simplicidade | 2 | 2 | 3 | 4 | 5 |
+| Economia | 1 | 3 | 3 | 3 | 4 |
+| **Resultado** | | **4,45** | **3,35** | Eliminada | Eliminada |
+
+As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0002).
 <!-- radar:end -->
 
 ## Leitura do radar
 
-HTTP síncrono é a opção mais simples, mas cria a dependência que o requisito proíbe, por isso recebe nota 1 em confiabilidade. CDC também evita a escrita dupla, mas acrescenta um conector, mais operação e expõe o esquema interno do banco.
+HTTP síncrono é a opção mais simples, mas cria a dependência que o requisito proíbe, por isso é eliminada por veto. CDC também evita a escrita dupla, mas acrescenta um conector, mais operação e expõe o esquema interno do banco.
 
 Publicar direto na mensageria durante a requisição foi descartado: a queda do broker impediria os lançamentos.
 

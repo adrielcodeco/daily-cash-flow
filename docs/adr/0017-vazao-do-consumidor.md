@@ -17,15 +17,18 @@ Limitar o consumidor a 16 eventos em processamento, com um único cliente de ass
 <!-- radar:start -->
 ![Radar de Vazão do consumidor](radar/ADR-0017.svg)
 
-| Pilar | **Limite por processo** | Sem limite, pool maior | Pooler de conexões |
-|---|---:|---:|---:|
-| Segurança | 4 | 4 | 4 |
-| Desempenho | 3 | 4 | 4 |
-| Escalabilidade | 3 | 2 | 5 |
-| Confiabilidade | 5 | 1 | 4 |
-| Custo | 5 | 4 | 3 |
-| Simplicidade | 4 | 5 | 2 |
-| Operabilidade | 4 | 2 | 3 |
+| Critério | Peso | **Limite fixo de eventos em processamento** | Pooler de conexões | Sem limite, com pool de conexões maior |
+|---|---:|---:|---:|---:|
+| Alinhamento com o negócio | 4 | 5 | 4 | Veto |
+| Confiabilidade | 3 | 5 | 3 | 3 |
+| Desempenho | 3 | 5 | 2 | 2 |
+| Escalabilidade | 2 | 3 | 4 | Veto |
+| Operabilidade | 2 | 5 | 3 | 4 |
+| Simplicidade | 2 | 5 | 3 | 5 |
+| Economia | 1 | 5 | 3 | 4 |
+| **Resultado** | | **4,76** | **3,18** | Eliminada |
+
+As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0017).
 <!-- radar:end -->
 
 ## Leitura do radar

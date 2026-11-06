@@ -1,62 +1,68 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 528" role="img" aria-label="Mensageria" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 551" role="img" aria-label="Mensageria" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
 <title>ADR-0003: Mensageria</title>
-<rect width="680" height="528" fill="#fcfcfb"/>
+<rect width="760" height="551" fill="#fcfcfb"/>
 <text x="24" y="30" font-size="16" font-weight="600" fill="#0b0b0b">Mensageria</text>
-<polygon points="340.0,202.0 365.8,214.4 372.2,242.3 354.3,264.7 325.7,264.7 307.8,242.3 314.2,214.4" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="214.0" font-size="10" fill="#52514e">1</text>
-<polygon points="340.0,169.0 391.6,193.8 404.3,249.7 368.6,294.5 311.4,294.5 275.7,249.7 288.4,193.8" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="181.0" font-size="10" fill="#52514e">2</text>
-<polygon points="340.0,136.0 417.4,173.3 436.5,257.0 383.0,324.2 297.0,324.2 243.5,257.0 262.6,173.3" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="148.0" font-size="10" fill="#52514e">3</text>
-<polygon points="340.0,103.0 443.2,152.7 468.7,264.4 397.3,353.9 282.7,353.9 211.3,264.4 236.8,152.7" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="115.0" font-size="10" fill="#52514e">4</text>
-<polygon points="340.0,70.0 469.0,132.1 500.9,271.7 411.6,383.7 268.4,383.7 179.1,271.7 211.0,132.1" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="82.0" font-size="10" fill="#52514e">5</text>
-<line x1="340" y1="235" x2="340.0" y2="70.0" stroke="#d9d8d3" stroke-width="1"/>
-<text x="340.0" y="59.2" text-anchor="middle" font-size="13" fill="#0b0b0b">Segurança</text>
-<line x1="340" y1="235" x2="469.0" y2="132.1" stroke="#d9d8d3" stroke-width="1"/>
-<text x="480.6" y="126.9" text-anchor="start" font-size="13" fill="#0b0b0b">Desempenho</text>
-<line x1="340" y1="235" x2="500.9" y2="271.7" stroke="#d9d8d3" stroke-width="1"/>
-<text x="515.3" y="279.0" text-anchor="start" font-size="13" fill="#0b0b0b">Escalabilidade</text>
-<line x1="340" y1="235" x2="411.6" y2="383.7" stroke="#d9d8d3" stroke-width="1"/>
-<text x="418.0" y="401.0" text-anchor="start" font-size="13" fill="#0b0b0b">Confiabilidade</text>
-<line x1="340" y1="235" x2="268.4" y2="383.7" stroke="#d9d8d3" stroke-width="1"/>
-<text x="262.0" y="401.0" text-anchor="end" font-size="13" fill="#0b0b0b">Custo</text>
-<line x1="340" y1="235" x2="179.1" y2="271.7" stroke="#d9d8d3" stroke-width="1"/>
-<text x="164.7" y="279.0" text-anchor="end" font-size="13" fill="#0b0b0b">Simplicidade</text>
-<line x1="340" y1="235" x2="211.0" y2="132.1" stroke="#d9d8d3" stroke-width="1"/>
-<text x="199.4" y="126.9" text-anchor="end" font-size="13" fill="#0b0b0b">Operabilidade</text>
-<polygon points="340.0,103.0 469.0,132.1 500.9,271.7 397.3,353.9 311.4,294.5 275.7,249.7 262.6,173.3" fill="#1baf7a" fill-opacity="0.08" stroke="#1baf7a" stroke-width="2" stroke-linejoin="round" stroke-dasharray="2 4"/>
-<polygon points="340.0,96.0 347.0,103.0 340.0,110.0 333.0,103.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Kafka gerenciado, Segurança: 4</title></polygon>
-<polygon points="469.0,125.1 476.0,132.1 469.0,139.1 462.0,132.1" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Kafka gerenciado, Desempenho: 5</title></polygon>
-<polygon points="500.9,264.7 507.9,271.7 500.9,278.7 493.9,271.7" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Kafka gerenciado, Escalabilidade: 5</title></polygon>
-<polygon points="397.3,346.9 404.3,353.9 397.3,360.9 390.3,353.9" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Kafka gerenciado, Confiabilidade: 4</title></polygon>
-<polygon points="311.4,287.5 318.4,294.5 311.4,301.5 304.4,294.5" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Kafka gerenciado, Custo: 2</title></polygon>
-<polygon points="275.7,242.7 282.7,249.7 275.7,256.7 268.7,249.7" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Kafka gerenciado, Simplicidade: 2</title></polygon>
-<polygon points="262.6,166.3 269.6,173.3 262.6,180.3 255.6,173.3" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Kafka gerenciado, Operabilidade: 3</title></polygon>
-<polygon points="340.0,136.0 443.2,152.7 436.5,257.0 383.0,324.2 297.0,324.2 243.5,257.0 288.4,193.8" fill="#eb6834" fill-opacity="0.08" stroke="#eb6834" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 4"/>
-<rect x="335.0" y="131.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>RabbitMQ autogerenciado, Segurança: 3</title></rect>
-<rect x="438.2" y="147.7" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>RabbitMQ autogerenciado, Desempenho: 4</title></rect>
-<rect x="431.5" y="252.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>RabbitMQ autogerenciado, Escalabilidade: 3</title></rect>
-<rect x="378.0" y="319.2" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>RabbitMQ autogerenciado, Confiabilidade: 3</title></rect>
-<rect x="292.0" y="319.2" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>RabbitMQ autogerenciado, Custo: 3</title></rect>
-<rect x="238.5" y="252.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>RabbitMQ autogerenciado, Simplicidade: 3</title></rect>
-<rect x="283.4" y="188.8" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>RabbitMQ autogerenciado, Operabilidade: 2</title></rect>
-<polygon points="340.0,70.0 443.2,152.7 500.9,271.7 411.6,383.7 282.7,353.9 211.3,264.4 211.0,132.1" fill="#2a78d6" fill-opacity="0.08" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
-<circle cx="340.0" cy="70.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Pub/Sub, Segurança: 5</title></circle>
-<circle cx="443.2" cy="152.7" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Pub/Sub, Desempenho: 4</title></circle>
-<circle cx="500.9" cy="271.7" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Pub/Sub, Escalabilidade: 5</title></circle>
-<circle cx="411.6" cy="383.7" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Pub/Sub, Confiabilidade: 5</title></circle>
-<circle cx="282.7" cy="353.9" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Pub/Sub, Custo: 4</title></circle>
-<circle cx="211.3" cy="264.4" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Pub/Sub, Simplicidade: 4</title></circle>
-<circle cx="211.0" cy="132.1" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Pub/Sub, Operabilidade: 5</title></circle>
-<line x1="24" y1="450" x2="60" y2="450" stroke="#2a78d6" stroke-width="2"/>
-<circle cx="42.0" cy="450.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"></circle>
-<text x="70" y="454" font-size="13" fill="#0b0b0b">Pub/Sub (escolhida)</text>
-<line x1="24" y1="476" x2="60" y2="476" stroke="#eb6834" stroke-width="2" stroke-dasharray="7 4"/>
-<rect x="37.0" y="471.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"></rect>
-<text x="70" y="480" font-size="13" fill="#0b0b0b">RabbitMQ autogerenciado</text>
-<line x1="24" y1="502" x2="60" y2="502" stroke="#1baf7a" stroke-width="2" stroke-dasharray="2 4"/>
-<polygon points="42.0,495.0 49.0,502.0 42.0,509.0 35.0,502.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"></polygon>
-<text x="70" y="506" font-size="13" fill="#0b0b0b">Kafka gerenciado</text>
+<text x="24" y="50" font-size="12" fill="#52514e">Quanto mais longe do centro, melhor</text>
+<polygon points="380.0,215.0 401.2,223.8 410.0,245.0 401.2,266.2 380.0,275.0 358.8,266.2 350.0,245.0 358.8,223.8" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="227.0" font-size="10" fill="#52514e">1</text>
+<polygon points="380.0,185.0 422.4,202.6 440.0,245.0 422.4,287.4 380.0,305.0 337.6,287.4 320.0,245.0 337.6,202.6" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="197.0" font-size="10" fill="#52514e">2</text>
+<polygon points="380.0,155.0 443.6,181.4 470.0,245.0 443.6,308.6 380.0,335.0 316.4,308.6 290.0,245.0 316.4,181.4" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="167.0" font-size="10" fill="#52514e">3</text>
+<polygon points="380.0,125.0 464.9,160.1 500.0,245.0 464.9,329.9 380.0,365.0 295.1,329.9 260.0,245.0 295.1,160.1" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="137.0" font-size="10" fill="#52514e">4</text>
+<polygon points="380.0,95.0 486.1,138.9 530.0,245.0 486.1,351.1 380.0,395.0 273.9,351.1 230.0,245.0 273.9,138.9" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="107.0" font-size="10" fill="#52514e">5</text>
+<line x1="380" y1="245" x2="380.0" y2="95.0" stroke="#d9d8d3" stroke-width="1"/>
+<text x="380.0" y="87.0" text-anchor="middle" font-size="12" fill="#0b0b0b">Alinhamento com o negócio (4)</text>
+<line x1="380" y1="245" x2="486.1" y2="138.9" stroke="#d9d8d3" stroke-width="1"/>
+<text x="494.6" y="134.4" text-anchor="start" font-size="12" fill="#0b0b0b">Confiabilidade (3)</text>
+<line x1="380" y1="245" x2="530.0" y2="245.0" stroke="#d9d8d3" stroke-width="1"/>
+<text x="542.0" y="249.0" text-anchor="start" font-size="12" fill="#0b0b0b">Operabilidade (3)</text>
+<line x1="380" y1="245" x2="486.1" y2="351.1" stroke="#d9d8d3" stroke-width="1"/>
+<text x="494.6" y="363.6" text-anchor="start" font-size="12" fill="#0b0b0b">Aderência ao problema (2)</text>
+<line x1="380" y1="245" x2="380.0" y2="395.0" stroke="#d9d8d3" stroke-width="1"/>
+<text x="380.0" y="411.0" text-anchor="middle" font-size="12" fill="#0b0b0b">Economia (2)</text>
+<line x1="380" y1="245" x2="273.9" y2="351.1" stroke="#d9d8d3" stroke-width="1"/>
+<text x="265.4" y="363.6" text-anchor="end" font-size="12" fill="#0b0b0b">Escalabilidade (2)</text>
+<line x1="380" y1="245" x2="230.0" y2="245.0" stroke="#d9d8d3" stroke-width="1"/>
+<text x="218.0" y="249.0" text-anchor="end" font-size="12" fill="#0b0b0b">Simplicidade (2)</text>
+<line x1="380" y1="245" x2="273.9" y2="138.9" stroke="#d9d8d3" stroke-width="1"/>
+<text x="265.4" y="134.4" text-anchor="end" font-size="12" fill="#0b0b0b">Portabilidade (1)</text>
+<polygon points="380.0,125.0 464.9,160.1 440.0,245.0 443.6,308.6 380.0,305.0 337.6,287.4 260.0,245.0 273.9,138.9" fill="#1baf7a" fill-opacity="0.08" stroke="#1baf7a" stroke-width="2" stroke-linejoin="round" stroke-dasharray="2 4"/>
+<polygon points="380.0,118.0 387.0,125.0 380.0,132.0 373.0,125.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>RabbitMQ autogerenciado, Alinhamento com o negócio: 4</title></polygon>
+<polygon points="464.9,153.1 471.9,160.1 464.9,167.1 457.9,160.1" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>RabbitMQ autogerenciado, Confiabilidade: 4</title></polygon>
+<polygon points="440.0,238.0 447.0,245.0 440.0,252.0 433.0,245.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>RabbitMQ autogerenciado, Operabilidade: 2</title></polygon>
+<polygon points="443.6,301.6 450.6,308.6 443.6,315.6 436.6,308.6" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>RabbitMQ autogerenciado, Aderência ao problema: 3</title></polygon>
+<polygon points="380.0,298.0 387.0,305.0 380.0,312.0 373.0,305.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>RabbitMQ autogerenciado, Economia: 2</title></polygon>
+<polygon points="337.6,280.4 344.6,287.4 337.6,294.4 330.6,287.4" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>RabbitMQ autogerenciado, Escalabilidade: 2</title></polygon>
+<polygon points="260.0,238.0 267.0,245.0 260.0,252.0 253.0,245.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>RabbitMQ autogerenciado, Simplicidade: 4</title></polygon>
+<polygon points="273.9,131.9 280.9,138.9 273.9,145.9 266.9,138.9" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>RabbitMQ autogerenciado, Portabilidade: 5</title></polygon>
+<polygon points="380.0,95.0 486.1,138.9 500.0,245.0 422.4,287.4 380.0,335.0 295.1,329.9 290.0,245.0 273.9,138.9" fill="#eb6834" fill-opacity="0.08" stroke="#eb6834" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 4"/>
+<rect x="375.0" y="90.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Kafka gerenciado, Alinhamento com o negócio: 5</title></rect>
+<rect x="481.1" y="133.9" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Kafka gerenciado, Confiabilidade: 5</title></rect>
+<rect x="495.0" y="240.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Kafka gerenciado, Operabilidade: 4</title></rect>
+<rect x="417.4" y="282.4" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Kafka gerenciado, Aderência ao problema: 2</title></rect>
+<rect x="375.0" y="330.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Kafka gerenciado, Economia: 3</title></rect>
+<rect x="290.1" y="324.9" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Kafka gerenciado, Escalabilidade: 4</title></rect>
+<rect x="285.0" y="240.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Kafka gerenciado, Simplicidade: 3</title></rect>
+<rect x="268.9" y="133.9" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Kafka gerenciado, Portabilidade: 5</title></rect>
+<polygon points="380.0,95.0 486.1,138.9 500.0,245.0 443.6,308.6 380.0,335.0 273.9,351.1 260.0,245.0 337.6,202.6" fill="#2a78d6" fill-opacity="0.08" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="380.0" cy="95.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Pub/Sub, Alinhamento com o negócio: 5</title></circle>
+<circle cx="486.1" cy="138.9" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Pub/Sub, Confiabilidade: 5</title></circle>
+<circle cx="500.0" cy="245.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Pub/Sub, Operabilidade: 4</title></circle>
+<circle cx="443.6" cy="308.6" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Pub/Sub, Aderência ao problema: 3</title></circle>
+<circle cx="380.0" cy="335.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Pub/Sub, Economia: 3</title></circle>
+<circle cx="273.9" cy="351.1" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Pub/Sub, Escalabilidade: 5</title></circle>
+<circle cx="260.0" cy="245.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Pub/Sub, Simplicidade: 4</title></circle>
+<circle cx="337.6" cy="202.6" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Pub/Sub, Portabilidade: 2</title></circle>
+<line x1="24" y1="465" x2="60" y2="465" stroke="#2a78d6" stroke-width="2"/>
+<circle cx="42.0" cy="465.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"></circle>
+<text x="70" y="469" font-size="13" fill="#0b0b0b">Pub/Sub (escolhida): 4,16</text>
+<line x1="24" y1="491" x2="60" y2="491" stroke="#eb6834" stroke-width="2" stroke-dasharray="7 4"/>
+<rect x="37.0" y="486.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"></rect>
+<text x="70" y="495" font-size="13" fill="#0b0b0b">Kafka gerenciado: 4,00</text>
+<line x1="24" y1="517" x2="60" y2="517" stroke="#1baf7a" stroke-width="2" stroke-dasharray="2 4"/>
+<polygon points="42.0,510.0 49.0,517.0 42.0,524.0 35.0,517.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"></polygon>
+<text x="70" y="521" font-size="13" fill="#0b0b0b">RabbitMQ autogerenciado: 3,21</text>
 </svg>

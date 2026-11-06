@@ -17,15 +17,16 @@ Usar ASP.NET Core Minimal APIs, com REST e JSON, rotas em `/v1` e erros no forma
 <!-- radar:start -->
 ![Radar de Estilo da API HTTP](radar/ADR-0020.svg)
 
-| Pilar | **Minimal APIs** | Controllers MVC | gRPC |
-|---|---:|---:|---:|
-| Segurança | 4 | 4 | 4 |
-| Desempenho | 5 | 4 | 5 |
-| Escalabilidade | 4 | 4 | 5 |
-| Confiabilidade | 4 | 4 | 4 |
-| Custo | 4 | 4 | 4 |
-| Simplicidade | 5 | 3 | 2 |
-| Operabilidade | 4 | 4 | 2 |
+| Critério | Peso | **Minimal APIs** | Controllers MVC | gRPC |
+|---|---:|---:|---:|---:|
+| Alinhamento com o negócio | 4 | 5 | 5 | 2 |
+| Operabilidade | 2 | 4 | 5 | 4 |
+| Portabilidade | 2 | 5 | 5 | 5 |
+| Simplicidade | 2 | 5 | 4 | 3 |
+| Desempenho | 1 | 5 | 4 | 5 |
+| **Resultado** | | **4,82** | **4,73** | **3,36** |
+
+As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0020).
 <!-- radar:end -->
 
 ## Leitura do radar

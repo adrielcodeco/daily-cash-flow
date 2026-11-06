@@ -16,15 +16,19 @@ Usar Pub/Sub, com tópico de mensagens mortas. O ambiente local usa o emulador. 
 <!-- radar:start -->
 ![Radar de Mensageria](radar/ADR-0003.svg)
 
-| Pilar | **Pub/Sub** | RabbitMQ autogerenciado | Kafka gerenciado |
-|---|---:|---:|---:|
-| Segurança | 5 | 3 | 4 |
-| Desempenho | 4 | 4 | 5 |
-| Escalabilidade | 5 | 3 | 5 |
-| Confiabilidade | 5 | 3 | 4 |
-| Custo | 4 | 3 | 2 |
-| Simplicidade | 4 | 3 | 2 |
-| Operabilidade | 5 | 2 | 3 |
+| Critério | Peso | **Pub/Sub** | Kafka gerenciado | RabbitMQ autogerenciado |
+|---|---:|---:|---:|---:|
+| Alinhamento com o negócio | 4 | 5 | 5 | 4 |
+| Confiabilidade | 3 | 5 | 5 | 4 |
+| Operabilidade | 3 | 4 | 4 | 2 |
+| Aderência ao problema | 2 | 3 | 2 | 3 |
+| Economia | 2 | 3 | 3 | 2 |
+| Escalabilidade | 2 | 5 | 4 | 2 |
+| Simplicidade | 2 | 4 | 3 | 4 |
+| Portabilidade | 1 | 2 | 5 | 5 |
+| **Resultado** | | **4,16** | **4,00** | **3,21** |
+
+As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0003).
 <!-- radar:end -->
 
 ## Leitura do radar

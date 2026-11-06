@@ -17,15 +17,17 @@ Usar DbUp com arquivos SQL embutidos no projeto de infraestrutura. A migração 
 <!-- radar:start -->
 ![Radar de Migrações de esquema](radar/ADR-0013.svg)
 
-| Pilar | **DbUp com SQL** | EF Core Migrations | Flyway |
-|---|---:|---:|---:|
-| Segurança | 4 | 4 | 4 |
-| Desempenho | 4 | 4 | 4 |
-| Escalabilidade | 4 | 4 | 4 |
-| Confiabilidade | 4 | 3 | 4 |
-| Custo | 5 | 5 | 4 |
-| Simplicidade | 4 | 3 | 3 |
-| Operabilidade | 4 | 3 | 4 |
+| Critério | Peso | **DbUp com SQL** | Flyway | EF Core Migrations |
+|---|---:|---:|---:|---:|
+| Alinhamento com o negócio | 4 | 5 | 4 | 4 |
+| Simplicidade | 3 | 5 | 4 | 3 |
+| Aderência ao problema | 2 | 5 | 5 | 2 |
+| Operabilidade | 2 | 5 | 4 | 5 |
+| Economia | 1 | 5 | 5 | 4 |
+| Portabilidade | 1 | 5 | 5 | 5 |
+| **Resultado** | | **5,00** | **4,31** | **3,69** |
+
+As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0013).
 <!-- radar:end -->
 
 ## Leitura do radar

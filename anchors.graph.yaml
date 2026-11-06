@@ -65,7 +65,7 @@ nodes:
     - id: product/ledger-immutability.doctrine.md
       kind: product
       rev: a3c10a3b6809
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: LDIMM
       file_code: LDIMM
       layer: product
@@ -78,7 +78,7 @@ nodes:
     - id: product/merchant-isolation.doctrine.md
       kind: product
       rev: 1ac1e5892037
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: MRISO
       file_code: MRISO
       layer: product
@@ -233,6 +233,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Core/CachePolicy.cs
       kind: code
       rev: 1ba8a8800c51
+      updated_at: "2026-11-06"
       code: CBSTR
       file_code: CBPOL
       layer: core
@@ -244,6 +245,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Core/CachedBalanceStore.cs
       kind: code
       rev: a0a776300b47
+      updated_at: "2026-11-06"
       code: CBSTR
       file_code: CBSCD
       layer: core
@@ -255,6 +257,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Core/CachedBalanceStore.feature
       kind: feature
       rev: 2dbef16e9a9e
+      updated_at: "2026-11-06"
       code: CBSTR
       file_code: CBSFT
       layer: feature
@@ -265,6 +268,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Core/CachedBalanceStore.spec.md
       kind: spec
       rev: 4f0c9162247e
+      updated_at: "2026-11-06"
       code: CBSTR
       file_code: CBSTR
       layer: spec
@@ -277,6 +281,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Core/CachedBalanceStore.test.cs
       kind: test
       rev: 30a8b8a2ab88
+      updated_at: "2026-11-06"
       code: CBSTR
       file_code: CBSTS
       layer: test
@@ -346,7 +351,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Core/GetDailyBalance.cs
       kind: code
       rev: 940edf1dd0ef
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: GTBAL
       file_code: GTBCD
       layer: core
@@ -358,7 +363,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Core/GetDailyBalance.feature
       kind: feature
       rev: 6a2a4f5c8d35
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: GTBAL
       file_code: GTBFT
       layer: feature
@@ -369,7 +374,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Core/GetDailyBalance.spec.md
       kind: spec
       rev: 77eb23357b24
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: GTBAL
       file_code: GTBAL
       layer: spec
@@ -382,7 +387,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Core/GetDailyBalance.test.cs
       kind: test
       rev: 319daf1c2618
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: GTBAL
       file_code: GTBTS
       layer: test
@@ -455,7 +460,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Core/IBalanceStore.cs
       kind: code
       rev: 04d32fb7353e
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: APENT
       file_code: IBSTR
       layer: core
@@ -523,6 +528,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Infrastructure/BalanceStoreRegistration.cs
       kind: code
       rev: 893286e90c87
+      updated_at: "2026-11-06"
       code: CNREG
       file_code: CNREG
       layer: infrastructure
@@ -550,6 +556,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Infrastructure/DapperSetup.cs
       kind: code
       rev: bb68f6118db5
+      updated_at: "2026-11-06"
       code: CNDAP
       file_code: CNDAP
       layer: infrastructure
@@ -577,7 +584,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Infrastructure/PostgresBalanceStore.cs
       kind: code
       rev: 109c8b0e7fa5
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: APENT
       file_code: PGBST
       layer: infrastructure
@@ -604,6 +611,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Infrastructure/RedisQueryCache.cs
       kind: code
       rev: 95ce07778f5d
+      updated_at: "2026-11-06"
       code: CBSTR
       file_code: RDQCH
       layer: infrastructure
@@ -700,6 +708,7 @@ nodes:
     - id: services/ledger/src/Ledger.Core/CachePolicy.cs
       kind: code
       rev: 0c4cc6dbce6a
+      updated_at: "2026-11-06"
       code: CESTR
       file_code: CEPOL
       layer: core
@@ -711,6 +720,7 @@ nodes:
     - id: services/ledger/src/Ledger.Core/CachedEntryStore.cs
       kind: code
       rev: 51dca43c8655
+      updated_at: "2026-11-06"
       code: CESTR
       file_code: CESCD
       layer: core
@@ -722,6 +732,7 @@ nodes:
     - id: services/ledger/src/Ledger.Core/CachedEntryStore.feature
       kind: feature
       rev: f05855bb75cc
+      updated_at: "2026-11-06"
       code: CESTR
       file_code: CESFT
       layer: feature
@@ -732,6 +743,7 @@ nodes:
     - id: services/ledger/src/Ledger.Core/CachedEntryStore.spec.md
       kind: spec
       rev: 9a53435b98c4
+      updated_at: "2026-11-06"
       code: CESTR
       file_code: CESTR
       layer: spec
@@ -744,6 +756,7 @@ nodes:
     - id: services/ledger/src/Ledger.Core/CachedEntryStore.test.cs
       kind: test
       rev: 66f59b79e518
+      updated_at: "2026-11-06"
       code: CESTR
       file_code: CESTS
       layer: test
@@ -820,7 +833,7 @@ nodes:
     - id: services/ledger/src/Ledger.Core/IEntryStore.cs
       kind: code
       rev: 979095bee094
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: RCENT
       file_code: IESTR
       layer: core
@@ -906,7 +919,7 @@ nodes:
     - id: services/ledger/src/Ledger.Core/LedgerFakes.test.cs
       kind: test
       rev: e8d4a69b9c0d
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: LDFKS
       file_code: LDFKS
       layer: test
@@ -945,7 +958,7 @@ nodes:
     - id: services/ledger/src/Ledger.Core/ListEntries.feature
       kind: feature
       rev: 096b7cdf8c80
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: LSTEN
       file_code: LSTFT
       layer: feature
@@ -956,7 +969,7 @@ nodes:
     - id: services/ledger/src/Ledger.Core/ListEntries.spec.md
       kind: spec
       rev: 84616fa623f1
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: LSTEN
       file_code: LSTEN
       layer: spec
@@ -969,7 +982,7 @@ nodes:
     - id: services/ledger/src/Ledger.Core/ListEntries.test.cs
       kind: test
       rev: 63428cd6a278
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: LSTEN
       file_code: LSTTS
       layer: test
@@ -1214,6 +1227,7 @@ nodes:
     - id: services/ledger/src/Ledger.Infrastructure/DapperSetup.cs
       kind: code
       rev: 351722a8f070
+      updated_at: "2026-11-06"
       code: LDDAP
       file_code: LDDAP
       layer: infrastructure
@@ -1241,6 +1255,7 @@ nodes:
     - id: services/ledger/src/Ledger.Infrastructure/EntryStoreRegistration.cs
       kind: code
       rev: 6e0ab260bf73
+      updated_at: "2026-11-06"
       code: LDREG
       file_code: LDREG
       layer: infrastructure
@@ -1307,6 +1322,7 @@ nodes:
     - id: services/ledger/src/Ledger.Infrastructure/RedisQueryCache.cs
       kind: code
       rev: 1107af60a368
+      updated_at: "2026-11-06"
       code: CESTR
       file_code: RDECH
       layer: infrastructure

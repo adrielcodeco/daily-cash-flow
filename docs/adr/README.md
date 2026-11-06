@@ -28,32 +28,15 @@ Cada ADR registra o contexto, as opções, a decisão, as consequências e o gat
 
 ## Como ler os radares
 
-Todos os radares usam os mesmos sete pilares e a mesma escala. O [método dos radares](../20-metodo-dos-radares.md) explica a régua, como as notas foram dadas e os limites delas. As notas são uma avaliação qualitativa para este problema e esta escala de carga. Elas não são medições e não valem para qualquer sistema.
+Cada decisão tem seus critérios, pesos e opções. O peso aparece ao lado do nome de cada critério. A nota vai de 1 a 5, e sai de 4 perguntas de sim ou não. Quanto mais longe do centro, melhor. O resultado é a média ponderada, e opção com veto é eliminada.
 
-| Nota | Significado |
-|---:|---|
-| 1 | Crítico: compromete o requisito ou exige grande compensação |
-| 2 | Fraco: atende com esforço relevante |
-| 3 | Adequado: atende sem vantagem |
-| 4 | Bom: atende com folga |
-| 5 | Excelente: é um ponto forte da opção |
-
-| Pilar | Pergunta |
-|---|---|
-| Segurança | Quão bem protege dados e acesso, e quão fácil é auditar? |
-| Desempenho | Quão baixas são a latência e o consumo de recursos? |
-| Escalabilidade | Quão bem acompanha o crescimento da carga? |
-| Confiabilidade | Quão bem isola falhas e evita perda de dados? |
-| Custo | Quão baixo é o custo total? Nota maior significa mais barato |
-| Simplicidade | Quão fácil é construir e entender? |
-| Operabilidade | Quão fácil é operar, observar e manter com a equipe do cliente? |
-
-Um polígono maior não decide sozinho. O pilar que atende ao requisito central pesa mais, e cada ADR explica esse peso em "Leitura do radar". Sempre há três opções no gráfico para mantê-lo legível. Outras alternativas aparecem no texto.
+O resultado apoia a decisão do arquiteto, e não a substitui. O [método dos radares](../20-metodo-dos-radares.md) explica a régua e os limites, e a [avaliação dos radares](../21-avaliacao-dos-radares.md) traz a evidência de cada nota.
 
 ## Atualizar os radares
 
-As notas ficam em `radar/data.json`. O comando abaixo gera os SVGs e atualiza as tabelas dos ADRs:
+As notas ficam em `radar/data.json`. Os comandos abaixo geram os SVGs, atualizam as tabelas dos ADRs e refazem o método e a avaliação:
 
 ```bash
 node tools/radar/generate.mjs
+node tools/radar/method.mjs
 ```

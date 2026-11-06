@@ -17,15 +17,19 @@ Consultar a outbox em lotes, com `FOR UPDATE SKIP LOCKED`, publicar cada evento 
 <!-- radar:start -->
 ![Radar de Envio da outbox](radar/ADR-0015.svg)
 
-| Pilar | **Consulta periódica** | LISTEN/NOTIFY | CDC |
-|---|---:|---:|---:|
-| Segurança | 4 | 4 | 3 |
-| Desempenho | 3 | 4 | 5 |
-| Escalabilidade | 3 | 3 | 5 |
-| Confiabilidade | 5 | 4 | 4 |
-| Custo | 5 | 5 | 2 |
-| Simplicidade | 5 | 3 | 2 |
-| Operabilidade | 4 | 3 | 2 |
+| Critério | Peso | **Consulta periódica com SKIP LOCKED** | LISTEN/NOTIFY com consulta de segurança | CDC |
+|---|---:|---:|---:|---:|
+| Alinhamento com o negócio | 4 | 5 | 5 | 4 |
+| Confiabilidade | 3 | 5 | 5 | 3 |
+| Operabilidade | 3 | 5 | 4 | 2 |
+| Aderência ao problema | 2 | 5 | 3 | 4 |
+| Desempenho | 2 | 5 | 4 | 5 |
+| Escalabilidade | 2 | 5 | 4 | 3 |
+| Simplicidade | 2 | 5 | 3 | 2 |
+| Economia | 1 | 5 | 5 | 3 |
+| **Resultado** | | **5,00** | **4,21** | **3,26** |
+
+As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0015).
 <!-- radar:end -->
 
 ## Leitura do radar

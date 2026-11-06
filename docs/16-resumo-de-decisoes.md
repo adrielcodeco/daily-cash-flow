@@ -1,6 +1,6 @@
 # Resumo das decisões
 
-Lista de tudo o que ficou decidido, com 317 itens, sem os trade-offs. Os motivos estão nos [ADRs](adr/README.md) e no [registro de decisões](15-registro-de-decisoes.md).
+Lista de tudo o que ficou decidido, com 323 itens, sem os trade-offs. Os motivos estão nos [ADRs](adr/README.md) e no [registro de decisões](15-registro-de-decisoes.md).
 
 Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decisions/generate.mjs`.
 
@@ -179,7 +179,7 @@ Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decis
 | ID | Decisão |
 |---|---|
 | D-43 | Documentação em pt-BR, código em en-US |
-| D-45 | Nota de radar é qualitativa, com sete pilares e três opções |
+| D-45 | Nota de radar sai de 4 perguntas de sim ou não, com critérios, pesos e opções por decisão |
 | D-46 | Preços de lista em São Paulo, sem desconto |
 | D-47 | Volumes de custo são premissas, e só o pico vem do desafio |
 
@@ -314,6 +314,11 @@ Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decis
 | D-143 | Papéis separados por processo: migração, API e worker |
 | D-144 | Worker ignora o RLS, porque atende todos os comerciantes |
 | D-145 | Leitura da API em transação, para definir o comerciante |
+| D-146 | Opção com veto é eliminada |
+| D-147 | C# é preferência de negócio, e não restrição |
+| D-148 | Alinhamento com o negócio tem peso 4 em toda decisão |
+| D-149 | Avaliação feita às cegas, com ajustes do arquiteto registrados |
+| D-150 | Manter Cloud SQL, com AlloyDB 5 para 4 em Alinhamento |
 | D-115 | Horizonte de 36 meses, sem impostos e sem cancelamento de clientes |
 
 ## Regras de negócio

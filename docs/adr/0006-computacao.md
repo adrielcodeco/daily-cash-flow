@@ -16,15 +16,20 @@ Usar Cloud Run com instância mínima, com o publicador e o consumidor em CPU se
 <!-- radar:start -->
 ![Radar de Plataforma de computação](radar/ADR-0006.svg)
 
-| Pilar | **Cloud Run** | GKE Autopilot | Compute Engine |
-|---|---:|---:|---:|
-| Segurança | 4 | 4 | 3 |
-| Desempenho | 4 | 5 | 4 |
-| Escalabilidade | 5 | 5 | 3 |
-| Confiabilidade | 4 | 5 | 3 |
-| Custo | 4 | 3 | 3 |
-| Simplicidade | 5 | 2 | 3 |
-| Operabilidade | 5 | 3 | 2 |
+| Critério | Peso | **Cloud Run** | GKE Autopilot | Compute Engine |
+|---|---:|---:|---:|---:|
+| Alinhamento com o negócio | 4 | 5 | 5 | 3 |
+| Confiabilidade | 3 | 5 | 5 | 5 |
+| Operabilidade | 3 | 4 | 4 | 3 |
+| Desempenho | 2 | 4 | 5 | 5 |
+| Economia | 2 | 4 | 3 | 2 |
+| Escalabilidade | 2 | 5 | 5 | 4 |
+| Simplicidade | 2 | 4 | 3 | 3 |
+| Portabilidade | 1 | 5 | 5 | 5 |
+| Segurança | 1 | 4 | 3 | 3 |
+| **Resultado** | | **4,50** | **4,35** | **3,60** |
+
+As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0006).
 <!-- radar:end -->
 
 ## Leitura do radar

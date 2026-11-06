@@ -16,15 +16,21 @@ Usar PostgreSQL em instâncias separadas por serviço, com Cloud SQL em alta dis
 <!-- radar:start -->
 ![Radar de Banco de dados](radar/ADR-0004.svg)
 
-| Pilar | **Cloud SQL para PostgreSQL** | Spanner | Firestore |
-|---|---:|---:|---:|
-| Segurança | 4 | 5 | 4 |
-| Desempenho | 4 | 4 | 4 |
-| Escalabilidade | 3 | 5 | 5 |
-| Confiabilidade | 4 | 5 | 4 |
-| Custo | 4 | 1 | 4 |
-| Simplicidade | 5 | 3 | 3 |
-| Operabilidade | 4 | 4 | 5 |
+| Critério | Peso | **Cloud SQL para PostgreSQL** | AlloyDB | Spanner | Firestore |
+|---|---:|---:|---:|---:|---:|
+| Alinhamento com o negócio | 4 | 5 | 4 | 5 | 4 |
+| Aderência ao problema | 3 | 5 | 4 | 4 | 3 |
+| Confiabilidade | 3 | 5 | 5 | 5 | 5 |
+| Operabilidade | 3 | 3 | 4 | 4 | 4 |
+| Segurança | 3 | 5 | 5 | 4 | 4 |
+| Desempenho | 2 | 5 | 5 | 4 | 3 |
+| Economia | 2 | 3 | 3 | 2 | 2 |
+| Escalabilidade | 2 | 2 | 3 | 5 | 4 |
+| Simplicidade | 2 | 4 | 4 | 2 | 2 |
+| Portabilidade | 1 | 5 | 4 | 1 | 1 |
+| **Resultado** | | **4,28** | **4,16** | **3,92** | **3,48** |
+
+As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0004).
 <!-- radar:end -->
 
 ## Leitura do radar
@@ -42,6 +48,10 @@ Spanner tem a melhor escala e confiabilidade, mas seu custo não se justifica pa
 
 - A escrita escala verticalmente até haver particionamento
 - Há duas instâncias para manter
+
+## Decisão do arquiteto
+
+Na avaliação às cegas, AlloyDB ficou 0,04 à frente. O autor reduziu a nota dele em Alinhamento de 5 para 4, porque a capacidade está acima da necessidade atual do negócio, conforme o princípio P6. O Cloud SQL atende às mesmas garantias. O preço do AlloyDB ainda precisa ser confirmado na calculadora do GCP.
 
 ## Gatilho de revisão
 

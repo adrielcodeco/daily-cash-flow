@@ -1,62 +1,63 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 528" role="img" aria-label="Separação de processos" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 551" role="img" aria-label="Separação de processos" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
 <title>ADR-0014: Separação de processos</title>
-<rect width="680" height="528" fill="#fcfcfb"/>
+<rect width="760" height="551" fill="#fcfcfb"/>
 <text x="24" y="30" font-size="16" font-weight="600" fill="#0b0b0b">Separação de processos</text>
-<polygon points="340.0,202.0 365.8,214.4 372.2,242.3 354.3,264.7 325.7,264.7 307.8,242.3 314.2,214.4" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="214.0" font-size="10" fill="#52514e">1</text>
-<polygon points="340.0,169.0 391.6,193.8 404.3,249.7 368.6,294.5 311.4,294.5 275.7,249.7 288.4,193.8" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="181.0" font-size="10" fill="#52514e">2</text>
-<polygon points="340.0,136.0 417.4,173.3 436.5,257.0 383.0,324.2 297.0,324.2 243.5,257.0 262.6,173.3" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="148.0" font-size="10" fill="#52514e">3</text>
-<polygon points="340.0,103.0 443.2,152.7 468.7,264.4 397.3,353.9 282.7,353.9 211.3,264.4 236.8,152.7" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="115.0" font-size="10" fill="#52514e">4</text>
-<polygon points="340.0,70.0 469.0,132.1 500.9,271.7 411.6,383.7 268.4,383.7 179.1,271.7 211.0,132.1" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="82.0" font-size="10" fill="#52514e">5</text>
-<line x1="340" y1="235" x2="340.0" y2="70.0" stroke="#d9d8d3" stroke-width="1"/>
-<text x="340.0" y="59.2" text-anchor="middle" font-size="13" fill="#0b0b0b">Segurança</text>
-<line x1="340" y1="235" x2="469.0" y2="132.1" stroke="#d9d8d3" stroke-width="1"/>
-<text x="480.6" y="126.9" text-anchor="start" font-size="13" fill="#0b0b0b">Desempenho</text>
-<line x1="340" y1="235" x2="500.9" y2="271.7" stroke="#d9d8d3" stroke-width="1"/>
-<text x="515.3" y="279.0" text-anchor="start" font-size="13" fill="#0b0b0b">Escalabilidade</text>
-<line x1="340" y1="235" x2="411.6" y2="383.7" stroke="#d9d8d3" stroke-width="1"/>
-<text x="418.0" y="401.0" text-anchor="start" font-size="13" fill="#0b0b0b">Confiabilidade</text>
-<line x1="340" y1="235" x2="268.4" y2="383.7" stroke="#d9d8d3" stroke-width="1"/>
-<text x="262.0" y="401.0" text-anchor="end" font-size="13" fill="#0b0b0b">Custo</text>
-<line x1="340" y1="235" x2="179.1" y2="271.7" stroke="#d9d8d3" stroke-width="1"/>
-<text x="164.7" y="279.0" text-anchor="end" font-size="13" fill="#0b0b0b">Simplicidade</text>
-<line x1="340" y1="235" x2="211.0" y2="132.1" stroke="#d9d8d3" stroke-width="1"/>
-<text x="199.4" y="126.9" text-anchor="end" font-size="13" fill="#0b0b0b">Operabilidade</text>
-<polygon points="340.0,103.0 391.6,193.8 436.5,257.0 397.3,353.9 282.7,353.9 211.3,264.4 262.6,173.3" fill="#1baf7a" fill-opacity="0.08" stroke="#1baf7a" stroke-width="2" stroke-linejoin="round" stroke-dasharray="2 4"/>
-<polygon points="340.0,96.0 347.0,103.0 340.0,110.0 333.0,103.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Job agendado, Segurança: 4</title></polygon>
-<polygon points="391.6,186.8 398.6,193.8 391.6,200.8 384.6,193.8" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Job agendado, Desempenho: 2</title></polygon>
-<polygon points="436.5,250.0 443.5,257.0 436.5,264.0 429.5,257.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Job agendado, Escalabilidade: 3</title></polygon>
-<polygon points="397.3,346.9 404.3,353.9 397.3,360.9 390.3,353.9" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Job agendado, Confiabilidade: 4</title></polygon>
-<polygon points="282.7,346.9 289.7,353.9 282.7,360.9 275.7,353.9" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Job agendado, Custo: 4</title></polygon>
-<polygon points="211.3,257.4 218.3,264.4 211.3,271.4 204.3,264.4" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Job agendado, Simplicidade: 4</title></polygon>
-<polygon points="262.6,166.3 269.6,173.3 262.6,180.3 255.6,173.3" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Job agendado, Operabilidade: 3</title></polygon>
-<polygon points="340.0,103.0 417.4,173.3 436.5,257.0 383.0,324.2 268.4,383.7 179.1,271.7 262.6,173.3" fill="#eb6834" fill-opacity="0.08" stroke="#eb6834" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 4"/>
-<rect x="335.0" y="98.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Worker dentro da API, Segurança: 4</title></rect>
-<rect x="412.4" y="168.3" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Worker dentro da API, Desempenho: 3</title></rect>
-<rect x="431.5" y="252.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Worker dentro da API, Escalabilidade: 3</title></rect>
-<rect x="378.0" y="319.2" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Worker dentro da API, Confiabilidade: 3</title></rect>
-<rect x="263.4" y="378.7" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Worker dentro da API, Custo: 5</title></rect>
-<rect x="174.1" y="266.7" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Worker dentro da API, Simplicidade: 5</title></rect>
-<rect x="257.6" y="168.3" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Worker dentro da API, Operabilidade: 3</title></rect>
-<polygon points="340.0,103.0 443.2,152.7 500.9,271.7 411.6,383.7 297.0,324.2 243.5,257.0 236.8,152.7" fill="#2a78d6" fill-opacity="0.08" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
-<circle cx="340.0" cy="103.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Processos separados, Segurança: 4</title></circle>
-<circle cx="443.2" cy="152.7" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Processos separados, Desempenho: 4</title></circle>
-<circle cx="500.9" cy="271.7" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Processos separados, Escalabilidade: 5</title></circle>
-<circle cx="411.6" cy="383.7" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Processos separados, Confiabilidade: 5</title></circle>
-<circle cx="297.0" cy="324.2" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Processos separados, Custo: 3</title></circle>
-<circle cx="243.5" cy="257.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Processos separados, Simplicidade: 3</title></circle>
-<circle cx="236.8" cy="152.7" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Processos separados, Operabilidade: 4</title></circle>
-<line x1="24" y1="450" x2="60" y2="450" stroke="#2a78d6" stroke-width="2"/>
-<circle cx="42.0" cy="450.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"></circle>
-<text x="70" y="454" font-size="13" fill="#0b0b0b">Processos separados (escolhida)</text>
-<line x1="24" y1="476" x2="60" y2="476" stroke="#eb6834" stroke-width="2" stroke-dasharray="7 4"/>
-<rect x="37.0" y="471.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"></rect>
-<text x="70" y="480" font-size="13" fill="#0b0b0b">Worker dentro da API</text>
-<line x1="24" y1="502" x2="60" y2="502" stroke="#1baf7a" stroke-width="2" stroke-dasharray="2 4"/>
-<polygon points="42.0,495.0 49.0,502.0 42.0,509.0 35.0,502.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"></polygon>
-<text x="70" y="506" font-size="13" fill="#0b0b0b">Job agendado</text>
+<text x="24" y="50" font-size="12" fill="#52514e">Quanto mais longe do centro, melhor</text>
+<polygon points="380.0,215.0 403.5,226.3 409.2,251.7 393.0,272.0 367.0,272.0 350.8,251.7 356.5,226.3" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="227.0" font-size="10" fill="#52514e">1</text>
+<polygon points="380.0,185.0 426.9,207.6 438.5,258.4 406.0,299.1 354.0,299.1 321.5,258.4 333.1,207.6" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="197.0" font-size="10" fill="#52514e">2</text>
+<polygon points="380.0,155.0 450.4,188.9 467.7,265.0 419.0,326.1 341.0,326.1 292.3,265.0 309.6,188.9" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="167.0" font-size="10" fill="#52514e">3</text>
+<polygon points="380.0,125.0 473.8,170.2 497.0,271.7 432.1,353.1 327.9,353.1 263.0,271.7 286.2,170.2" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="137.0" font-size="10" fill="#52514e">4</text>
+<polygon points="380.0,95.0 497.3,151.5 526.2,278.4 445.1,380.1 314.9,380.1 233.8,278.4 262.7,151.5" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="107.0" font-size="10" fill="#52514e">5</text>
+<line x1="380" y1="245" x2="380.0" y2="95.0" stroke="#d9d8d3" stroke-width="1"/>
+<text x="380.0" y="87.0" text-anchor="middle" font-size="12" fill="#0b0b0b">Alinhamento com o negócio (4)</text>
+<line x1="380" y1="245" x2="497.3" y2="151.5" stroke="#d9d8d3" stroke-width="1"/>
+<text x="506.7" y="148.0" text-anchor="start" font-size="12" fill="#0b0b0b">Confiabilidade (3)</text>
+<line x1="380" y1="245" x2="526.2" y2="278.4" stroke="#d9d8d3" stroke-width="1"/>
+<text x="537.9" y="285.0" text-anchor="start" font-size="12" fill="#0b0b0b">Desempenho (2)</text>
+<line x1="380" y1="245" x2="445.1" y2="380.1" stroke="#d9d8d3" stroke-width="1"/>
+<text x="450.3" y="395.0" text-anchor="start" font-size="12" fill="#0b0b0b">Economia (2)</text>
+<line x1="380" y1="245" x2="314.9" y2="380.1" stroke="#d9d8d3" stroke-width="1"/>
+<text x="309.7" y="395.0" text-anchor="end" font-size="12" fill="#0b0b0b">Escalabilidade (2)</text>
+<line x1="380" y1="245" x2="233.8" y2="278.4" stroke="#d9d8d3" stroke-width="1"/>
+<text x="222.1" y="285.0" text-anchor="end" font-size="12" fill="#0b0b0b">Operabilidade (2)</text>
+<line x1="380" y1="245" x2="262.7" y2="151.5" stroke="#d9d8d3" stroke-width="1"/>
+<text x="253.3" y="148.0" text-anchor="end" font-size="12" fill="#0b0b0b">Simplicidade (2)</text>
+<polygon points="380.0,125.0 473.8,170.2 467.7,265.0 432.1,353.1 354.0,299.1 233.8,278.4 262.7,151.5" fill="#1baf7a" fill-opacity="0.08" stroke="#1baf7a" stroke-width="2" stroke-linejoin="round" stroke-dasharray="2 4"/>
+<polygon points="380.0,118.0 387.0,125.0 380.0,132.0 373.0,125.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Worker dentro da API, Alinhamento com o negócio: 4</title></polygon>
+<polygon points="473.8,163.2 480.8,170.2 473.8,177.2 466.8,170.2" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Worker dentro da API, Confiabilidade: 4</title></polygon>
+<polygon points="467.7,258.0 474.7,265.0 467.7,272.0 460.7,265.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Worker dentro da API, Desempenho: 3</title></polygon>
+<polygon points="432.1,346.1 439.1,353.1 432.1,360.1 425.1,353.1" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Worker dentro da API, Economia: 4</title></polygon>
+<polygon points="354.0,292.1 361.0,299.1 354.0,306.1 347.0,299.1" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Worker dentro da API, Escalabilidade: 2</title></polygon>
+<polygon points="233.8,271.4 240.8,278.4 233.8,285.4 226.8,278.4" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Worker dentro da API, Operabilidade: 5</title></polygon>
+<polygon points="262.7,144.5 269.7,151.5 262.7,158.5 255.7,151.5" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Worker dentro da API, Simplicidade: 5</title></polygon>
+<polygon points="380.0,125.0 497.3,151.5 526.2,278.4 432.1,353.1 327.9,353.1 233.8,278.4 286.2,170.2" fill="#eb6834" fill-opacity="0.08" stroke="#eb6834" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 4"/>
+<rect x="375.0" y="120.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Job agendado, Alinhamento com o negócio: 4</title></rect>
+<rect x="492.3" y="146.5" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Job agendado, Confiabilidade: 5</title></rect>
+<rect x="521.2" y="273.4" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Job agendado, Desempenho: 5</title></rect>
+<rect x="427.1" y="348.1" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Job agendado, Economia: 4</title></rect>
+<rect x="322.9" y="348.1" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Job agendado, Escalabilidade: 4</title></rect>
+<rect x="228.8" y="273.4" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Job agendado, Operabilidade: 5</title></rect>
+<rect x="281.2" y="165.2" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Job agendado, Simplicidade: 4</title></rect>
+<polygon points="380.0,95.0 497.3,151.5 526.2,278.4 432.1,353.1 327.9,353.1 233.8,278.4 286.2,170.2" fill="#2a78d6" fill-opacity="0.08" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="380.0" cy="95.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Processos separados, Alinhamento com o negócio: 5</title></circle>
+<circle cx="497.3" cy="151.5" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Processos separados, Confiabilidade: 5</title></circle>
+<circle cx="526.2" cy="278.4" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Processos separados, Desempenho: 5</title></circle>
+<circle cx="432.1" cy="353.1" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Processos separados, Economia: 4</title></circle>
+<circle cx="327.9" cy="353.1" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Processos separados, Escalabilidade: 4</title></circle>
+<circle cx="233.8" cy="278.4" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Processos separados, Operabilidade: 5</title></circle>
+<circle cx="286.2" cy="170.2" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Processos separados, Simplicidade: 4</title></circle>
+<line x1="24" y1="465" x2="60" y2="465" stroke="#2a78d6" stroke-width="2"/>
+<circle cx="42.0" cy="465.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"></circle>
+<text x="70" y="469" font-size="13" fill="#0b0b0b">Processos separados (escolhida): 4,65</text>
+<line x1="24" y1="491" x2="60" y2="491" stroke="#eb6834" stroke-width="2" stroke-dasharray="7 4"/>
+<rect x="37.0" y="486.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"></rect>
+<text x="70" y="495" font-size="13" fill="#0b0b0b">Job agendado: 4,41</text>
+<line x1="24" y1="517" x2="60" y2="517" stroke="#1baf7a" stroke-width="2" stroke-dasharray="2 4"/>
+<polygon points="42.0,510.0 49.0,517.0 42.0,524.0 35.0,517.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"></polygon>
+<text x="70" y="521" font-size="13" fill="#0b0b0b">Worker dentro da API: 3,88</text>
 </svg>

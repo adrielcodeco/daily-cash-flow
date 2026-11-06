@@ -16,15 +16,17 @@ Usar o padrão strangler fig, com um gateway de roteamento, comparação de sald
 <!-- radar:start -->
 ![Radar de Estratégia de migração](radar/ADR-0010.svg)
 
-| Pilar | **Strangler fig** | Migração de uma vez | Escrita dupla |
-|---|---:|---:|---:|
-| Segurança | 4 | 3 | 3 |
-| Desempenho | 4 | 4 | 3 |
-| Escalabilidade | 4 | 4 | 3 |
-| Confiabilidade | 5 | 1 | 2 |
-| Custo | 2 | 4 | 3 |
-| Simplicidade | 3 | 4 | 2 |
-| Operabilidade | 4 | 2 | 2 |
+| Critério | Peso | **Strangler fig, por fases** | Migração de uma vez | Escrita dupla nos dois sistemas |
+|---|---:|---:|---:|---:|
+| Alinhamento com o negócio | 4 | 5 | 2 | Veto |
+| Aderência ao problema | 3 | 4 | 4 | Veto |
+| Confiabilidade | 3 | 4 | 2 | Veto |
+| Operabilidade | 2 | 5 | 3 | 4 |
+| Simplicidade | 2 | 3 | 4 | 3 |
+| Economia | 1 | 2 | 4 | 2 |
+| **Resultado** | | **4,13** | **2,93** | Eliminada |
+
+As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0010).
 <!-- radar:end -->
 
 ## Leitura do radar

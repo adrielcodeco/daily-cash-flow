@@ -1,62 +1,63 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 528" role="img" aria-label="Autenticação e autorização" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 551" role="img" aria-label="Autenticação e autorização" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
 <title>ADR-0008: Autenticação e autorização</title>
-<rect width="680" height="528" fill="#fcfcfb"/>
+<rect width="760" height="551" fill="#fcfcfb"/>
 <text x="24" y="30" font-size="16" font-weight="600" fill="#0b0b0b">Autenticação e autorização</text>
-<polygon points="340.0,202.0 365.8,214.4 372.2,242.3 354.3,264.7 325.7,264.7 307.8,242.3 314.2,214.4" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="214.0" font-size="10" fill="#52514e">1</text>
-<polygon points="340.0,169.0 391.6,193.8 404.3,249.7 368.6,294.5 311.4,294.5 275.7,249.7 288.4,193.8" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="181.0" font-size="10" fill="#52514e">2</text>
-<polygon points="340.0,136.0 417.4,173.3 436.5,257.0 383.0,324.2 297.0,324.2 243.5,257.0 262.6,173.3" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="148.0" font-size="10" fill="#52514e">3</text>
-<polygon points="340.0,103.0 443.2,152.7 468.7,264.4 397.3,353.9 282.7,353.9 211.3,264.4 236.8,152.7" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="115.0" font-size="10" fill="#52514e">4</text>
-<polygon points="340.0,70.0 469.0,132.1 500.9,271.7 411.6,383.7 268.4,383.7 179.1,271.7 211.0,132.1" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="82.0" font-size="10" fill="#52514e">5</text>
-<line x1="340" y1="235" x2="340.0" y2="70.0" stroke="#d9d8d3" stroke-width="1"/>
-<text x="340.0" y="59.2" text-anchor="middle" font-size="13" fill="#0b0b0b">Segurança</text>
-<line x1="340" y1="235" x2="469.0" y2="132.1" stroke="#d9d8d3" stroke-width="1"/>
-<text x="480.6" y="126.9" text-anchor="start" font-size="13" fill="#0b0b0b">Desempenho</text>
-<line x1="340" y1="235" x2="500.9" y2="271.7" stroke="#d9d8d3" stroke-width="1"/>
-<text x="515.3" y="279.0" text-anchor="start" font-size="13" fill="#0b0b0b">Escalabilidade</text>
-<line x1="340" y1="235" x2="411.6" y2="383.7" stroke="#d9d8d3" stroke-width="1"/>
-<text x="418.0" y="401.0" text-anchor="start" font-size="13" fill="#0b0b0b">Confiabilidade</text>
-<line x1="340" y1="235" x2="268.4" y2="383.7" stroke="#d9d8d3" stroke-width="1"/>
-<text x="262.0" y="401.0" text-anchor="end" font-size="13" fill="#0b0b0b">Custo</text>
-<line x1="340" y1="235" x2="179.1" y2="271.7" stroke="#d9d8d3" stroke-width="1"/>
-<text x="164.7" y="279.0" text-anchor="end" font-size="13" fill="#0b0b0b">Simplicidade</text>
-<line x1="340" y1="235" x2="211.0" y2="132.1" stroke="#d9d8d3" stroke-width="1"/>
-<text x="199.4" y="126.9" text-anchor="end" font-size="13" fill="#0b0b0b">Operabilidade</text>
-<polygon points="340.0,70.0 417.4,173.3 436.5,257.0 383.0,324.2 297.0,324.2 275.7,249.7 288.4,193.8" fill="#1baf7a" fill-opacity="0.08" stroke="#1baf7a" stroke-width="2" stroke-linejoin="round" stroke-dasharray="2 4"/>
-<polygon points="340.0,63.0 347.0,70.0 340.0,77.0 333.0,70.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>mTLS para todo cliente, Segurança: 5</title></polygon>
-<polygon points="417.4,166.3 424.4,173.3 417.4,180.3 410.4,173.3" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>mTLS para todo cliente, Desempenho: 3</title></polygon>
-<polygon points="436.5,250.0 443.5,257.0 436.5,264.0 429.5,257.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>mTLS para todo cliente, Escalabilidade: 3</title></polygon>
-<polygon points="383.0,317.2 390.0,324.2 383.0,331.2 376.0,324.2" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>mTLS para todo cliente, Confiabilidade: 3</title></polygon>
-<polygon points="297.0,317.2 304.0,324.2 297.0,331.2 290.0,324.2" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>mTLS para todo cliente, Custo: 3</title></polygon>
-<polygon points="275.7,242.7 282.7,249.7 275.7,256.7 268.7,249.7" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>mTLS para todo cliente, Simplicidade: 2</title></polygon>
-<polygon points="288.4,186.8 295.4,193.8 288.4,200.8 281.4,193.8" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>mTLS para todo cliente, Operabilidade: 2</title></polygon>
-<polygon points="340.0,169.0 469.0,132.1 468.7,264.4 397.3,353.9 268.4,383.7 179.1,271.7 262.6,173.3" fill="#eb6834" fill-opacity="0.08" stroke="#eb6834" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 4"/>
-<rect x="335.0" y="164.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Chaves de API, Segurança: 2</title></rect>
-<rect x="464.0" y="127.1" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Chaves de API, Desempenho: 5</title></rect>
-<rect x="463.7" y="259.4" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Chaves de API, Escalabilidade: 4</title></rect>
-<rect x="392.3" y="348.9" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Chaves de API, Confiabilidade: 4</title></rect>
-<rect x="263.4" y="378.7" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Chaves de API, Custo: 5</title></rect>
-<rect x="174.1" y="266.7" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Chaves de API, Simplicidade: 5</title></rect>
-<rect x="257.6" y="168.3" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Chaves de API, Operabilidade: 3</title></rect>
-<polygon points="340.0,70.0 443.2,152.7 500.9,271.7 397.3,353.9 282.7,353.9 243.5,257.0 236.8,152.7" fill="#2a78d6" fill-opacity="0.08" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
-<circle cx="340.0" cy="70.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Gateway, OIDC e JWT, Segurança: 5</title></circle>
-<circle cx="443.2" cy="152.7" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Gateway, OIDC e JWT, Desempenho: 4</title></circle>
-<circle cx="500.9" cy="271.7" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Gateway, OIDC e JWT, Escalabilidade: 5</title></circle>
-<circle cx="397.3" cy="353.9" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Gateway, OIDC e JWT, Confiabilidade: 4</title></circle>
-<circle cx="282.7" cy="353.9" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Gateway, OIDC e JWT, Custo: 4</title></circle>
-<circle cx="243.5" cy="257.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Gateway, OIDC e JWT, Simplicidade: 3</title></circle>
-<circle cx="236.8" cy="152.7" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Gateway, OIDC e JWT, Operabilidade: 4</title></circle>
-<line x1="24" y1="450" x2="60" y2="450" stroke="#2a78d6" stroke-width="2"/>
-<circle cx="42.0" cy="450.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"></circle>
-<text x="70" y="454" font-size="13" fill="#0b0b0b">Gateway, OIDC e JWT (escolhida)</text>
-<line x1="24" y1="476" x2="60" y2="476" stroke="#eb6834" stroke-width="2" stroke-dasharray="7 4"/>
-<rect x="37.0" y="471.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"></rect>
-<text x="70" y="480" font-size="13" fill="#0b0b0b">Chaves de API</text>
-<line x1="24" y1="502" x2="60" y2="502" stroke="#1baf7a" stroke-width="2" stroke-dasharray="2 4"/>
-<polygon points="42.0,495.0 49.0,502.0 42.0,509.0 35.0,502.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"></polygon>
-<text x="70" y="506" font-size="13" fill="#0b0b0b">mTLS para todo cliente</text>
+<text x="24" y="50" font-size="12" fill="#52514e">Quanto mais longe do centro, melhor</text>
+<polygon points="380.0,215.0 403.5,226.3 409.2,251.7 393.0,272.0 367.0,272.0 350.8,251.7 356.5,226.3" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="227.0" font-size="10" fill="#52514e">1</text>
+<polygon points="380.0,185.0 426.9,207.6 438.5,258.4 406.0,299.1 354.0,299.1 321.5,258.4 333.1,207.6" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="197.0" font-size="10" fill="#52514e">2</text>
+<polygon points="380.0,155.0 450.4,188.9 467.7,265.0 419.0,326.1 341.0,326.1 292.3,265.0 309.6,188.9" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="167.0" font-size="10" fill="#52514e">3</text>
+<polygon points="380.0,125.0 473.8,170.2 497.0,271.7 432.1,353.1 327.9,353.1 263.0,271.7 286.2,170.2" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="137.0" font-size="10" fill="#52514e">4</text>
+<polygon points="380.0,95.0 497.3,151.5 526.2,278.4 445.1,380.1 314.9,380.1 233.8,278.4 262.7,151.5" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="107.0" font-size="10" fill="#52514e">5</text>
+<line x1="380" y1="245" x2="380.0" y2="95.0" stroke="#d9d8d3" stroke-width="1"/>
+<text x="380.0" y="87.0" text-anchor="middle" font-size="12" fill="#0b0b0b">Alinhamento com o negócio (4)</text>
+<line x1="380" y1="245" x2="497.3" y2="151.5" stroke="#d9d8d3" stroke-width="1"/>
+<text x="506.7" y="148.0" text-anchor="start" font-size="12" fill="#0b0b0b">Segurança (3)</text>
+<line x1="380" y1="245" x2="526.2" y2="278.4" stroke="#d9d8d3" stroke-width="1"/>
+<text x="537.9" y="285.0" text-anchor="start" font-size="12" fill="#0b0b0b">Operabilidade (2)</text>
+<line x1="380" y1="245" x2="445.1" y2="380.1" stroke="#d9d8d3" stroke-width="1"/>
+<text x="450.3" y="395.0" text-anchor="start" font-size="12" fill="#0b0b0b">Simplicidade (2)</text>
+<line x1="380" y1="245" x2="314.9" y2="380.1" stroke="#d9d8d3" stroke-width="1"/>
+<text x="309.7" y="395.0" text-anchor="end" font-size="12" fill="#0b0b0b">Desempenho (1)</text>
+<line x1="380" y1="245" x2="233.8" y2="278.4" stroke="#d9d8d3" stroke-width="1"/>
+<text x="222.1" y="285.0" text-anchor="end" font-size="12" fill="#0b0b0b">Economia (1)</text>
+<line x1="380" y1="245" x2="262.7" y2="151.5" stroke="#d9d8d3" stroke-width="1"/>
+<text x="253.3" y="148.0" text-anchor="end" font-size="12" fill="#0b0b0b">Portabilidade (1)</text>
+<polygon points="380.0,155.0 450.4,188.9 467.7,265.0 406.0,299.1 327.9,353.1 292.3,265.0 286.2,170.2" fill="#1baf7a" fill-opacity="0.08" stroke="#1baf7a" stroke-width="2" stroke-linejoin="round" stroke-dasharray="2 4"/>
+<polygon points="380.0,148.0 387.0,155.0 380.0,162.0 373.0,155.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>mTLS para todo cliente, Alinhamento com o negócio: 3</title></polygon>
+<polygon points="450.4,181.9 457.4,188.9 450.4,195.9 443.4,188.9" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>mTLS para todo cliente, Segurança: 3</title></polygon>
+<polygon points="467.7,258.0 474.7,265.0 467.7,272.0 460.7,265.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>mTLS para todo cliente, Operabilidade: 3</title></polygon>
+<polygon points="406.0,292.1 413.0,299.1 406.0,306.1 399.0,299.1" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>mTLS para todo cliente, Simplicidade: 2</title></polygon>
+<polygon points="327.9,346.1 334.9,353.1 327.9,360.1 320.9,353.1" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>mTLS para todo cliente, Desempenho: 4</title></polygon>
+<polygon points="292.3,258.0 299.3,265.0 292.3,272.0 285.3,265.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>mTLS para todo cliente, Economia: 3</title></polygon>
+<polygon points="286.2,163.2 293.2,170.2 286.2,177.2 279.2,170.2" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>mTLS para todo cliente, Portabilidade: 4</title></polygon>
+<polygon points="380.0,155.0 426.9,207.6 497.0,271.7 432.1,353.1 327.9,353.1 233.8,278.4 286.2,170.2" fill="#eb6834" fill-opacity="0.08" stroke="#eb6834" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 4"/>
+<rect x="375.0" y="150.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Chaves de API, Alinhamento com o negócio: 3</title></rect>
+<rect x="421.9" y="202.6" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Chaves de API, Segurança: 2</title></rect>
+<rect x="492.0" y="266.7" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Chaves de API, Operabilidade: 4</title></rect>
+<rect x="427.1" y="348.1" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Chaves de API, Simplicidade: 4</title></rect>
+<rect x="322.9" y="348.1" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Chaves de API, Desempenho: 4</title></rect>
+<rect x="228.8" y="273.4" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Chaves de API, Economia: 5</title></rect>
+<rect x="281.2" y="165.2" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Chaves de API, Portabilidade: 4</title></rect>
+<polygon points="380.0,95.0 473.8,170.2 526.2,278.4 432.1,353.1 327.9,353.1 292.3,265.0 286.2,170.2" fill="#2a78d6" fill-opacity="0.08" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="380.0" cy="95.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Gateway, OIDC e JWT, Alinhamento com o negócio: 5</title></circle>
+<circle cx="473.8" cy="170.2" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Gateway, OIDC e JWT, Segurança: 4</title></circle>
+<circle cx="526.2" cy="278.4" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Gateway, OIDC e JWT, Operabilidade: 5</title></circle>
+<circle cx="432.1" cy="353.1" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Gateway, OIDC e JWT, Simplicidade: 4</title></circle>
+<circle cx="327.9" cy="353.1" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Gateway, OIDC e JWT, Desempenho: 4</title></circle>
+<circle cx="292.3" cy="265.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Gateway, OIDC e JWT, Economia: 3</title></circle>
+<circle cx="286.2" cy="170.2" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Gateway, OIDC e JWT, Portabilidade: 4</title></circle>
+<line x1="24" y1="465" x2="60" y2="465" stroke="#2a78d6" stroke-width="2"/>
+<circle cx="42.0" cy="465.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"></circle>
+<text x="70" y="469" font-size="13" fill="#0b0b0b">Gateway, OIDC e JWT (escolhida): 4,36</text>
+<line x1="24" y1="491" x2="60" y2="491" stroke="#eb6834" stroke-width="2" stroke-dasharray="7 4"/>
+<rect x="37.0" y="486.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"></rect>
+<text x="70" y="495" font-size="13" fill="#0b0b0b">Chaves de API: 3,36</text>
+<line x1="24" y1="517" x2="60" y2="517" stroke="#1baf7a" stroke-width="2" stroke-dasharray="2 4"/>
+<polygon points="42.0,510.0 49.0,517.0 42.0,524.0 35.0,517.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"></polygon>
+<text x="70" y="521" font-size="13" fill="#0b0b0b">mTLS para todo cliente: 3,00</text>
 </svg>

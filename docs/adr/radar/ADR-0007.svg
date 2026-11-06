@@ -1,62 +1,62 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 528" role="img" aria-label="Linguagem e plataforma" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 577" role="img" aria-label="Linguagem e plataforma" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
 <title>ADR-0007: Linguagem e plataforma</title>
-<rect width="680" height="528" fill="#fcfcfb"/>
+<rect width="760" height="577" fill="#fcfcfb"/>
 <text x="24" y="30" font-size="16" font-weight="600" fill="#0b0b0b">Linguagem e plataforma</text>
-<polygon points="340.0,202.0 365.8,214.4 372.2,242.3 354.3,264.7 325.7,264.7 307.8,242.3 314.2,214.4" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="214.0" font-size="10" fill="#52514e">1</text>
-<polygon points="340.0,169.0 391.6,193.8 404.3,249.7 368.6,294.5 311.4,294.5 275.7,249.7 288.4,193.8" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="181.0" font-size="10" fill="#52514e">2</text>
-<polygon points="340.0,136.0 417.4,173.3 436.5,257.0 383.0,324.2 297.0,324.2 243.5,257.0 262.6,173.3" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="148.0" font-size="10" fill="#52514e">3</text>
-<polygon points="340.0,103.0 443.2,152.7 468.7,264.4 397.3,353.9 282.7,353.9 211.3,264.4 236.8,152.7" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="115.0" font-size="10" fill="#52514e">4</text>
-<polygon points="340.0,70.0 469.0,132.1 500.9,271.7 411.6,383.7 268.4,383.7 179.1,271.7 211.0,132.1" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="82.0" font-size="10" fill="#52514e">5</text>
-<line x1="340" y1="235" x2="340.0" y2="70.0" stroke="#d9d8d3" stroke-width="1"/>
-<text x="340.0" y="59.2" text-anchor="middle" font-size="13" fill="#0b0b0b">Segurança</text>
-<line x1="340" y1="235" x2="469.0" y2="132.1" stroke="#d9d8d3" stroke-width="1"/>
-<text x="480.6" y="126.9" text-anchor="start" font-size="13" fill="#0b0b0b">Desempenho</text>
-<line x1="340" y1="235" x2="500.9" y2="271.7" stroke="#d9d8d3" stroke-width="1"/>
-<text x="515.3" y="279.0" text-anchor="start" font-size="13" fill="#0b0b0b">Escalabilidade</text>
-<line x1="340" y1="235" x2="411.6" y2="383.7" stroke="#d9d8d3" stroke-width="1"/>
-<text x="418.0" y="401.0" text-anchor="start" font-size="13" fill="#0b0b0b">Confiabilidade</text>
-<line x1="340" y1="235" x2="268.4" y2="383.7" stroke="#d9d8d3" stroke-width="1"/>
-<text x="262.0" y="401.0" text-anchor="end" font-size="13" fill="#0b0b0b">Custo</text>
-<line x1="340" y1="235" x2="179.1" y2="271.7" stroke="#d9d8d3" stroke-width="1"/>
-<text x="164.7" y="279.0" text-anchor="end" font-size="13" fill="#0b0b0b">Simplicidade</text>
-<line x1="340" y1="235" x2="211.0" y2="132.1" stroke="#d9d8d3" stroke-width="1"/>
-<text x="199.4" y="126.9" text-anchor="end" font-size="13" fill="#0b0b0b">Operabilidade</text>
-<polygon points="340.0,103.0 469.0,132.1 468.7,264.4 397.3,353.9 282.7,353.9 211.3,264.4 262.6,173.3" fill="#1baf7a" fill-opacity="0.08" stroke="#1baf7a" stroke-width="2" stroke-linejoin="round" stroke-dasharray="2 4"/>
-<polygon points="340.0,96.0 347.0,103.0 340.0,110.0 333.0,103.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Go, Segurança: 4</title></polygon>
-<polygon points="469.0,125.1 476.0,132.1 469.0,139.1 462.0,132.1" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Go, Desempenho: 5</title></polygon>
-<polygon points="468.7,257.4 475.7,264.4 468.7,271.4 461.7,264.4" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Go, Escalabilidade: 4</title></polygon>
-<polygon points="397.3,346.9 404.3,353.9 397.3,360.9 390.3,353.9" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Go, Confiabilidade: 4</title></polygon>
-<polygon points="282.7,346.9 289.7,353.9 282.7,360.9 275.7,353.9" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Go, Custo: 4</title></polygon>
-<polygon points="211.3,257.4 218.3,264.4 211.3,271.4 204.3,264.4" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Go, Simplicidade: 4</title></polygon>
-<polygon points="262.6,166.3 269.6,173.3 262.6,180.3 255.6,173.3" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Go, Operabilidade: 3</title></polygon>
-<polygon points="340.0,136.0 417.4,173.3 436.5,257.0 383.0,324.2 297.0,324.2 211.3,264.4 262.6,173.3" fill="#eb6834" fill-opacity="0.08" stroke="#eb6834" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 4"/>
-<rect x="335.0" y="131.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>TypeScript com Node.js, Segurança: 3</title></rect>
-<rect x="412.4" y="168.3" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>TypeScript com Node.js, Desempenho: 3</title></rect>
-<rect x="431.5" y="252.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>TypeScript com Node.js, Escalabilidade: 3</title></rect>
-<rect x="378.0" y="319.2" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>TypeScript com Node.js, Confiabilidade: 3</title></rect>
-<rect x="292.0" y="319.2" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>TypeScript com Node.js, Custo: 3</title></rect>
-<rect x="206.3" y="259.4" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>TypeScript com Node.js, Simplicidade: 4</title></rect>
-<rect x="257.6" y="168.3" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>TypeScript com Node.js, Operabilidade: 3</title></rect>
-<polygon points="340.0,103.0 443.2,152.7 468.7,264.4 397.3,353.9 297.0,324.2 211.3,264.4 211.0,132.1" fill="#2a78d6" fill-opacity="0.08" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
-<circle cx="340.0" cy="103.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>C# com .NET 10, Segurança: 4</title></circle>
-<circle cx="443.2" cy="152.7" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>C# com .NET 10, Desempenho: 4</title></circle>
-<circle cx="468.7" cy="264.4" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>C# com .NET 10, Escalabilidade: 4</title></circle>
-<circle cx="397.3" cy="353.9" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>C# com .NET 10, Confiabilidade: 4</title></circle>
-<circle cx="297.0" cy="324.2" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>C# com .NET 10, Custo: 3</title></circle>
-<circle cx="211.3" cy="264.4" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>C# com .NET 10, Simplicidade: 4</title></circle>
-<circle cx="211.0" cy="132.1" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>C# com .NET 10, Operabilidade: 5</title></circle>
-<line x1="24" y1="450" x2="60" y2="450" stroke="#2a78d6" stroke-width="2"/>
-<circle cx="42.0" cy="450.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"></circle>
-<text x="70" y="454" font-size="13" fill="#0b0b0b">C# com .NET 10 (escolhida)</text>
-<line x1="24" y1="476" x2="60" y2="476" stroke="#eb6834" stroke-width="2" stroke-dasharray="7 4"/>
-<rect x="37.0" y="471.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"></rect>
-<text x="70" y="480" font-size="13" fill="#0b0b0b">TypeScript com Node.js</text>
-<line x1="24" y1="502" x2="60" y2="502" stroke="#1baf7a" stroke-width="2" stroke-dasharray="2 4"/>
-<polygon points="42.0,495.0 49.0,502.0 42.0,509.0 35.0,502.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"></polygon>
-<text x="70" y="506" font-size="13" fill="#0b0b0b">Go</text>
+<text x="24" y="50" font-size="12" fill="#52514e">Quanto mais longe do centro, melhor</text>
+<polygon points="380.0,215.0 408.5,235.7 397.6,269.3 362.4,269.3 351.5,235.7" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="227.0" font-size="10" fill="#52514e">1</text>
+<polygon points="380.0,185.0 437.1,226.5 415.3,293.5 344.7,293.5 322.9,226.5" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="197.0" font-size="10" fill="#52514e">2</text>
+<polygon points="380.0,155.0 465.6,217.2 432.9,317.8 327.1,317.8 294.4,217.2" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="167.0" font-size="10" fill="#52514e">3</text>
+<polygon points="380.0,125.0 494.1,207.9 450.5,342.1 309.5,342.1 265.9,207.9" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="137.0" font-size="10" fill="#52514e">4</text>
+<polygon points="380.0,95.0 522.7,198.6 468.2,366.4 291.8,366.4 237.3,198.6" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="107.0" font-size="10" fill="#52514e">5</text>
+<line x1="380" y1="245" x2="380.0" y2="95.0" stroke="#d9d8d3" stroke-width="1"/>
+<text x="380.0" y="87.0" text-anchor="middle" font-size="12" fill="#0b0b0b">Alinhamento com o negócio (4)</text>
+<line x1="380" y1="245" x2="522.7" y2="198.6" stroke="#d9d8d3" stroke-width="1"/>
+<text x="534.1" y="198.9" text-anchor="start" font-size="12" fill="#0b0b0b">Operabilidade (3)</text>
+<line x1="380" y1="245" x2="468.2" y2="366.4" stroke="#d9d8d3" stroke-width="1"/>
+<text x="475.2" y="380.1" text-anchor="start" font-size="12" fill="#0b0b0b">Desempenho (2)</text>
+<line x1="380" y1="245" x2="291.8" y2="366.4" stroke="#d9d8d3" stroke-width="1"/>
+<text x="284.8" y="380.1" text-anchor="end" font-size="12" fill="#0b0b0b">Simplicidade (2)</text>
+<line x1="380" y1="245" x2="237.3" y2="198.6" stroke="#d9d8d3" stroke-width="1"/>
+<text x="225.9" y="198.9" text-anchor="end" font-size="12" fill="#0b0b0b">Economia (1)</text>
+<polygon points="380.0,185.0 494.1,207.9 450.5,342.1 309.5,342.1 294.4,217.2" fill="#8a5cd6" fill-opacity="0.08" stroke="#8a5cd6" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 3 2 3"/>
+<polygon points="380.0,178.0 387.0,191.0 373.0,191.0" fill="#8a5cd6" stroke="#fcfcfb" stroke-width="2"><title>TypeScript com Node.js, Alinhamento com o negócio: 2</title></polygon>
+<polygon points="494.1,200.9 501.1,213.9 487.1,213.9" fill="#8a5cd6" stroke="#fcfcfb" stroke-width="2"><title>TypeScript com Node.js, Operabilidade: 4</title></polygon>
+<polygon points="450.5,335.1 457.5,348.1 443.5,348.1" fill="#8a5cd6" stroke="#fcfcfb" stroke-width="2"><title>TypeScript com Node.js, Desempenho: 4</title></polygon>
+<polygon points="309.5,335.1 316.5,348.1 302.5,348.1" fill="#8a5cd6" stroke="#fcfcfb" stroke-width="2"><title>TypeScript com Node.js, Simplicidade: 4</title></polygon>
+<polygon points="294.4,210.2 301.4,223.2 287.4,223.2" fill="#8a5cd6" stroke="#fcfcfb" stroke-width="2"><title>TypeScript com Node.js, Economia: 3</title></polygon>
+<polygon points="380.0,185.0 494.1,207.9 450.5,342.1 309.5,342.1 294.4,217.2" fill="#1baf7a" fill-opacity="0.08" stroke="#1baf7a" stroke-width="2" stroke-linejoin="round" stroke-dasharray="2 4"/>
+<polygon points="380.0,178.0 387.0,185.0 380.0,192.0 373.0,185.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Java com Spring Boot, Alinhamento com o negócio: 2</title></polygon>
+<polygon points="494.1,200.9 501.1,207.9 494.1,214.9 487.1,207.9" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Java com Spring Boot, Operabilidade: 4</title></polygon>
+<polygon points="450.5,335.1 457.5,342.1 450.5,349.1 443.5,342.1" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Java com Spring Boot, Desempenho: 4</title></polygon>
+<polygon points="309.5,335.1 316.5,342.1 309.5,349.1 302.5,342.1" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Java com Spring Boot, Simplicidade: 4</title></polygon>
+<polygon points="294.4,210.2 301.4,217.2 294.4,224.2 287.4,217.2" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Java com Spring Boot, Economia: 3</title></polygon>
+<polygon points="380.0,185.0 494.1,207.9 468.2,366.4 327.1,317.8 294.4,217.2" fill="#eb6834" fill-opacity="0.08" stroke="#eb6834" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 4"/>
+<rect x="375.0" y="180.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Go, Alinhamento com o negócio: 2</title></rect>
+<rect x="489.1" y="202.9" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Go, Operabilidade: 4</title></rect>
+<rect x="463.2" y="361.4" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Go, Desempenho: 5</title></rect>
+<rect x="322.1" y="312.8" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Go, Simplicidade: 3</title></rect>
+<rect x="289.4" y="212.2" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Go, Economia: 3</title></rect>
+<polygon points="380.0,95.0 522.7,198.6 468.2,366.4 291.8,366.4 265.9,207.9" fill="#2a78d6" fill-opacity="0.08" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="380.0" cy="95.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>C# com .NET 10, Alinhamento com o negócio: 5</title></circle>
+<circle cx="522.7" cy="198.6" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>C# com .NET 10, Operabilidade: 5</title></circle>
+<circle cx="468.2" cy="366.4" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>C# com .NET 10, Desempenho: 5</title></circle>
+<circle cx="291.8" cy="366.4" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>C# com .NET 10, Simplicidade: 5</title></circle>
+<circle cx="265.9" cy="207.9" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>C# com .NET 10, Economia: 4</title></circle>
+<line x1="24" y1="465" x2="60" y2="465" stroke="#2a78d6" stroke-width="2"/>
+<circle cx="42.0" cy="465.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"></circle>
+<text x="70" y="469" font-size="13" fill="#0b0b0b">C# com .NET 10 (escolhida): 4,92</text>
+<line x1="24" y1="491" x2="60" y2="491" stroke="#eb6834" stroke-width="2" stroke-dasharray="7 4"/>
+<rect x="37.0" y="486.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"></rect>
+<text x="70" y="495" font-size="13" fill="#0b0b0b">Go: 3,25</text>
+<line x1="24" y1="517" x2="60" y2="517" stroke="#1baf7a" stroke-width="2" stroke-dasharray="2 4"/>
+<polygon points="42.0,510.0 49.0,517.0 42.0,524.0 35.0,517.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"></polygon>
+<text x="70" y="521" font-size="13" fill="#0b0b0b">Java com Spring Boot: 3,25</text>
+<line x1="24" y1="543" x2="60" y2="543" stroke="#8a5cd6" stroke-width="2" stroke-dasharray="10 3 2 3"/>
+<polygon points="42.0,536.0 49.0,549.0 35.0,549.0" fill="#8a5cd6" stroke="#fcfcfb" stroke-width="2"></polygon>
+<text x="70" y="547" font-size="13" fill="#0b0b0b">TypeScript com Node.js: 3,25</text>
 </svg>

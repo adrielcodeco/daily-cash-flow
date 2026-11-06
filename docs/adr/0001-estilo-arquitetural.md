@@ -16,22 +16,25 @@ Construir dois serviços independentes, Lançamentos e Consolidado, cada um com 
 <!-- radar:start -->
 ![Radar de Estilo arquitetural](radar/ADR-0001.svg)
 
-| Pilar | **Dois serviços com eventos** | Monolito modular | Funções serverless |
-|---|---:|---:|---:|
-| Segurança | 4 | 4 | 4 |
-| Desempenho | 4 | 5 | 3 |
-| Escalabilidade | 5 | 3 | 5 |
-| Confiabilidade | 5 | 2 | 4 |
-| Custo | 3 | 5 | 4 |
-| Simplicidade | 3 | 5 | 3 |
-| Operabilidade | 3 | 4 | 4 |
+| Critério | Peso | **Dois serviços orientados a eventos** | Funções serverless | SOA com barramento central | Monolito modular |
+|---|---:|---:|---:|---:|---:|
+| Alinhamento com o negócio | 4 | 5 | 5 | 4 | Veto |
+| Confiabilidade | 3 | 5 | 5 | 2 | Veto |
+| Operabilidade | 3 | 4 | 4 | 2 | 5 |
+| Desempenho | 2 | 4 | 2 | 2 | 4 |
+| Escalabilidade | 2 | 5 | 4 | 2 | 3 |
+| Simplicidade | 2 | 2 | 3 | 1 | 5 |
+| Economia | 1 | 3 | 4 | 1 | 4 |
+| **Resultado** | | **4,24** | **4,06** | **2,29** | Eliminada |
+
+As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0001).
 <!-- radar:end -->
 
 ## Leitura do radar
 
 Confiabilidade é o pilar decisivo, porque atende ao requisito central. O monolito modular ganha em simplicidade e custo, mas compartilha processo, banco e ciclo de deploy, então uma falha pode atingir os lançamentos. Funções serverless também isolam falhas, mas pioram a latência em partida a frio e dificultam a execução local.
 
-SOA com barramento foi descartada sem radar: um barramento central é desproporcional para dois serviços.
+SOA com barramento perde por ser desproporcional: um barramento central é demais para dois serviços. O monolito foi eliminado por veto, porque o mesmo processo faria a escrita depender do consolidado.
 
 ## Consequências
 

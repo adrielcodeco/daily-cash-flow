@@ -17,15 +17,16 @@ Paginar por cursor, ordenando por `id` dentro de comerciante e data, com o índi
 <!-- radar:start -->
 ![Radar de Paginação de lançamentos](radar/ADR-0019.svg)
 
-| Pilar | **Keyset com cursor** | Offset e limite | Sem paginação |
+| Critério | Peso | **Keyset com cursor** | Offset e limite |
 |---|---:|---:|---:|
-| Segurança | 4 | 4 | 3 |
-| Desempenho | 5 | 2 | 1 |
-| Escalabilidade | 5 | 2 | 1 |
-| Confiabilidade | 5 | 3 | 2 |
-| Custo | 4 | 4 | 4 |
-| Simplicidade | 3 | 5 | 5 |
-| Operabilidade | 4 | 4 | 3 |
+| Alinhamento com o negócio | 4 | 5 | 3 |
+| Aderência ao problema | 3 | 5 | 2 |
+| Desempenho | 3 | 5 | 2 |
+| Escalabilidade | 2 | 5 | 2 |
+| Simplicidade | 2 | 4 | 5 |
+| **Resultado** | | **4,86** | **2,71** |
+
+As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0019).
 <!-- radar:end -->
 
 ## Leitura do radar

@@ -17,15 +17,16 @@ Testar o domínio com xUnit e falsos, os adaptadores com PostgreSQL real por Tes
 <!-- radar:start -->
 ![Radar de Estratégia de testes](radar/ADR-0021.svg)
 
-| Pilar | **Banco real e mutação** | Só testes com falsos | Só ponta a ponta |
-|---|---:|---:|---:|
-| Segurança | 4 | 3 | 3 |
-| Desempenho | 4 | 5 | 1 |
-| Escalabilidade | 4 | 3 | 2 |
-| Confiabilidade | 5 | 2 | 4 |
-| Custo | 3 | 5 | 3 |
-| Simplicidade | 3 | 5 | 3 |
-| Operabilidade | 4 | 3 | 2 |
+| Critério | Peso | **Domínio, banco real e mutação** | Só testes de ponta a ponta | Só testes com falsos em memória |
+|---|---:|---:|---:|---:|
+| Alinhamento com o negócio | 4 | 5 | 3 | 2 |
+| Aderência ao problema | 3 | 5 | 4 | Veto |
+| Eficácia de detecção | 3 | 4 | 3 | Veto |
+| Simplicidade | 2 | 2 | 2 | 4 |
+| Economia | 1 | 4 | 4 | 5 |
+| **Resultado** | | **4,23** | **3,15** | Eliminada |
+
+As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0021).
 <!-- radar:end -->
 
 ## Leitura do radar

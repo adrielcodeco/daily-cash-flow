@@ -16,15 +16,18 @@ Usar OAuth2 e OIDC com JWT de vida curta. O gateway faz a primeira validação, 
 <!-- radar:start -->
 ![Radar de Autenticação e autorização](radar/ADR-0008.svg)
 
-| Pilar | **Gateway, OIDC e JWT** | Chaves de API | mTLS para todo cliente |
-|---|---:|---:|---:|
-| Segurança | 5 | 2 | 5 |
-| Desempenho | 4 | 5 | 3 |
-| Escalabilidade | 5 | 4 | 3 |
-| Confiabilidade | 4 | 4 | 3 |
-| Custo | 4 | 5 | 3 |
-| Simplicidade | 3 | 5 | 2 |
-| Operabilidade | 4 | 3 | 2 |
+| Critério | Peso | **Gateway, OIDC e JWT** | Chaves de API | mTLS para todo cliente |
+|---|---:|---:|---:|---:|
+| Alinhamento com o negócio | 4 | 5 | 3 | 3 |
+| Segurança | 3 | 4 | 2 | 3 |
+| Operabilidade | 2 | 5 | 4 | 3 |
+| Simplicidade | 2 | 4 | 4 | 2 |
+| Desempenho | 1 | 4 | 4 | 4 |
+| Economia | 1 | 3 | 5 | 3 |
+| Portabilidade | 1 | 4 | 4 | 4 |
+| **Resultado** | | **4,36** | **3,36** | **3,00** |
+
+As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0008).
 <!-- radar:end -->
 
 ## Leitura do radar

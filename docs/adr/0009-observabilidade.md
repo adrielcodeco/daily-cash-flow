@@ -16,15 +16,17 @@ Instrumentar com OpenTelemetry. Localmente, usar Prometheus e Grafana. No GCP, e
 <!-- radar:start -->
 ![Radar de Observabilidade](radar/ADR-0009.svg)
 
-| Pilar | **OpenTelemetry** | SDK do provedor | APM comercial |
-|---|---:|---:|---:|
-| Segurança | 4 | 4 | 3 |
-| Desempenho | 4 | 4 | 4 |
-| Escalabilidade | 4 | 5 | 4 |
-| Confiabilidade | 4 | 5 | 4 |
-| Custo | 4 | 4 | 2 |
-| Simplicidade | 3 | 4 | 4 |
-| Operabilidade | 5 | 3 | 4 |
+| Critério | Peso | **OpenTelemetry** | SDK do provedor de nuvem | APM comercial |
+|---|---:|---:|---:|---:|
+| Alinhamento com o negócio | 4 | 5 | 4 | 4 |
+| Operabilidade | 3 | 4 | 4 | 4 |
+| Economia | 2 | 5 | 5 | 2 |
+| Portabilidade | 2 | 5 | 1 | 1 |
+| Simplicidade | 2 | 4 | 4 | 3 |
+| Segurança | 1 | 4 | 4 | 2 |
+| **Resultado** | | **4,57** | **3,71** | **3,00** |
+
+As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0009).
 <!-- radar:end -->
 
 ## Leitura do radar

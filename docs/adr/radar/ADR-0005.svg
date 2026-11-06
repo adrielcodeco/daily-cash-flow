@@ -1,62 +1,80 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 528" role="img" aria-label="Modelo de leitura do saldo" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 577" role="img" aria-label="Modelo de leitura do saldo" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
 <title>ADR-0005: Modelo de leitura do saldo</title>
-<rect width="680" height="528" fill="#fcfcfb"/>
+<rect width="760" height="577" fill="#fcfcfb"/>
 <text x="24" y="30" font-size="16" font-weight="600" fill="#0b0b0b">Modelo de leitura do saldo</text>
-<polygon points="340.0,202.0 365.8,214.4 372.2,242.3 354.3,264.7 325.7,264.7 307.8,242.3 314.2,214.4" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="214.0" font-size="10" fill="#52514e">1</text>
-<polygon points="340.0,169.0 391.6,193.8 404.3,249.7 368.6,294.5 311.4,294.5 275.7,249.7 288.4,193.8" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="181.0" font-size="10" fill="#52514e">2</text>
-<polygon points="340.0,136.0 417.4,173.3 436.5,257.0 383.0,324.2 297.0,324.2 243.5,257.0 262.6,173.3" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="148.0" font-size="10" fill="#52514e">3</text>
-<polygon points="340.0,103.0 443.2,152.7 468.7,264.4 397.3,353.9 282.7,353.9 211.3,264.4 236.8,152.7" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="115.0" font-size="10" fill="#52514e">4</text>
-<polygon points="340.0,70.0 469.0,132.1 500.9,271.7 411.6,383.7 268.4,383.7 179.1,271.7 211.0,132.1" fill="none" stroke="#d9d8d3" stroke-width="1"/>
-<text x="350.0" y="82.0" font-size="10" fill="#52514e">5</text>
-<line x1="340" y1="235" x2="340.0" y2="70.0" stroke="#d9d8d3" stroke-width="1"/>
-<text x="340.0" y="59.2" text-anchor="middle" font-size="13" fill="#0b0b0b">Segurança</text>
-<line x1="340" y1="235" x2="469.0" y2="132.1" stroke="#d9d8d3" stroke-width="1"/>
-<text x="480.6" y="126.9" text-anchor="start" font-size="13" fill="#0b0b0b">Desempenho</text>
-<line x1="340" y1="235" x2="500.9" y2="271.7" stroke="#d9d8d3" stroke-width="1"/>
-<text x="515.3" y="279.0" text-anchor="start" font-size="13" fill="#0b0b0b">Escalabilidade</text>
-<line x1="340" y1="235" x2="411.6" y2="383.7" stroke="#d9d8d3" stroke-width="1"/>
-<text x="418.0" y="401.0" text-anchor="start" font-size="13" fill="#0b0b0b">Confiabilidade</text>
-<line x1="340" y1="235" x2="268.4" y2="383.7" stroke="#d9d8d3" stroke-width="1"/>
-<text x="262.0" y="401.0" text-anchor="end" font-size="13" fill="#0b0b0b">Custo</text>
-<line x1="340" y1="235" x2="179.1" y2="271.7" stroke="#d9d8d3" stroke-width="1"/>
-<text x="164.7" y="279.0" text-anchor="end" font-size="13" fill="#0b0b0b">Simplicidade</text>
-<line x1="340" y1="235" x2="211.0" y2="132.1" stroke="#d9d8d3" stroke-width="1"/>
-<text x="199.4" y="126.9" text-anchor="end" font-size="13" fill="#0b0b0b">Operabilidade</text>
-<polygon points="340.0,103.0 443.2,152.7 468.7,264.4 411.6,383.7 311.4,294.5 307.8,242.3 288.4,193.8" fill="#1baf7a" fill-opacity="0.08" stroke="#1baf7a" stroke-width="2" stroke-linejoin="round" stroke-dasharray="2 4"/>
-<polygon points="340.0,96.0 347.0,103.0 340.0,110.0 333.0,103.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Event sourcing completo, Segurança: 4</title></polygon>
-<polygon points="443.2,145.7 450.2,152.7 443.2,159.7 436.2,152.7" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Event sourcing completo, Desempenho: 4</title></polygon>
-<polygon points="468.7,257.4 475.7,264.4 468.7,271.4 461.7,264.4" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Event sourcing completo, Escalabilidade: 4</title></polygon>
-<polygon points="411.6,376.7 418.6,383.7 411.6,390.7 404.6,383.7" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Event sourcing completo, Confiabilidade: 5</title></polygon>
-<polygon points="311.4,287.5 318.4,294.5 311.4,301.5 304.4,294.5" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Event sourcing completo, Custo: 2</title></polygon>
-<polygon points="307.8,235.3 314.8,242.3 307.8,249.3 300.8,242.3" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Event sourcing completo, Simplicidade: 1</title></polygon>
-<polygon points="288.4,186.8 295.4,193.8 288.4,200.8 281.4,193.8" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Event sourcing completo, Operabilidade: 2</title></polygon>
-<polygon points="340.0,136.0 391.6,193.8 404.3,249.7 368.6,294.5 282.7,353.9 179.1,271.7 262.6,173.3" fill="#eb6834" fill-opacity="0.08" stroke="#eb6834" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 4"/>
-<rect x="335.0" y="131.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Consulta aos lançamentos, Segurança: 3</title></rect>
-<rect x="386.6" y="188.8" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Consulta aos lançamentos, Desempenho: 2</title></rect>
-<rect x="399.3" y="244.7" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Consulta aos lançamentos, Escalabilidade: 2</title></rect>
-<rect x="363.6" y="289.5" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Consulta aos lançamentos, Confiabilidade: 2</title></rect>
-<rect x="277.7" y="348.9" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Consulta aos lançamentos, Custo: 4</title></rect>
-<rect x="174.1" y="266.7" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Consulta aos lançamentos, Simplicidade: 5</title></rect>
-<rect x="257.6" y="168.3" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Consulta aos lançamentos, Operabilidade: 3</title></rect>
-<polygon points="340.0,103.0 469.0,132.1 500.9,271.7 397.3,353.9 282.7,353.9 211.3,264.4 236.8,152.7" fill="#2a78d6" fill-opacity="0.08" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
-<circle cx="340.0" cy="103.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Agregado diário e cache, Segurança: 4</title></circle>
-<circle cx="469.0" cy="132.1" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Agregado diário e cache, Desempenho: 5</title></circle>
-<circle cx="500.9" cy="271.7" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Agregado diário e cache, Escalabilidade: 5</title></circle>
-<circle cx="397.3" cy="353.9" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Agregado diário e cache, Confiabilidade: 4</title></circle>
-<circle cx="282.7" cy="353.9" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Agregado diário e cache, Custo: 4</title></circle>
-<circle cx="211.3" cy="264.4" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Agregado diário e cache, Simplicidade: 4</title></circle>
-<circle cx="236.8" cy="152.7" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Agregado diário e cache, Operabilidade: 4</title></circle>
-<line x1="24" y1="450" x2="60" y2="450" stroke="#2a78d6" stroke-width="2"/>
-<circle cx="42.0" cy="450.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"></circle>
-<text x="70" y="454" font-size="13" fill="#0b0b0b">Agregado diário e cache (escolhida)</text>
-<line x1="24" y1="476" x2="60" y2="476" stroke="#eb6834" stroke-width="2" stroke-dasharray="7 4"/>
-<rect x="37.0" y="471.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"></rect>
-<text x="70" y="480" font-size="13" fill="#0b0b0b">Consulta aos lançamentos</text>
-<line x1="24" y1="502" x2="60" y2="502" stroke="#1baf7a" stroke-width="2" stroke-dasharray="2 4"/>
-<polygon points="42.0,495.0 49.0,502.0 42.0,509.0 35.0,502.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"></polygon>
-<text x="70" y="506" font-size="13" fill="#0b0b0b">Event sourcing completo</text>
+<text x="24" y="50" font-size="12" fill="#52514e">Quanto mais longe do centro, melhor</text>
+<polygon points="380.0,215.0 401.2,223.8 410.0,245.0 401.2,266.2 380.0,275.0 358.8,266.2 350.0,245.0 358.8,223.8" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="227.0" font-size="10" fill="#52514e">1</text>
+<polygon points="380.0,185.0 422.4,202.6 440.0,245.0 422.4,287.4 380.0,305.0 337.6,287.4 320.0,245.0 337.6,202.6" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="197.0" font-size="10" fill="#52514e">2</text>
+<polygon points="380.0,155.0 443.6,181.4 470.0,245.0 443.6,308.6 380.0,335.0 316.4,308.6 290.0,245.0 316.4,181.4" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="167.0" font-size="10" fill="#52514e">3</text>
+<polygon points="380.0,125.0 464.9,160.1 500.0,245.0 464.9,329.9 380.0,365.0 295.1,329.9 260.0,245.0 295.1,160.1" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="137.0" font-size="10" fill="#52514e">4</text>
+<polygon points="380.0,95.0 486.1,138.9 530.0,245.0 486.1,351.1 380.0,395.0 273.9,351.1 230.0,245.0 273.9,138.9" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<text x="390.0" y="107.0" font-size="10" fill="#52514e">5</text>
+<line x1="380" y1="245" x2="380.0" y2="95.0" stroke="#d9d8d3" stroke-width="1"/>
+<text x="380.0" y="87.0" text-anchor="middle" font-size="12" fill="#0b0b0b">Alinhamento com o negócio (4)</text>
+<line x1="380" y1="245" x2="486.1" y2="138.9" stroke="#d9d8d3" stroke-width="1"/>
+<text x="494.6" y="134.4" text-anchor="start" font-size="12" fill="#0b0b0b">Aderência ao problema (3)</text>
+<line x1="380" y1="245" x2="530.0" y2="245.0" stroke="#d9d8d3" stroke-width="1"/>
+<text x="542.0" y="249.0" text-anchor="start" font-size="12" fill="#0b0b0b">Desempenho (3)</text>
+<line x1="380" y1="245" x2="486.1" y2="351.1" stroke="#d9d8d3" stroke-width="1"/>
+<text x="494.6" y="363.6" text-anchor="start" font-size="12" fill="#0b0b0b">Confiabilidade (2)</text>
+<line x1="380" y1="245" x2="380.0" y2="395.0" stroke="#d9d8d3" stroke-width="1"/>
+<text x="380.0" y="411.0" text-anchor="middle" font-size="12" fill="#0b0b0b">Escalabilidade (2)</text>
+<line x1="380" y1="245" x2="273.9" y2="351.1" stroke="#d9d8d3" stroke-width="1"/>
+<text x="265.4" y="363.6" text-anchor="end" font-size="12" fill="#0b0b0b">Operabilidade (2)</text>
+<line x1="380" y1="245" x2="230.0" y2="245.0" stroke="#d9d8d3" stroke-width="1"/>
+<text x="218.0" y="249.0" text-anchor="end" font-size="12" fill="#0b0b0b">Simplicidade (2)</text>
+<line x1="380" y1="245" x2="273.9" y2="138.9" stroke="#d9d8d3" stroke-width="1"/>
+<text x="265.4" y="134.4" text-anchor="end" font-size="12" fill="#0b0b0b">Economia (1)</text>
+<polygon points="380.0,125.0 401.2,223.8 500.0,245.0 486.1,351.1 380.0,365.0 337.6,287.4 320.0,245.0 316.4,181.4" fill="#8a5cd6" fill-opacity="0.08" stroke="#8a5cd6" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 3 2 3"/>
+<polygon points="380.0,118.0 387.0,131.0 373.0,131.0" fill="#8a5cd6" stroke="#fcfcfb" stroke-width="2"><title>Event sourcing completo, Alinhamento com o negócio: 4</title></polygon>
+<polygon points="401.2,216.8 408.2,229.8 394.2,229.8" fill="#8a5cd6" stroke="#fcfcfb" stroke-width="2"><title>Event sourcing completo, Aderência ao problema: 1</title></polygon>
+<polygon points="500.0,238.0 507.0,251.0 493.0,251.0" fill="#8a5cd6" stroke="#fcfcfb" stroke-width="2"><title>Event sourcing completo, Desempenho: 4</title></polygon>
+<polygon points="486.1,344.1 493.1,357.1 479.1,357.1" fill="#8a5cd6" stroke="#fcfcfb" stroke-width="2"><title>Event sourcing completo, Confiabilidade: 5</title></polygon>
+<polygon points="380.0,358.0 387.0,371.0 373.0,371.0" fill="#8a5cd6" stroke="#fcfcfb" stroke-width="2"><title>Event sourcing completo, Escalabilidade: 4</title></polygon>
+<polygon points="337.6,280.4 344.6,293.4 330.6,293.4" fill="#8a5cd6" stroke="#fcfcfb" stroke-width="2"><title>Event sourcing completo, Operabilidade: 2</title></polygon>
+<polygon points="320.0,238.0 327.0,251.0 313.0,251.0" fill="#8a5cd6" stroke="#fcfcfb" stroke-width="2"><title>Event sourcing completo, Simplicidade: 2</title></polygon>
+<polygon points="316.4,174.4 323.4,187.4 309.4,187.4" fill="#8a5cd6" stroke="#fcfcfb" stroke-width="2"><title>Event sourcing completo, Economia: 3</title></polygon>
+<polygon points="380.0,155.0 464.9,160.1 440.0,245.0 464.9,329.9 380.0,275.0 273.9,351.1 230.0,245.0 295.1,160.1" fill="#1baf7a" fill-opacity="0.08" stroke="#1baf7a" stroke-width="2" stroke-linejoin="round" stroke-dasharray="2 4"/>
+<polygon points="380.0,148.0 387.0,155.0 380.0,162.0 373.0,155.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Consulta direta aos lançamentos, Alinhamento com o negócio: 3</title></polygon>
+<polygon points="464.9,153.1 471.9,160.1 464.9,167.1 457.9,160.1" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Consulta direta aos lançamentos, Aderência ao problema: 4</title></polygon>
+<polygon points="440.0,238.0 447.0,245.0 440.0,252.0 433.0,245.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Consulta direta aos lançamentos, Desempenho: 2</title></polygon>
+<polygon points="464.9,322.9 471.9,329.9 464.9,336.9 457.9,329.9" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Consulta direta aos lançamentos, Confiabilidade: 4</title></polygon>
+<polygon points="380.0,268.0 387.0,275.0 380.0,282.0 373.0,275.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Consulta direta aos lançamentos, Escalabilidade: 1</title></polygon>
+<polygon points="273.9,344.1 280.9,351.1 273.9,358.1 266.9,351.1" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Consulta direta aos lançamentos, Operabilidade: 5</title></polygon>
+<polygon points="230.0,238.0 237.0,245.0 230.0,252.0 223.0,245.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Consulta direta aos lançamentos, Simplicidade: 5</title></polygon>
+<polygon points="295.1,153.1 302.1,160.1 295.1,167.1 288.1,160.1" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Consulta direta aos lançamentos, Economia: 4</title></polygon>
+<polygon points="380.0,95.0 422.4,202.6 470.0,245.0 464.9,329.9 380.0,335.0 295.1,329.9 290.0,245.0 295.1,160.1" fill="#eb6834" fill-opacity="0.08" stroke="#eb6834" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 4"/>
+<rect x="375.0" y="90.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Agregado diário com cache Redis, Alinhamento com o negócio: 5</title></rect>
+<rect x="417.4" y="197.6" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Agregado diário com cache Redis, Aderência ao problema: 2</title></rect>
+<rect x="465.0" y="240.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Agregado diário com cache Redis, Desempenho: 3</title></rect>
+<rect x="459.9" y="324.9" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Agregado diário com cache Redis, Confiabilidade: 4</title></rect>
+<rect x="375.0" y="330.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Agregado diário com cache Redis, Escalabilidade: 3</title></rect>
+<rect x="290.1" y="324.9" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Agregado diário com cache Redis, Operabilidade: 4</title></rect>
+<rect x="285.0" y="240.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Agregado diário com cache Redis, Simplicidade: 3</title></rect>
+<rect x="290.1" y="155.1" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Agregado diário com cache Redis, Economia: 4</title></rect>
+<polygon points="380.0,95.0 464.9,160.1 530.0,245.0 486.1,351.1 380.0,365.0 273.9,351.1 260.0,245.0 273.9,138.9" fill="#2a78d6" fill-opacity="0.08" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="380.0" cy="95.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Agregado diário sem cache, Alinhamento com o negócio: 5</title></circle>
+<circle cx="464.9" cy="160.1" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Agregado diário sem cache, Aderência ao problema: 4</title></circle>
+<circle cx="530.0" cy="245.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Agregado diário sem cache, Desempenho: 5</title></circle>
+<circle cx="486.1" cy="351.1" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Agregado diário sem cache, Confiabilidade: 5</title></circle>
+<circle cx="380.0" cy="365.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Agregado diário sem cache, Escalabilidade: 4</title></circle>
+<circle cx="273.9" cy="351.1" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Agregado diário sem cache, Operabilidade: 5</title></circle>
+<circle cx="260.0" cy="245.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Agregado diário sem cache, Simplicidade: 4</title></circle>
+<circle cx="273.9" cy="138.9" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Agregado diário sem cache, Economia: 5</title></circle>
+<line x1="24" y1="465" x2="60" y2="465" stroke="#2a78d6" stroke-width="2"/>
+<circle cx="42.0" cy="465.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"></circle>
+<text x="70" y="469" font-size="13" fill="#0b0b0b">Agregado diário sem cache (escolhida): 4,63</text>
+<line x1="24" y1="491" x2="60" y2="491" stroke="#eb6834" stroke-width="2" stroke-dasharray="7 4"/>
+<rect x="37.0" y="486.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"></rect>
+<text x="70" y="495" font-size="13" fill="#0b0b0b">Agregado diário com cache Redis: 3,53</text>
+<line x1="24" y1="517" x2="60" y2="517" stroke="#1baf7a" stroke-width="2" stroke-dasharray="2 4"/>
+<polygon points="42.0,510.0 49.0,517.0 42.0,524.0 35.0,517.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"></polygon>
+<text x="70" y="521" font-size="13" fill="#0b0b0b">Consulta direta aos lançamentos: 3,37</text>
+<line x1="24" y1="543" x2="60" y2="543" stroke="#8a5cd6" stroke-width="2" stroke-dasharray="10 3 2 3"/>
+<polygon points="42.0,536.0 49.0,549.0 35.0,549.0" fill="#8a5cd6" stroke="#fcfcfb" stroke-width="2"></polygon>
+<text x="70" y="547" font-size="13" fill="#0b0b0b">Event sourcing completo: 3,16</text>
 </svg>

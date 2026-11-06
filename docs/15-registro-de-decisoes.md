@@ -96,7 +96,7 @@ A coluna **Base** diz de onde veio cada escolha:
 | ID | Decisão | Alternativas | Do que abrimos mão | Base | Rever quando |
 |---|---|---|---|---|---|
 | D-43 | Documentação em pt-BR, código em en-US | Um idioma só | O glossário precisa ligar os termos | Autor | Não previsto |
-| D-45 | Nota de radar é qualitativa, com sete pilares e três opções | Pontuação ponderada | A nota é opinião fundamentada, e não medição | Julgamento | Houver dados de operação |
+| D-45 | Nota de radar sai de 4 perguntas de sim ou não, com critérios, pesos e opções por decisão | Sete pilares fixos com nota por julgamento | Mais trabalho por decisão, e a nota ainda depende de interpretação | Autor | Houver dados de operação |
 | D-46 | Preços de lista em São Paulo, sem desconto | Preços com desconto | O custo real tende a ser menor | Julgamento | Houver contrato com o provedor |
 | D-47 | Volumes de custo são premissas, e só o pico vem do desafio | Só o pico | As médias podem estar erradas | Julgamento | Houver dados reais |
 
@@ -231,6 +231,11 @@ A coluna **Base** diz de onde veio cada escolha:
 | D-143 | Papéis separados por processo: migração, API e worker | Usuário único | Mais papéis para administrar | Julgamento | Não previsto |
 | D-144 | Worker ignora o RLS, porque atende todos os comerciantes | Definir o comerciante por evento | O isolamento do worker depende do código | Julgamento | Houver exigência de isolamento no worker |
 | D-145 | Leitura da API em transação, para definir o comerciante | Definir na conexão | Mais idas ao banco. Em conexões reaproveitadas, a transação evita vazar o comerciante | Julgamento | A latência pesar |
+| D-146 | Opção com veto é eliminada | Nota 1 e média normal | Uma interpretação rígida de veto pode tirar uma boa opção | Autor | Não previsto |
+| D-147 | C# é preferência de negócio, e não restrição | Tratar como restrição | Outras linguagens seguem na comparação, com nota menor em Alinhamento | Autor | Não previsto |
+| D-148 | Alinhamento com o negócio tem peso 4 em toda decisão | Peso igual aos demais | O critério pode contar de novo méritos de outros critérios | Autor | Não previsto |
+| D-149 | Avaliação feita às cegas, com ajustes do arquiteto registrados | Notas do próprio autor | O resultado depende de modelos de IA, com uma rodada | Autor | Houver revisão por pessoas |
+| D-150 | Manter Cloud SQL, com AlloyDB 5 para 4 em Alinhamento | Adotar AlloyDB | Decisão por julgamento, com preço ainda não confirmado | Autor | O preço do AlloyDB não for maior |
 | D-115 | Horizonte de 36 meses, sem impostos e sem cancelamento de clientes | Modelo completo | O resultado tende a ser otimista | Julgamento | Houver dados reais |
 
 ## Decisões revistas

@@ -1,196 +1,132 @@
 # Método dos radares
 
-Este documento explica o que significam as notas dos gráficos de radar, como elas foram dadas e até onde confiar nelas.
+Este documento explica o que significam as notas dos gráficos de radar e como elas são dadas.
 
 ## Em resumo
 
-- **As notas são opinião técnica, e não medição.** Elas comparam três opções para este problema e esta carga.
-- **A régua abaixo foi escrita depois das notas.** Ela descreve o critério aplicado, para que as notas possam ser revistas. As notas não nasceram de uma régua definida antes.
-- **O radar não decide.** A decisão vem do pilar que atende ao requisito central. Ele aparece em "Leitura do radar", em cada ADR.
-- **Só uma parte das notas tem evidência.** A maioria nasce de conhecimento técnico sobre cada opção.
+- **A escala vai de 1 a 5 e sai de fatos.** Cada critério tem 4 perguntas de sim ou não, e a nota é 1 mais o número de "sim".
+- **Cada decisão tem seus critérios, pesos e opções.** Hoje são de 4 a 10 critérios, e de 2 a 4 opções por decisão.
+- **Alinhamento com o negócio é o critério de maior peso.** Ele é a forma de o arquiteto aproximar o resultado do que o negócio precisa.
+- **Veto elimina a opção.** Uma opção que quebra uma restrição sai da comparação, sem importar a média.
+- **O resultado apoia a decisão, mas não a substitui.** A decisão final é do arquiteto, e todo ajuste fica registrado.
 
 ## O que cada nota quer dizer
 
-A nota compara a opção com a necessidade deste sistema, e não com o melhor produto do mercado. Um 5 aqui não é um 5 universal.
+| Nota | "Sim" nas perguntas | Significado |
+|---:|---:|---|
+| 1 | 0, ou veto | Crítico |
+| 2 | 1 | Fraco |
+| 3 | 2 | Adequado |
+| 4 | 3 | Bom |
+| 5 | 4 | Excelente |
 
-| Nota | Significado | Na prática |
-|---:|---|---|
-| 1 | Crítico | Compromete um requisito, ou exige grande compensação |
-| 2 | Fraco | Atende, com esforço relevante ou risco claro |
-| 3 | Adequado | Atende, sem vantagem. É o ponto de partida |
-| 4 | Bom | Atende com folga |
-| 5 | Excelente | É um ponto forte da opção neste problema |
+Nota maior é sempre melhor, em todos os critérios. No gráfico, quanto mais longe do centro, melhor. O critério de custo se chama **Economia** para deixar isso claro.
 
-Nota maior é sempre melhor. Em Custo, nota maior significa mais barato. Em Simplicidade, significa menos para construir e entender.
+A nota compara a opção com a necessidade deste sistema. Ela não mede o produto em geral.
 
-## Régua de cada pilar
+## Como uma decisão é avaliada
 
-As notas 2 e 4 ficam entre as colunas.
+1. **Escolher os critérios** do catálogo que se aplicam à decisão, com no mínimo 3. Se faltar algo, a decisão pode criar um critério próprio, com 4 perguntas.
+2. **Definir os pesos**, antes de avaliar as opções.
+3. **Responder às perguntas** de cada opção, com a evidência.
+4. **Aplicar os vetos**, que eliminam a opção.
+5. **Calcular o resultado:** a média das notas, ponderada pelos pesos.
 
-| Pilar | Pergunta | Nota 1 | Nota 3 | Nota 5 |
-|---|---|---|---|---|
-| Segurança | Protege dados e acesso, e facilita auditar? | Expõe dados ou não permite controlar acesso | Atende com controles comuns, como rede e TLS | Controle forte por padrão, com identidade, expiração e auditoria |
-| Desempenho | A latência e o consumo são baixos? | Inviabiliza a meta de latência | Cumpre a meta, sem folga relevante | Cumpre a meta com muita folga, ou é a opção mais rápida |
-| Escalabilidade | Acompanha o crescimento da carga? | Para de atender com pouco crescimento | Atende o cenário Crescimento com ajustes | Cresce sem mudar a arquitetura |
-| Confiabilidade | Isola falhas e evita perda de dados? | Quebra um requisito, como a independência da escrita | Recupera com intervenção, e o risco é aceitável | Falha isolada, sem perda, e com recuperação automática |
-| Custo | O custo total é baixo? | Custo muito acima do que o volume justifica | Custo proporcional ao valor | Custo marginal ou nenhum componente novo |
-| Simplicidade | É fácil construir e entender? | Exige novo paradigma ou muitos componentes | Exige um componente ou conceito novo | Cabe no que a equipe já usa, com pouco código |
-| Operabilidade | É fácil operar e manter com a equipe do cliente? | Exige equipe especializada, com operação manual constante | Operação comum, com rotinas conhecidas | Serviço gerenciado ou prática que a equipe já domina |
+| Peso | Regra |
+|---:|---|
+| 4 | Alinhamento com o negócio, em toda decisão |
+| 3 | A decisão afeta diretamente uma restrição do negócio por este critério |
+| 2 | Relevante para esta decisão |
+| 1 | Secundário |
 
-## Como as notas foram dadas
+## Catálogo de critérios
 
-Este procedimento é uma reconstrução. Ele descreve o raciocínio usado, mas não foi seguido como um formulário nem registrado nota a nota. Por isso, algumas notas podem não bater exatamente com a régua.
-
-1. **Três opções por decisão.** A escolhida e as duas alternativas mais fortes. Outras aparecem só no texto do ADR.
-2. **Partida em 3.** Cada nota começa em "adequado".
-3. **Ajuste por fatos da opção.** Sobe ou desce por características conhecidas. Exemplo: Pub/Sub é gerenciado, então recebe 5 em Operabilidade. RabbitMQ exige cluster próprio, então recebe 2.
-4. **Nota 1 marca o que quebra um requisito.** HTTP síncrono recebe 1 em Confiabilidade porque a queda do consolidado afetaria a escrita.
-5. **Comparação na mesma linha.** Cada pilar é comparado entre as três opções do ADR, e não entre ADRs.
-6. **Sem pesos e sem soma.** A leitura aponta o pilar decisivo, e o texto explica a escolha.
-
-**Quem deu as notas:** o agente de IA que escreveu a documentação, com as decisões já discutidas com o autor. Não houve comitê nem votação.
-
-**Quando:** nos ADRs 0001 a 0010, durante o desenho. Nos ADRs 0011 a 0021, depois da implementação, com a escolha já feita.
-
-## O que sustenta cada decisão
-
-A coluna **Base** diz de onde veio a força da decisão, e não de cada nota.
-
-| ADR | Decisão | Pilar decisivo | Base | Motivo |
-|---|---|---|---|---|
-| [0001](adr/0001-estilo-arquitetural.md) | Estilo arquitetural | Confiabilidade | Requisito | Isolar a falha do consolidado |
-| [0002](adr/0002-integracao-entre-servicos.md) | Integração entre serviços | Confiabilidade | Requisito | Nenhuma dependência síncrona entre os serviços |
-| [0003](adr/0003-mensageria.md) | Mensageria | Operabilidade | Julgamento | Serviço gerenciado, sem cluster próprio |
-| [0004](adr/0004-banco-de-dados.md) | Banco de dados | Simplicidade | Fora dos pilares | Transações, restrições e SQL. A aderência ao modelo relacional não é um pilar |
-| [0005](adr/0005-modelo-de-leitura.md) | Modelo de leitura do saldo | Desempenho | Medição | Leitura rápida e isolada, medida na carga |
-| [0006](adr/0006-computacao.md) | Plataforma de computação | Operabilidade | Julgamento | Menos operação que GKE e máquinas virtuais |
-| [0007](adr/0007-linguagem.md) | Linguagem e plataforma | Operabilidade | Julgamento | Equipe que já domina C# |
-| [0008](adr/0008-autenticacao-e-autorizacao.md) | Autenticação e autorização | Segurança | Julgamento | Tokens curtos e escopos |
-| [0009](adr/0009-observabilidade.md) | Observabilidade | Operabilidade | Fora dos pilares | Portabilidade: mesmo código no local e na nuvem. Portabilidade não é um pilar |
-| [0010](adr/0010-estrategia-de-migracao.md) | Estratégia de migração | Confiabilidade | Julgamento | Poder parar e voltar em cada fase |
-| [0011](adr/0011-isolamento-de-comerciantes.md) | Isolamento entre comerciantes | Custo | Julgamento | Custo que não cresce com cada comerciante |
-| [0012](adr/0012-acesso-a-dados.md) | Acesso a dados | Simplicidade | Fora dos pilares | Uma dependência a menos e SQL visível. O texto admite que Dapper seria igualmente bom |
-| [0013](adr/0013-migracoes-de-esquema.md) | Migrações de esquema | Simplicidade | Julgamento | SQL explícito no binário do serviço |
-| [0014](adr/0014-separacao-de-processos.md) | Separação de processos | Confiabilidade | Requisito | Isolar falhas entre API e worker |
-| [0015](adr/0015-envio-da-outbox.md) | Envio da outbox | Simplicidade | Julgamento | Nenhum componente novo |
-| [0016](adr/0016-idempotencia-da-escrita.md) | Idempotência da escrita | Confiabilidade | Requisito | Garantia na mesma transação, sem depender do cache |
-| [0017](adr/0017-vazao-do-consumidor.md) | Vazão do consumidor | Confiabilidade | Medição | O teste de resiliência esgotou as conexões |
-| [0018](adr/0018-reconstrucao-do-saldo.md) | Reconstrução do saldo | Confiabilidade | Requisito | Um só caminho de cálculo, sem ler o banco do outro serviço |
-| [0019](adr/0019-paginacao.md) | Paginação de lançamentos | Desempenho | Julgamento | Tempo estável em qualquer página |
-| [0020](adr/0020-estilo-da-api-http.md) | Estilo da API HTTP | Simplicidade | Julgamento | Pouco código para poucas rotas |
-| [0021](adr/0021-estrategia-de-testes.md) | Estratégia de testes | Confiabilidade | Medição | O banco real achou um defeito que falsos não achariam |
-
-| Base | ADRs | Significado |
+| Critério | Perguntas | Veto |
 |---|---|---|
-| Requisito | 5 | O desafio ou um requisito aceito define a escolha |
-| Medição | 3 | Um teste deste projeto confirmou o motivo |
-| Julgamento | 10 | Argumento técnico, sem medição |
-| Fora dos pilares | 3 | O motivo real não aparece nos sete pilares |
+| Alinhamento com o negócio | Atende a uma restrição ou capacidade do negócio? Entrega valor cedo? É compatível com a stack, o provedor e as regras de uma instituição financeira? Apoia a evolução prevista? | Contraria uma restrição do negócio |
+| Segurança | Controla acesso por identidade? Não acrescenta exposição? Facilita auditar? O isolamento não depende só de disciplina no código? | Expõe dados de um comerciante a outro |
+| Desempenho | Cumpre as metas de p95? Não acrescenta chamada de rede ao caminho crítico? A latência é estável? O consumo é baixo? | Não cumpre a meta de latência |
+| Escalabilidade | Atende 500 req/s sem mudar a arquitetura? Escala sem coordenação manual? Não cria gargalo novo? O esforço cresce menos que a carga? | Não atende 50 req/s |
+| Confiabilidade | A falha fica isolada? Falhas comuns não perdem dado confirmado? Recupera sozinho? Não cria ponto único de falha, e repetir é seguro? | A escrita depende do consolidado, ou há perda de lançamento em falha comum |
+| Economia | Não acrescenta componente pago? O custo fixo adicional fica abaixo de US$ 100 por mês? O custo cresce menos que a carga? Construir e manter custa menos de 1 pessoa-mês por ano? | Custo acima de 3 vezes US$ 1.250 por mês |
+| Simplicidade | Não acrescenta componente? Não exige conceito desconhecido de uma equipe .NET? Exige pouco código? É fácil testar localmente? | Nenhum |
+| Operabilidade | É gerenciado? Atualiza sem parada? Oferece telemetria padrão? A equipe já domina? | Exige especialista dedicado |
+| Portabilidade | Funciona igual no local e na nuvem? Permite trocar de fornecedor? Usa padrão aberto? Não prende dados em formato proprietário? | Nenhum |
+| Aderência ao problema | Combina com dados financeiros relacionais? Oferece as garantias nativamente? Evita lógica compensatória? Foi feita para este volume? | Não oferece uma garantia exigida |
 
-Mesmo nas decisões com medição, só a opção escolhida foi medida. **Nenhuma alternativa foi implementada para comparação.** As notas de Custo das alternativas também são estimativas: só a opção escolhida teve preço pesquisado.
+## Como esta avaliação foi feita
 
-## Análise das notas
+Três agentes de IA avaliaram as 21 decisões e as 69 opções, sem acesso ao repositório. Eles não sabiam qual opção tinha sido escolhida, as opções vieram embaralhadas, e eles definiram critérios e pesos antes das notas. Depois disso, o autor decidiu o que aceitar. As respostas e a evidência estão na [avaliação dos radares](21-avaliacao-dos-radares.md).
 
-Esta seção é calculada a partir das 441 notas de `docs/adr/radar/data.json`.
+## Ajustes do arquiteto
 
-### A escolhida nem sempre vence na soma
+A avaliação não é a palavra final. Estes ajustes foram decididos pelo autor, depois da avaliação:
 
-A soma simples das notas é só um teste. Ela trata todos os pilares como iguais, o que o método não faz.
+| ADR | Opção | Critério | Antes | Depois | Motivo |
+|---|---|---|---|---|---|
+| 0004 | AlloyDB | Alinhamento com o negócio | 5 | 4 | Capacidade acima da necessidade atual do negócio, conforme o princípio P6. O preço maior ainda precisa ser confirmado na calculadora do GCP. |
+| 0007 | Go | Alinhamento com o negócio | Veto | 2 | C# é a stack da empresa, mas é preferência de negócio, e não restrição. A opção perde em Alinhamento, sem ser eliminada. |
+| 0007 | Java com Spring Boot | Alinhamento com o negócio | Veto | 2 | C# é a stack da empresa, mas é preferência de negócio, e não restrição. A opção perde em Alinhamento, sem ser eliminada. |
+| 0007 | TypeScript com Node.js | Alinhamento com o negócio | Veto | 2 | C# é a stack da empresa, mas é preferência de negócio, e não restrição. A opção perde em Alinhamento, sem ser eliminada. |
 
-| Resultado | ADRs | Quais |
+A avaliação também mudou a arquitetura em três decisões:
+
+| ADR | Antes | Depois |
 |---|---|---|
-| A escolhida vence | 16 | Os demais |
-| Empate | 1 | 0007 |
-| A escolhida perde | 4 | 0001, 0004, 0009, 0012 |
+| 0005 | Cache sempre ligado | Sem cache por padrão, com cache configurável por rota ou tabela |
+| 0011 | Isolamento só no código | Row-level security |
+| 0012 | Npgsql direto | Dapper |
 
-Com peso 3 no pilar decisivo, a escolhida vence em 20 de 21 ADRs. Continua sem vencer em: 0012.
+## Resultado
 
-| ADR | Soma da escolhida | Melhor alternativa | Margem | Margem com peso |
-|---|---|---|---|---|
-| [0001](adr/0001-estilo-arquitetural.md) | 27 | 28 | −1 | +2 |
-| [0002](adr/0002-integracao-entre-servicos.md) | 28 | 24 | +4 | +8 |
-| [0003](adr/0003-mensageria.md) | 32 | 25 | +7 | +11 |
-| [0004](adr/0004-banco-de-dados.md) | 28 | 29 | −1 | +3 |
-| [0005](adr/0005-modelo-de-leitura.md) | 30 | 22 | +8 | +10 |
-| [0006](adr/0006-computacao.md) | 31 | 27 | +4 | +8 |
-| [0007](adr/0007-linguagem.md) | 28 | 28 | 0 | +4 |
-| [0008](adr/0008-autenticacao-e-autorizacao.md) | 29 | 28 | +1 | +7 |
-| [0009](adr/0009-observabilidade.md) | 28 | 29 | −1 | +3 |
-| [0010](adr/0010-estrategia-de-migracao.md) | 26 | 22 | +4 | +12 |
-| [0011](adr/0011-isolamento-de-comerciantes.md) | 31 | 22 | +9 | +13 |
-| [0012](adr/0012-acesso-a-dados.md) | 28 | 29 | −1 | −3 |
-| [0013](adr/0013-migracoes-de-esquema.md) | 29 | 27 | +2 | +4 |
-| [0014](adr/0014-separacao-de-processos.md) | 28 | 26 | +2 | +6 |
-| [0015](adr/0015-envio-da-outbox.md) | 29 | 26 | +3 | +7 |
-| [0016](adr/0016-idempotencia-da-escrita.md) | 29 | 24 | +5 | +12 |
-| [0017](adr/0017-vazao-do-consumidor.md) | 28 | 25 | +3 | +5 |
-| [0018](adr/0018-reconstrucao-do-saldo.md) | 28 | 26 | +2 | +4 |
-| [0019](adr/0019-paginacao.md) | 30 | 24 | +6 | +12 |
-| [0020](adr/0020-estilo-da-api-http.md) | 30 | 27 | +3 | +7 |
-| [0021](adr/0021-estrategia-de-testes.md) | 27 | 26 | +1 | +7 |
+| ADR | Decisão | Escolhida | Nota | Melhor alternativa | Nota | Margem | Eliminadas |
+|---|---|---|---|---|---|---|---|
+| [0001](adr/0001-estilo-arquitetural.md) | Estilo arquitetural | Dois serviços orientados a eventos | 4,24 | Funções serverless | 4,06 | 0,18 | 1 |
+| [0002](adr/0002-integracao-entre-servicos.md) | Integração entre serviços | Outbox na transação e mensageria | 4,45 | CDC do banco | 3,35 | 1,10 | 2 |
+| [0003](adr/0003-mensageria.md) | Mensageria | Pub/Sub | 4,16 | Kafka gerenciado | 4,00 | 0,16 | 0 |
+| [0004](adr/0004-banco-de-dados.md) | Banco de dados | Cloud SQL para PostgreSQL | 4,28 | AlloyDB | 4,16 | 0,12 | 0 |
+| [0005](adr/0005-modelo-de-leitura.md) | Modelo de leitura do saldo | Agregado diário sem cache | 4,63 | Agregado diário com cache Redis | 3,53 | 1,11 | 0 |
+| [0006](adr/0006-computacao.md) | Plataforma de computação | Cloud Run | 4,50 | GKE Autopilot | 4,35 | 0,15 | 0 |
+| [0007](adr/0007-linguagem.md) | Linguagem e plataforma | C# com .NET 10 | 4,92 | Go | 3,25 | 1,67 | 0 |
+| [0008](adr/0008-autenticacao-e-autorizacao.md) | Autenticação e autorização | Gateway, OIDC e JWT | 4,36 | Chaves de API | 3,36 | 1,00 | 0 |
+| [0009](adr/0009-observabilidade.md) | Observabilidade | OpenTelemetry | 4,57 | SDK do provedor de nuvem | 3,71 | 0,86 | 0 |
+| [0010](adr/0010-estrategia-de-migracao.md) | Estratégia de migração | Strangler fig, por fases | 4,13 | Migração de uma vez | 2,93 | 1,20 | 1 |
+| [0011](adr/0011-isolamento-de-comerciantes.md) | Isolamento entre comerciantes | Tabelas compartilhadas com row-level security | 4,32 | Tabelas compartilhadas com filtro no código | 3,79 | 0,53 | 0 |
+| [0012](adr/0012-acesso-a-dados.md) | Acesso a dados | Dapper | 5,00 | Npgsql com SQL explícito | 4,82 | 0,18 | 0 |
+| [0013](adr/0013-migracoes-de-esquema.md) | Migrações de esquema | DbUp com SQL | 5,00 | Flyway | 4,31 | 0,69 | 0 |
+| [0014](adr/0014-separacao-de-processos.md) | Separação de processos | Processos separados | 4,65 | Job agendado | 4,41 | 0,24 | 0 |
+| [0015](adr/0015-envio-da-outbox.md) | Envio da outbox | Consulta periódica com SKIP LOCKED | 5,00 | LISTEN/NOTIFY com consulta de segurança | 4,21 | 0,79 | 0 |
+| [0016](adr/0016-idempotencia-da-escrita.md) | Idempotência da escrita | Idempotency-Key guardada no banco | 4,88 | Nenhuma restante | — | — | 2 |
+| [0017](adr/0017-vazao-do-consumidor.md) | Vazão do consumidor | Limite fixo de eventos em processamento | 4,76 | Pooler de conexões | 3,18 | 1,59 | 1 |
+| [0018](adr/0018-reconstrucao-do-saldo.md) | Reconstrução do saldo | Reenvio dos lançamentos pela outbox | 3,89 | Restaurar backup do consolidado e reprocessar o que faltou | 3,84 | 0,05 | 2 |
+| [0019](adr/0019-paginacao.md) | Paginação de lançamentos | Keyset com cursor | 4,86 | Offset e limite | 2,71 | 2,14 | 0 |
+| [0020](adr/0020-estilo-da-api-http.md) | Estilo da API HTTP | Minimal APIs | 4,82 | Controllers MVC | 4,73 | 0,09 | 0 |
+| [0021](adr/0021-estrategia-de-testes.md) | Estratégia de testes | Domínio, banco real e mutação | 4,23 | Só testes de ponta a ponta | 3,15 | 1,08 | 1 |
 
-Quando a escolhida perde, a explicação está fora da soma:
+10 opções foram eliminadas por veto.
 
-- **0001:** o monolito é mais simples e barato, mas quebra a independência da escrita. O requisito elimina a opção, mesmo com soma maior.
-- **0004:** Firestore soma mais, mas agregações e restrições ficariam na aplicação. Esse motivo não é um pilar.
-- **0009:** o SDK do provedor soma mais, mas prende o código ao GCP. Portabilidade não é um pilar.
-- **0012:** Dapper soma mais, e o ADR admite que seria igualmente bom. A escolha é uma preferência defensável, e não uma vitória.
+**Decisões apertadas**, com margem menor que 0,25: 0001, 0003, 0004, 0006, 0012, 0014, 0018, 0020. Nesses casos, a defesa vem do argumento, e não do gráfico.
 
-### Decisões com margem pequena
+**Sem o critério de negócio**, a escolhida deixa de vencer em: 0004, 0018.
 
-Com margem de até 1 ponto, mudar uma única nota pode empatar ou inverter a soma: 0007, 0008, 0021. Nesses casos, a defesa precisa vir do argumento, e não do gráfico.
+**Com pesos iguais**, a escolhida deixa de vencer em: nenhuma.
 
-### Sinais de viés
+## Limites
 
-| Pilar | Média da escolhida | Média das alternativas |
-|---|---|---|
-| Segurança | 4,05 | 3,64 |
-| Desempenho | 4,10 | 3,81 |
-| Escalabilidade | 4,24 | 3,57 |
-| Confiabilidade | 4,52 | 3,36 |
-| Custo | 3,95 | 3,57 |
-| Simplicidade | 3,81 | 3,36 |
-| Operabilidade | 4,10 | 2,93 |
+- **Avaliadores:** são modelos de IA, com uma rodada cada, sem repetição para medir variação.
+- **Interpretação:** pontos abertos da régua foram interpretados. O veto do monolito no ADR-0001, por exemplo, trata "mesmo processo" como dependência da escrita.
+- **"A equipe já domina":** a resposta foi "não" quando a informação faltava, o que favorece opções em SQL e C#.
+- **Fatos não verificados:** ficaram marcados na evidência, principalmente preços em São Paulo. O preço do AlloyDB precisa de confirmação.
+- **Medições:** existem só para parte das opções, e nenhuma alternativa foi implementada para comparação.
+- **Degraus:** com 4 perguntas por critério, um 5,00 não significa perfeição.
+- **Sobreposição:** Alinhamento pode contar de novo um mérito que já aparece em outro critério.
+- **Decisão anterior:** a escolha já existia quando a avaliação foi feita, e o autor ajustou resultados depois de vê-los. Os ajustes estão expostos acima.
 
-| Nota | Quantidade | Parte do total |
-|---|---|---|
-| 1 | 12 | 3% |
-| 2 | 44 | 10% |
-| 3 | 107 | 24% |
-| 4 | 189 | 43% |
-| 5 | 89 | 20% |
+## Histórico
 
-- **A escolhida tem média maior em todos os pilares.** Parte disso é legítima, porque ela foi escolhida por ser melhor. Parte pode ser viés de quem já conhecia a resposta.
-- **As notas se concentram em 4.** A escala usa pouco o 1 e o 2, então as diferenças ficam pequenas.
+A primeira avaliação usava sete pilares fixos, três opções e notas por julgamento, sem régua prévia. Na soma simples, a opção escolhida perdia em 4 decisões e empatava em 1, e a escolhida tinha média maior em todos os pilares, o que indicava viés. As notas originais estão em `docs/adr/radar/historico/avaliacao-original.json`.
 
-### Inconsistências conhecidas
+## Como rever
 
-| Caso | Problema |
-|---|---|
-| CDC nos ADRs 0002 e 0015 | Recebe Desempenho 4 em um e 5 no outro, sem motivo declarado |
-| Operabilidade no ADR-0007 | Mede o domínio da equipe, e não a operação do sistema |
-| Pilares no ADR-0021 | Segurança e Escalabilidade dizem pouco sobre estratégia de testes |
-| Portabilidade | Decide o ADR-0009, mas não é um pilar |
-| Aderência ao problema | Decide o ADR-0004, mas não é um pilar |
-
-As notas foram mantidas como estavam. Corrigi-las depois de ver esta análise seria ajustar o resultado à conclusão.
-
-## Como usar em uma revisão
-
-Para defender uma decisão, parta do requisito e do pilar decisivo, e use o radar como resumo visual. Se alguém questionar uma nota, a resposta honesta é: "é um julgamento, e o motivo é este". Discordar de uma nota é esperado, e o que importa é saber se a discordância muda a decisão.
-
-Para rever uma nota:
-
-1. Altere `docs/adr/radar/data.json`.
-2. Registre o motivo no ADR.
-3. Rode `node tools/radar/generate.mjs` e `node tools/radar/method.mjs`.
-
-## O que daria mais rigor
-
-| Melhoria | Custo |
-|---|---|
-| Duas ou mais pessoas darem notas sem ver as dos outros | Baixo |
-| Definir pesos antes de dar as notas | Baixo |
-| Dar as notas antes de escolher a opção | Baixo, em novas decisões |
-| Acrescentar Portabilidade e Aderência ao problema | Exige rever todas as notas |
-| Medir as alternativas com protótipos | Alto. Vale só para decisões difíceis de reverter |
+1. Altere `docs/adr/radar/data.json`. Se for um ajuste de julgamento, registre em `adjustments`, com o motivo.
+2. Rode `node tools/radar/generate.mjs` e `node tools/radar/method.mjs`.

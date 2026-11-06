@@ -17,15 +17,15 @@ Usar Dapper sobre Npgsql, com SQL escrito à mão dentro dos adaptadores de infr
 <!-- radar:start -->
 ![Radar de Acesso a dados](radar/ADR-0012.svg)
 
-| Pilar | **Npgsql com SQL** | EF Core | Dapper |
-|---|---:|---:|---:|
-| Segurança | 4 | 4 | 4 |
-| Desempenho | 5 | 3 | 5 |
-| Escalabilidade | 4 | 4 | 4 |
-| Confiabilidade | 4 | 4 | 4 |
-| Custo | 4 | 4 | 4 |
-| Simplicidade | 3 | 4 | 4 |
-| Operabilidade | 4 | 3 | 4 |
+| Critério | Peso | **Dapper** | Npgsql com SQL explícito | EF Core |
+|---|---:|---:|---:|---:|
+| Alinhamento com o negócio | 4 | 5 | 5 | 5 |
+| Aderência ao problema | 3 | 5 | 5 | 3 |
+| Desempenho | 2 | 5 | 5 | 4 |
+| Simplicidade | 2 | 5 | 4 | 5 |
+| **Resultado** | | **5,00** | **4,82** | **4,27** |
+
+As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0012).
 <!-- radar:end -->
 
 ## Leitura do radar
@@ -47,8 +47,6 @@ As notas ficaram próximas, e nenhuma opção compromete um requisito. Dapper re
 ## Revisão de 2026-11-06
 
 A primeira versão usava Npgsql direto. A reavaliação às cegas favoreceu o Dapper, que elimina o mapeamento manual e mantém o SQL explícito, e a troca foi feita.
-
-O radar acima mostra a avaliação original. A nova avaliação ainda não foi oficializada.
 
 ## Gatilho de revisão
 

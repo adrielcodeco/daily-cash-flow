@@ -17,15 +17,18 @@ Exigir `Idempotency-Key` de 8 a 128 caracteres nas escritas. A chave fica em `id
 <!-- radar:start -->
 ![Radar de Idempotência da escrita](radar/ADR-0016.svg)
 
-| Pilar | **Chave no banco** | Chave no Redis | Deduplicar por conteúdo |
-|---|---:|---:|---:|
-| Segurança | 4 | 3 | 3 |
-| Desempenho | 4 | 5 | 4 |
-| Escalabilidade | 4 | 4 | 4 |
-| Confiabilidade | 5 | 2 | 1 |
-| Custo | 4 | 3 | 5 |
-| Simplicidade | 4 | 3 | 4 |
-| Operabilidade | 4 | 3 | 3 |
+| Critério | Peso | **Idempotency-Key guardada no banco** | Idempotency-Key guardada no Redis | Deduplicar por conteúdo do lançamento |
+|---|---:|---:|---:|---:|
+| Alinhamento com o negócio | 4 | 5 | 4 | Veto |
+| Aderência ao problema | 3 | 5 | Veto | Veto |
+| Confiabilidade | 3 | 5 | 3 | Veto |
+| Desempenho | 2 | 4 | 4 | 5 |
+| Operabilidade | 2 | 5 | 3 | 5 |
+| Simplicidade | 2 | 5 | 3 | 5 |
+| Economia | 1 | 5 | 3 | 5 |
+| **Resultado** | | **4,88** | Eliminada | Eliminada |
+
+As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0016).
 <!-- radar:end -->
 
 ## Leitura do radar

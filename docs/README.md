@@ -23,7 +23,8 @@
 | [Resumo das decisões](16-resumo-de-decisoes.md) | Tudo o que ficou decidido, de todas as fontes, sem os trade-offs |
 | [Registro de decisões](15-registro-de-decisoes.md) | Decisões menores, parâmetros e o que foi revisto |
 | [ADRs](adr/README.md) | Decisões, com radar de trade-offs |
-| [Método dos radares](20-metodo-dos-radares.md) | O que as notas significam, como foram dadas e seus limites |
+| [Método dos radares](20-metodo-dos-radares.md) | Régua, pesos, vetos, ajustes do arquiteto e limites |
+| [Avaliação dos radares](21-avaliacao-dos-radares.md) | Evidência de cada nota, por decisão e opção |
 | [Contratos](contratos/README.md) | OpenAPI, AsyncAPI e esquema do evento |
 
 ## Implementado e proposto

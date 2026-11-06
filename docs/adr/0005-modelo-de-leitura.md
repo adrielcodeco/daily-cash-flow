@@ -18,15 +18,19 @@ O cache em Redis é opcional e fica desligado por padrão. Ele pode ser ligado p
 <!-- radar:start -->
 ![Radar de Modelo de leitura do saldo](radar/ADR-0005.svg)
 
-| Pilar | **Agregado diário e cache** | Consulta aos lançamentos | Event sourcing completo |
-|---|---:|---:|---:|
-| Segurança | 4 | 3 | 4 |
-| Desempenho | 5 | 2 | 4 |
-| Escalabilidade | 5 | 2 | 4 |
-| Confiabilidade | 4 | 2 | 5 |
-| Custo | 4 | 4 | 2 |
-| Simplicidade | 4 | 5 | 1 |
-| Operabilidade | 4 | 3 | 2 |
+| Critério | Peso | **Agregado diário sem cache** | Agregado diário com cache Redis | Consulta direta aos lançamentos | Event sourcing completo |
+|---|---:|---:|---:|---:|---:|
+| Alinhamento com o negócio | 4 | 5 | 5 | 3 | 4 |
+| Aderência ao problema | 3 | 4 | 2 | 4 | 1 |
+| Desempenho | 3 | 5 | 3 | 2 | 4 |
+| Confiabilidade | 2 | 5 | 4 | 4 | 5 |
+| Escalabilidade | 2 | 4 | 3 | 1 | 4 |
+| Operabilidade | 2 | 5 | 4 | 5 | 2 |
+| Simplicidade | 2 | 4 | 3 | 5 | 2 |
+| Economia | 1 | 5 | 4 | 4 | 3 |
+| **Resultado** | | **4,63** | **3,53** | **3,37** | **3,16** |
+
+As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0005).
 <!-- radar:end -->
 
 ## Leitura do radar
@@ -54,8 +58,6 @@ No teste de carga, a latência foi equivalente com e sem cache, com p95 perto de
 A reavaliação às cegas favoreceu o agregado sem cache, com a maior diferença entre as decisões, e a carga já mostrava que o cache não trazia ganho. Como a necessidade muda de caso a caso, o cache virou um recurso configurável, e não uma parte fixa da arquitetura.
 
 ORMs como NHibernate, e EF Core com bibliotecas de terceiros, oferecem cache por tabela. Aqui, uma camada própria na frente do repositório invalida só o comerciante afetado, em vez da tabela inteira, e funciona com escritas feitas em outro processo.
-
-O radar acima mostra a avaliação original. A nova avaliação ainda não foi oficializada.
 
 ## Gatilho de revisão
 

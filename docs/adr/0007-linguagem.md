@@ -16,15 +16,16 @@ Usar C# com .NET 10 LTS e ASP.NET Core.
 <!-- radar:start -->
 ![Radar de Linguagem e plataforma](radar/ADR-0007.svg)
 
-| Pilar | **C# com .NET 10** | TypeScript com Node.js | Go |
-|---|---:|---:|---:|
-| Segurança | 4 | 3 | 4 |
-| Desempenho | 4 | 3 | 5 |
-| Escalabilidade | 4 | 3 | 4 |
-| Confiabilidade | 4 | 3 | 4 |
-| Custo | 3 | 3 | 4 |
-| Simplicidade | 4 | 4 | 4 |
-| Operabilidade | 5 | 3 | 3 |
+| Critério | Peso | **C# com .NET 10** | Go | Java com Spring Boot | TypeScript com Node.js |
+|---|---:|---:|---:|---:|---:|
+| Alinhamento com o negócio | 4 | 5 | 2 | 2 | 2 |
+| Operabilidade | 3 | 5 | 4 | 4 | 4 |
+| Desempenho | 2 | 5 | 5 | 4 | 4 |
+| Simplicidade | 2 | 5 | 3 | 4 | 4 |
+| Economia | 1 | 4 | 3 | 3 | 3 |
+| **Resultado** | | **4,92** | **3,25** | **3,25** | **3,25** |
+
+As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0007).
 <!-- radar:end -->
 
 ## Leitura do radar
@@ -42,6 +43,10 @@ Go tem o melhor desempenho e o menor consumo, mas a operabilidade pesa mais aqui
 
 - Imagens e consumo de memória maiores que os de Go
 - Partida a frio mais lenta, atenuada por instância mínima
+
+## Decisão do arquiteto
+
+C# é a stack da empresa, mas é uma preferência de negócio, e não uma restrição. Por isso, as outras linguagens perdem em Alinhamento, sem serem eliminadas.
 
 ## Gatilho de revisão
 

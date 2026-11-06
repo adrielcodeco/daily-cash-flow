@@ -17,15 +17,19 @@ Parar o consumidor, zerar o consolidado com `--reset`, recolocar os lançamentos
 <!-- radar:start -->
 ![Radar de Reconstrução do saldo](radar/ADR-0018.svg)
 
-| Pilar | **Reenvio pela outbox** | Leitura do banco de lançamentos | Replay na mensageria |
-|---|---:|---:|---:|
-| Segurança | 4 | 2 | 4 |
-| Desempenho | 3 | 5 | 4 |
-| Escalabilidade | 3 | 3 | 3 |
-| Confiabilidade | 5 | 4 | 3 |
-| Custo | 5 | 5 | 3 |
-| Simplicidade | 4 | 4 | 3 |
-| Operabilidade | 4 | 3 | 3 |
+| Critério | Peso | **Reenvio dos lançamentos pela outbox** | Restaurar backup do consolidado e reprocessar o que faltou | Leitura direta do banco de lançamentos | Replay na mensageria |
+|---|---:|---:|---:|---:|---:|
+| Alinhamento com o negócio | 4 | 5 | 4 | Veto | 3 |
+| Aderência ao problema | 3 | 3 | 4 | 5 | Veto |
+| Confiabilidade | 3 | 4 | 4 | 3 | 3 |
+| Escalabilidade | 2 | 2 | 4 | 3 | 4 |
+| Operabilidade | 2 | 4 | 3 | 5 | 4 |
+| Segurança | 2 | 4 | 4 | 3 | 4 |
+| Simplicidade | 2 | 4 | 3 | 5 | 4 |
+| Economia | 1 | 5 | 5 | 5 | 3 |
+| **Resultado** | | **3,89** | **3,84** | Eliminada | Eliminada |
+
+As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0018).
 <!-- radar:end -->
 
 ## Leitura do radar
