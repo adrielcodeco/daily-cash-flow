@@ -17,6 +17,7 @@
 | [Operação](12-operacao.md) | Recuperação de desastres e runbooks |
 | [Revisão Well-Architected](13-revisao-well-architected.md) | Autoavaliação pelos pilares do GCP |
 | [Riscos](14-riscos.md) | Registro e mapa de exposição |
+| [Resumo das decisões](16-resumo-de-decisoes.md) | Lista do que ficou decidido, sem os trade-offs |
 | [Registro de decisões](15-registro-de-decisoes.md) | Decisões menores, parâmetros e o que foi revisto |
 | [ADRs](adr/README.md) | Decisões, com radar de trade-offs |
 | [Contratos](contratos/README.md) | OpenAPI, AsyncAPI e esquema do evento |

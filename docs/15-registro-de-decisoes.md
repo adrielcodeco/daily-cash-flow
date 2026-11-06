@@ -1,6 +1,6 @@
 # Registro de decisões
 
-Toda decisão e todo trade-off ficam registrados, conforme o princípio P10. Este documento guarda as decisões menores e os parâmetros. As escolhas com alternativas reais ficam nos [ADRs](adr/README.md), com radar.
+Toda decisão e todo trade-off ficam registrados, conforme o princípio P10. Este documento guarda as decisões menores e os parâmetros. As escolhas com alternativas reais ficam nos [ADRs](adr/README.md), com radar. A lista só com o que foi decidido está no [resumo das decisões](16-resumo-de-decisoes.md).
 
 ## Como registrar
 
@@ -11,7 +11,7 @@ Toda decisão e todo trade-off ficam registrados, conforme o princípio P10. Est
 | Regra de negócio | Spec ao lado do código e doutrina em `product/` |
 | Decisão revista | Seção "Decisões revistas", sem apagar a original |
 
-O registro entra no mesmo commit da decisão. Antes de fechar um marco, o código é conferido contra este documento.
+O registro entra no mesmo commit da decisão, com o resumo gerado de novo por `node tools/decisions/generate.mjs`. Antes de fechar um marco, o código é conferido contra este documento.
 
 A coluna **Base** diz de onde veio cada escolha:
 
