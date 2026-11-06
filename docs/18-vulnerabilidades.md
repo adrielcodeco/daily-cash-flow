@@ -11,7 +11,7 @@ Este registro acompanha as fraquezas conhecidas da solução, do achado à corre
 | Crítica | 0 | 0 |
 | Alta | 1 | 0 |
 | Média | 8 | 0 |
-| Baixa | 5 | 2 |
+| Baixa | 6 | 2 |
 
 Já foram corrigidos V-01 a V-05. A V-06 está parcial e ainda bloqueia produção.
 
@@ -65,6 +65,8 @@ Já foram corrigidos V-01 a V-05. A V-06 está parcial e ainda bloqueia produç�
 | V-19 | O limite de requisições é por instância, então cresce com a escala | CWE-770 | Média | Código | Aberta | Limite global no Cloud Armor ou no gateway |
 | V-20 | Keycloak local em modo de desenvolvimento, com senha fixa de administrador | CWE-798 | Baixa | Código | Aberta | Só no ambiente local. Em produção, usar o provedor de identidade do cliente |
 | V-21 | A API aceita `traceparent` de quem chama | CWE-345 | Baixa | Testada | Aberta | Remover o cabeçalho no gateway |
+| V-22 | Resultados do k6 guardavam tokens de teste | CWE-312 | Baixa | Testada | Corrigida | `load-test.sh` remove o `setup_data`, e `gitleaks` verifica o histórico |
+| V-23 | `sbom.json` gerado entrou no Git, com caminhos locais | CWE-200 | Baixa | Código | Parcial | Fora do versionamento. Falta tirar do histórico antes de publicar |
 
 As classes usam a [OWASP API Security Top 10 2023](https://owasp.org/API-Security/editions/2023/en/0x11-t10/) e a [CWE](https://cwe.mitre.org/).
 
@@ -105,7 +107,7 @@ Além disso, o cálculo do fechamento em C# não verifica estouro, então a soma
 | Injeção de SQL | Leitura dos adaptadores | Todas as entradas são parâmetros |
 | Isolamento entre comerciantes | Testes automatizados | Registro de outro comerciante responde 404 |
 | Erro interno | Leitura do tratador de erros | Resposta genérica, sem detalhes internos |
-| Segredos no Git | Busca no histórico | Nenhum encontrado, além da senha da V-17 |
+| Segredos no Git | `gitleaks` em todo o histórico | Nenhum encontrado. A senha local da V-17 é conhecida e aceita |
 | Pacotes .NET vulneráveis | `dotnet list package --vulnerable`, nos 10 projetos | Nenhum, em 2026-11-06 |
 | Banco e cache no ambiente local | Leitura do `docker-compose.yml` | Sem porta publicada |
 

@@ -222,6 +222,9 @@ A coluna **Base** diz de onde veio cada escolha:
 | D-130 | Publicador lê o tamanho da outbox a cada 5 s | Ler a cada exportação | A métrica para se o publicador morrer | Valor inicial | Não previsto: `TelemetryMissing` cobre esse caso |
 | D-131 | Nível de log do ASP.NET definido no código | Variável de ambiente | Mudar exige novo build. O `sh` do contêiner descarta variáveis com ponto | Medição | Trocar o ponto de entrada da imagem |
 | D-132 | Métricas expiram em 1 minuto no coletor | Padrão de 5 minutos | Queda curta some mais rápido dos gráficos | Valor inicial | Não previsto |
+| D-133 | `sbom.json` é gerado e não entra no Git | Versionar o inventário | Sem histórico do inventário | Julgamento | Publicar o SBOM como artefato do CI |
+| D-134 | Resultados de carga ficam no Git, sem `setup_data` | Não versionar resultados | Arquivos grandes no repositório, em troca de prova rastreável | Julgamento | Não previsto |
+| D-135 | README em pt-BR, com limites explícitos para produção | Só instruções de execução | Texto mais longo | Julgamento | Não previsto |
 | D-115 | Horizonte de 36 meses, sem impostos e sem cancelamento de clientes | Modelo completo | O resultado tende a ser otimista | Julgamento | Houver dados reais |
 
 ## Decisões revistas

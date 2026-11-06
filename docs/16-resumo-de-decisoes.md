@@ -1,6 +1,6 @@
 # Resumo das decisões
 
-Lista de tudo o que ficou decidido, com 284 itens, sem os trade-offs. Os motivos estão nos [ADRs](adr/README.md) e no [registro de decisões](15-registro-de-decisoes.md).
+Lista de tudo o que ficou decidido, com 287 itens, sem os trade-offs. Os motivos estão nos [ADRs](adr/README.md) e no [registro de decisões](15-registro-de-decisoes.md).
 
 Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decisions/generate.mjs`.
 
@@ -305,6 +305,9 @@ Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decis
 | D-130 | Publicador lê o tamanho da outbox a cada 5 s |
 | D-131 | Nível de log do ASP.NET definido no código |
 | D-132 | Métricas expiram em 1 minuto no coletor |
+| D-133 | `sbom.json` é gerado e não entra no Git |
+| D-134 | Resultados de carga ficam no Git, sem `setup_data` |
+| D-135 | README em pt-BR, com limites explícitos para produção |
 | D-115 | Horizonte de 36 meses, sem impostos e sem cancelamento de clientes |
 
 ## Regras de negócio

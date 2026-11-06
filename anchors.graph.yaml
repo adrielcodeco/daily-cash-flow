@@ -23,7 +23,7 @@ nodes:
     - id: CONTRIBUTING.md
       kind: doc
       rev: 64efd7a42e27
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       layer: guidance
       tags:
         - guidance
@@ -31,6 +31,7 @@ nodes:
     - id: README.md
       kind: doc
       rev: fc0b3768126e
+      updated_at: "2026-11-06"
       layer: guidance
       tags:
         - guidance
