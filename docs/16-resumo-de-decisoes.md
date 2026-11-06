@@ -1,6 +1,6 @@
 # Resumo das decisões
 
-Lista de tudo o que ficou decidido, com 289 itens, sem os trade-offs. Os motivos estão nos [ADRs](adr/README.md) e no [registro de decisões](15-registro-de-decisoes.md).
+Lista de tudo o que ficou decidido, com 291 itens, sem os trade-offs. Os motivos estão nos [ADRs](adr/README.md) e no [registro de decisões](15-registro-de-decisoes.md).
 
 Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decisions/generate.mjs`.
 

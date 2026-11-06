@@ -28,7 +28,7 @@ Cada ADR registra o contexto, as opções, a decisão, as consequências e o gat
 
 ## Como ler os radares
 
-Todos os radares usam os mesmos sete pilares e a mesma escala. As notas são uma avaliação qualitativa para este problema e esta escala de carga. Elas não são medições e não valem para qualquer sistema.
+Todos os radares usam os mesmos sete pilares e a mesma escala. O [método dos radares](../20-metodo-dos-radares.md) explica a régua, como as notas foram dadas e os limites delas. As notas são uma avaliação qualitativa para este problema e esta escala de carga. Elas não são medições e não valem para qualquer sistema.
 
 | Nota | Significado |
 |---:|---|

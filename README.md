@@ -133,7 +133,7 @@ Em cada serviço, `*.Core` é o domínio, sem dependência de banco ou mensageri
 | Para entender | Leia |
 |---|---|
 | O que foi decidido | [Resumo das decisões](docs/16-resumo-de-decisoes.md) |
-| Por que foi decidido | [ADRs](docs/adr/README.md) |
+| Por que foi decidido | [ADRs](docs/adr/README.md) e [método dos radares](docs/20-metodo-dos-radares.md) |
 | A arquitetura | [Arquitetura-alvo](docs/03-arquitetura-alvo.md) e [transição](docs/04-arquitetura-transicao.md) |
 | Os requisitos | [Domínios](docs/01-dominios-e-capacidades.md) e [requisitos](docs/02-requisitos.md) |
 | Custos e retorno | [Custos](docs/05-custos.md) e [ROI](docs/19-roi-e-custo-operacional.md) |

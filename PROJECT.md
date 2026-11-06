@@ -40,7 +40,7 @@ docs/contratos/           OpenAPI, AsyncAPI e esquema do evento
 infra/                    Keycloak, coletor, Tempo, Prometheus e Grafana locais
 load-tests/               cenários k6
 scripts/                  testes, carga, resiliência, mutação e reconstrução
-tools/radar/              gerador dos gráficos de radar
+tools/radar/              gerador dos gráficos de radar e do método
 tools/decisions/          gerador do resumo das decisões
 tools/roi/                gerador do modelo de ROI
 ```
