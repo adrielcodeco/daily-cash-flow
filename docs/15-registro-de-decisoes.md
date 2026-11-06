@@ -1,6 +1,6 @@
 # Registro de decisões
 
-Toda decisão e todo trade-off ficam registrados, conforme o princípio P10. Este documento guarda as decisões menores e os parâmetros. As escolhas com alternativas reais ficam nos [ADRs](adr/README.md), com radar. A lista só com o que foi decidido está no [resumo das decisões](16-resumo-de-decisoes.md).
+Toda decisão e todo trade-off ficam registrados, conforme o princípio P10. Este documento guarda as decisões menores e os parâmetros. As escolhas com alternativas reais ficam nos [ADRs](adr/README.md), com radar. A lista de tudo o que foi decidido, de todas as fontes, está no [resumo das decisões](16-resumo-de-decisoes.md).
 
 ## Como registrar
 
@@ -9,6 +9,7 @@ Toda decisão e todo trade-off ficam registrados, conforme o princípio P10. Est
 | Escolha entre alternativas reais, com efeito na arquitetura | ADR com radar |
 | Parâmetro, convenção ou escolha menor | Este registro |
 | Regra de negócio | Spec ao lado do código e doutrina em `product/` |
+| Premissa, meta ou item fora de escopo | [Requisitos](02-requisitos.md) |
 | Decisão revista | Seção "Decisões revistas", sem apagar a original |
 
 O registro entra no mesmo commit da decisão, com o resumo gerado de novo por `node tools/decisions/generate.mjs`. Antes de fechar um marco, o código é conferido contra este documento.
@@ -18,6 +19,7 @@ A coluna **Base** diz de onde veio cada escolha:
 | Base | Significado |
 |---|---|
 | Requisito | Vem do desafio ou de um requisito aceito |
+| Autor | Definida por quem conduz o projeto |
 | Medição | Foi definida ou confirmada por um teste |
 | Julgamento | Escolha fundamentada, sem medição |
 | Valor inicial | Número razoável para começar, ainda não medido nem ajustado |
@@ -35,7 +37,7 @@ A coluna **Base** diz de onde veio cada escolha:
 | D-07 | Abertura calculada na consulta | Gravar o acumulado por dia | A consulta soma o histórico do comerciante | Julgamento | A soma ficar lenta: ver ADR-0005 |
 | D-08 | Ids em UUID v7 | UUID v4, sequência do banco | Ids mais longos que uma sequência, e revelam o momento da criação | Julgamento | O tamanho dos índices pesar |
 | D-09 | `eventId` igual ao id do lançamento | Id próprio do evento | Um lançamento só pode gerar um evento desse tipo | Julgamento | Surgirem novos eventos por lançamento |
-| D-10 | Evento carrega os dados do lançamento, sem exigir consulta de volta | Evento só com o id | Mensagem maior, e o contrato expõe mais campos | Julgamento | O evento passar a ter dados sensíveis |
+| D-10 | Evento carrega o necessário para o saldo, sem a descrição | Evento só com o id, evento com todos os campos | Quem precisar da descrição terá de obtê-la de outra forma | Julgamento | Um consumidor precisar da descrição |
 | D-11 | Tópico versionado no nome: `entries-recorded-v1` | Versão só no conteúdo | Mudança incompatível exige novo tópico e publicação dupla | Julgamento | Houver mudança incompatível |
 | D-12 | `processed_event` guarda todo evento aplicado | Janela de retenção | A tabela cresce sem limite | Julgamento | O volume pedir retenção, maior que a retenção de reenvio |
 | D-13 | Limpeza da outbox fica como proposta | Limpar desde o início | A tabela cresce até a limpeza existir | Julgamento | Antes de produção |
@@ -93,10 +95,82 @@ A coluna **Base** diz de onde veio cada escolha:
 
 | ID | Decisão | Alternativas | Do que abrimos mão | Base | Rever quando |
 |---|---|---|---|---|---|
-| D-43 | Documentação em pt-BR, código em en-US | Um idioma só | O glossário precisa ligar os termos | Requisito | Não previsto |
+| D-43 | Documentação em pt-BR, código em en-US | Um idioma só | O glossário precisa ligar os termos | Autor | Não previsto |
 | D-45 | Nota de radar é qualitativa, com sete pilares e três opções | Pontuação ponderada | A nota é opinião fundamentada, e não medição | Julgamento | Houver dados de operação |
 | D-46 | Preços de lista em São Paulo, sem desconto | Preços com desconto | O custo real tende a ser menor | Julgamento | Houver contrato com o provedor |
 | D-47 | Volumes de custo são premissas, e só o pico vem do desafio | Só o pico | As médias podem estar erradas | Julgamento | Houver dados reais |
+
+## Escopo e método
+
+| ID | Decisão | Alternativas | Do que abrimos mão | Base | Rever quando |
+|---|---|---|---|---|---|
+| D-54 | Um repositório com os dois serviços | Um repositório por serviço | Os serviços não têm ciclo de versão separado | Julgamento | Equipes diferentes assumirem cada serviço |
+| D-55 | Portas e adaptadores dentro de cada serviço | Camadas simples | Mais projetos e interfaces | Julgamento | O custo superar o ganho em testes |
+| D-56 | CI no GitHub Actions, com testes e `smoke.sh` | Outro CI | Depende do GitHub | Julgamento | O repositório mudar de lugar |
+| D-57 | Cenários Gherkin em pt-BR | Em inglês | Features e testes ficam em idiomas diferentes | Julgamento | A equipe não falar português |
+| D-58 | Mensagens de commit em inglês | Em pt-BR | Histórico em idioma diferente da documentação | Autor | Não previsto |
+
+## Domínio e contratos
+
+| ID | Decisão | Alternativas | Do que abrimos mão | Base | Rever quando |
+|---|---|---|---|---|---|
+| D-59 | Lançamentos e Consolidação são domínios principais, com código próprio | Tratar o relatório como suporte | Duas bases de código | Julgamento | Não previsto |
+| D-60 | Identidade, mensageria e observabilidade usam produto pronto ou padrão aberto | Construir | Dependência de fornecedores | Julgamento | Não previsto |
+| D-61 | Estorno usa o mesmo evento `entry.recorded`, com `reversalOf` | Evento `entry.reversed` | O evento não nomeia o estorno, e o consumidor precisa olhar o campo | Julgamento | Um consumidor tratar estornos de forma diferente |
+| D-62 | Saldo de período limitado a 366 dias | Sem limite | Períodos maiores exigem mais de uma consulta | Valor inicial | O uso real pedir |
+| D-63 | OpenAPI 3.1, AsyncAPI 3.0 e JSON Schema | Só texto | Contratos para manter junto do código | Julgamento | Não previsto |
+| D-64 | Erros no formato Problem Details, da RFC 9457 | Formato próprio | Formato mais verboso | Julgamento | Não previsto |
+| D-65 | Consumidor ignora campos desconhecidos e aceita repetição e ordem diferente | Contrato rígido | Erros de campo passam sem aviso | Julgamento | Não previsto |
+
+## Nuvem e rede
+
+| ID | Decisão | Alternativas | Do que abrimos mão | Base | Rever quando |
+|---|---|---|---|---|---|
+| D-66 | Uma região, com alta disponibilidade entre zonas | Duas regiões ativas | Perder a região exige recuperação, com RTO de 1 hora | Julgamento | Conformidade aprovar região fora do Brasil |
+| D-67 | Réplica fora do Brasil depende de avaliação regulatória | Assumir Santiago | A recuperação regional fica condicionada | Julgamento | Houver parecer de conformidade |
+| D-68 | Início com 6 instâncias sempre ativas de 1 vCPU e 0,5 GiB | Escala a zero | Custo fixo maior, sem inicialização a frio | Julgamento | O teste no GCP mostrar outro tamanho |
+| D-69 | Início com Cloud SQL HA de 2 vCPU e 8 GiB nos dois bancos | Consolidado sem HA | Maior custo do cenário, embora o consolidado possa ser reconstruído | Julgamento | Houver pressão de custo: é a primeira economia |
+| D-70 | Início com Memorystore Basic, de 1 GiB | Standard, com réplica | O cache pode cair com a zona, e a consulta vai ao banco | Julgamento | O banco não suportar a leitura sem cache |
+| D-71 | Cloud Run aceita tráfego só do balanceador | Entrada pública | Mais um componente no caminho | Julgamento | Não previsto |
+| D-72 | Bancos e cache sem IP público | IP público com lista de permissão | Exige rede privada e acesso controlado para operar | Julgamento | Não previsto |
+| D-73 | APIs do Google por Private Service Connect | Saída pela internet | Mais configuração de rede | Julgamento | Não previsto |
+| D-74 | Saída por Cloud NAT só para o provedor de identidade | Saída livre | Cada novo destino precisa de liberação | Julgamento | Surgirem novas integrações externas |
+| D-75 | Todo fluxo não listado é negado | Permitir por padrão | Mudanças exigem nova regra | Julgamento | Não previsto |
+| D-76 | Identidade própria por serviço, com acesso só ao próprio banco | Conta compartilhada | Mais identidades para administrar | Julgamento | Não previsto |
+| D-77 | Limites de 10, 2, 10 e 5 instâncias, conforme o orçamento de conexões | Sem limite | A escala para antes de esgotar o banco | Valor inicial | Houver medição no GCP |
+| D-78 | Faixas de rede `10.20.0.0` são exemplo | Definir agora | Falta alinhar com o plano de endereços do cliente | Julgamento | Antes de produção |
+
+## Segurança
+
+| ID | Decisão | Alternativas | Do que abrimos mão | Base | Rever quando |
+|---|---|---|---|---|---|
+| D-79 | OAuth2 client credentials, com tokens de até 15 minutos | Tokens longos | Mais renovações de token | Valor inicial | O provedor de identidade pesar |
+| D-80 | Escopos `entries.read`, `entries.write` e `balances.read` | Escopo único | Mais configuração por cliente | Julgamento | Não previsto |
+| D-81 | TLS 1.2 ou superior | Só TLS 1.3 | Aceita clientes mais antigos | Julgamento | A política do cliente exigir 1.3 |
+| D-82 | Limite de taxa por cliente, com resposta 429 | Limite global | Um estado a mais por cliente | Julgamento | Valores definidos no M6 |
+| D-83 | mTLS e perfis como FAPI só em integrações críticas | Para todo cliente | Clientes comuns têm proteção menor | Julgamento | A regulação exigir |
+| D-84 | Uma assinatura e uma identidade por consumidor de eventos | Assinatura compartilhada | Mais recursos para administrar | Julgamento | Não previsto |
+| D-85 | Keycloak como identidade local | Provedor na nuvem | O ambiente local difere do provedor real | Julgamento | Definição do provedor do cliente |
+
+## Operação
+
+| ID | Decisão | Alternativas | Do que abrimos mão | Base | Rever quando |
+|---|---|---|---|---|---|
+| D-86 | Consultas com SLO de 99,5%, mais rígido que os 5% do desafio no pico | Usar 95% | Mais esforço que o exigido | Julgamento | Houver dados de operação |
+| D-87 | Orçamento de erro esgotado para novas funcionalidades | Só alertar | Entregas podem atrasar | Julgamento | Não previsto |
+| D-88 | Exercício de restauração por trimestre | Sem exercício | Tempo da equipe | Julgamento | Não previsto |
+| D-89 | Reconciliação automática fica como proposta | Implementar agora | A divergência só aparece com verificação manual ou reconstrução | Julgamento | Antes de produção |
+| D-90 | Cada atividade da RACI tem um único aprovador | Aprovação compartilhada | Papéis podem se acumular em equipes pequenas | Julgamento | Não previsto |
+
+## Migração
+
+| ID | Decisão | Alternativas | Do que abrimos mão | Base | Rever quando |
+|---|---|---|---|---|---|
+| D-91 | Migrar em 5 fases, começando pelas leituras | Começar pelas escritas | Mais tempo com dois sistemas | Julgamento | Houver um legado real |
+| D-92 | CDC alimenta o novo consolidado na fase de espelho | Escrita dupla | Componente temporário a construir | Julgamento | Houver um legado real |
+| D-93 | Avançar só com 30 dias de saldos iguais no espelho e 2 semanas de SLO nas leituras | Prazos menores | A migração demora mais | Valor inicial | Houver um legado real |
+| D-94 | Migrar por grupos de comerciantes | Todos juntos | Convivência mais longa | Julgamento | Não previsto |
+| D-95 | Cada comerciante escreve em um único sistema por vez | Escrever nos dois | Exige um corte controlado por grupo | Julgamento | Não previsto |
 
 ## Decisões revistas
 
