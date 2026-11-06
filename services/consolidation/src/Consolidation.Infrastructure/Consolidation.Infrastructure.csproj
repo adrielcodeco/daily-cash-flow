@@ -6,6 +6,9 @@
     <PackageReference Include="Npgsql" />
     <PackageReference Include="StackExchange.Redis" />
     <PackageReference Include="Npgsql.DependencyInjection" />
+    <PackageReference Include="Npgsql.OpenTelemetry" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" />
     <EmbeddedResource Include="Migrations/*.sql" />
   </ItemGroup>
 </Project>

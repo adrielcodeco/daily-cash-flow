@@ -29,6 +29,5 @@
 
 | Situação | Itens |
 |---|---|
-| Implementado e testado localmente | Serviços, outbox, consumidor, saldo e cache |
-| Previsto para o M6 | Autenticação, limite de taxa, telemetria e dashboards |
+| Implementado e testado localmente | Serviços, outbox, consumidor, saldo, cache, autenticação, limite de taxa, telemetria, dashboards e alertas |
 | Proposto para o GCP, sem deploy | Cloud Run, Cloud SQL, Pub/Sub, Memorystore, Cloud Armor, balanceador e rede |

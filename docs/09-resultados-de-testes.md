@@ -2,11 +2,13 @@
 
 Medições feitas em 05/11/2026, na versão final do M4. Todo o ambiente e o gerador de carga rodaram na mesma máquina, um Apple M1 Pro com 10 CPUs e 7,7 GiB para contêineres. Os números servem de referência local e não representam o ambiente do GCP.
 
+As tabelas de carga e resiliência mostram duas medições: o M4, sem segurança nem telemetria, e o M6, em 06/11/2026, com autenticação, rate limiting e telemetria ativos.
+
 ## Resumo dos requisitos do desafio
 
 | Requisito | Meta | Resultado | Situação |
 |---|---|---|---|
-| Lançamentos disponível com o consolidado fora | Nenhuma escrita recusada | 0 falhas em 4.501 escritas | Aprovado |
+| Lançamentos disponível com o consolidado fora | Nenhuma escrita recusada | 0 falhas em 4.501 escritas, no M4 e no M6 | Aprovado |
 | Vazão do consolidado | 50 req/s | 50 req/s por 5 minutos | Aprovado |
 | Perda de requisições | No máximo 5% | 0% | Aprovado |
 
@@ -16,8 +18,12 @@ Comando: `./scripts/load-test.sh`. Cada cenário envia 50 leituras por segundo e
 
 | Cenário | Duração | Leituras | Falhas | Leitura p95 | Leitura máx. | Escrita p95 |
 |---|---|---:|---:|---:|---:|---:|
-| Com cache | 5 min | 15.001 | 0 | 7,71 ms | 28,44 ms | 11,35 ms |
-| Com o cache fora | 2 min | 6.001 | 0 | 6,91 ms | 55,47 ms | 11,38 ms |
+| M4, com cache | 5 min | 15.001 | 0 | 7,71 ms | 28,44 ms | 11,35 ms |
+| M4, com o cache fora | 2 min | 6.001 | 0 | 6,91 ms | 55,47 ms | 11,38 ms |
+| M6, com cache | 5 min | 15.001 | 0 | 7,55 ms | 97,78 ms | 11,16 ms |
+| M6, com o cache fora | 2 min | 6.001 | 0 | 6,54 ms | 22,95 ms | 11,26 ms |
+
+Autenticação e telemetria não mudaram o p95 de forma perceptível, e a diferença entre as medições está dentro da variação esperada. O maior tempo isolado subiu para 97,78 ms no cenário com cache, sem efeito na meta. A carga usa 50 comerciantes, então cada um fica muito abaixo do limite de 100 requisições por segundo.
 
 Nesta carga, o cache não trouxe ganho de latência, porque o saldo pré-calculado já responde em poucos milissegundos. O ganho esperado é reduzir a carga no banco com mais volume e histórico, e isso ainda não foi medido.
 
@@ -25,16 +31,30 @@ Nesta carga, o cache não trouxe ganho de latência, porque o saldo pré-calcula
 
 Comando: `./scripts/resilience.sh`. O teste envia 50 lançamentos por segundo por 90 segundos e, durante a carga, para o consolidado por 60 segundos e congela a mensageria por 20 segundos.
 
-| Medida | Resultado |
-|---|---:|
-| Lançamentos enviados | 4.501 |
-| Lançamentos recusados | 0 |
-| Latência de escrita p95 | 8,03 ms |
-| Eventos retidos na outbox com a mensageria congelada | 1.042 |
-| Saldo final | 450.100 centavos, igual à soma dos lançamentos |
-| Tempo para fechar o saldo depois do fim da carga | 3 s |
-| Leituras com falha durante a recuperação | 0 |
-| Eventos pendentes no final | 0 |
+| Medida | M4 | M6 |
+|---|---:|---:|
+| Lançamentos enviados | 4.501 | 4.501 |
+| Lançamentos recusados | 0 | 0 |
+| Latência de escrita p95 | 8,03 ms | 7,90 ms |
+| Eventos retidos na outbox com a mensageria congelada | 1.042 | Não registrado |
+| Saldo final, igual à soma dos lançamentos | 450.100 centavos | 450.100 centavos |
+| Tempo para fechar o saldo depois do fim da carga | 3 s | 4 s |
+| Leituras com falha durante a recuperação | 0 | 0 |
+| Eventos pendentes no final | 0 | 0 |
+
+## Segurança e telemetria
+
+`./scripts/smoke.sh` verifica estes cenários a cada execução:
+
+| Cenário | Resultado |
+|---|---|
+| Sem token, com token inválido ou só com `X-Merchant-Id` | 401 |
+| Sem o escopo da operação | 403 |
+| Lançamento de outro comerciante | 404 |
+| `X-Merchant-Id` enviado junto de um token válido | Ignorado |
+| 400 requisições simultâneas de um comerciante | Parte recebe 429, e outro cliente segue com 200 |
+| Coletor de telemetria fora do ar | Escrita aceita |
+| Um lançamento rastreado | Um traço com API, publicador e consumidor |
 
 ## Testes automatizados
 
@@ -89,4 +109,3 @@ A revisão de segurança achou entradas inválidas aceitas pela API, apesar dos 
 - O gerador de carga divide a máquina com os serviços.
 - A carga usa um histórico pequeno. Um histórico longo pode deixar a soma da abertura mais lenta, como aponta o ADR-0005.
 - A mensageria é o emulador do Pub/Sub, e não o serviço real.
-- A autenticação ainda não está ativa nestas medições. Ela entra no M6, e os testes serão repetidos.

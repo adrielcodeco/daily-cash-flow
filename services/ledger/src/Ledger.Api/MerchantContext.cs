@@ -1,15 +1,12 @@
 // @anchors
 //   code: LDMCT
 //   layer: host
-//   updated_at: 2026-11-05
+//   updated_at: 2026-11-06
 namespace Ledger.Api;
 
-/// <summary>
-/// Local placeholder until token validation lands in milestone M6.
-/// The merchant must come from the token, never from a client-controlled header.
-/// </summary>
+/// <summary>The merchant comes from the validated token, never from anything the client chooses.</summary>
 public static class MerchantContext
 {
     public static bool TryRead(HttpContext context, out Guid merchantId) =>
-        Guid.TryParse(context.Request.Headers["X-Merchant-Id"], out merchantId);
+        Guid.TryParse(context.User.FindFirst(ApiSecurity.MerchantClaim)?.Value, out merchantId);
 }

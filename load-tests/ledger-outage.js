@@ -3,7 +3,7 @@ import http from 'k6/http';
 import { check } from 'k6';
 
 const LEDGER = __ENV.LEDGER_URL || 'http://localhost:18081';
-const MERCHANT = __ENV.MERCHANT;
+const TOKEN = __ENV.TOKEN;
 const DATE = __ENV.DATE;
 
 export const options = {
@@ -30,7 +30,7 @@ export default function () {
   const response = http.post(
     `${LEDGER}/v1/entries`,
     JSON.stringify({ entryType: 'CREDIT', amountCents: 100, accountingDate: DATE }),
-    { headers: { 'Content-Type': 'application/json', 'X-Merchant-Id': MERCHANT, 'Idempotency-Key': uuid() } },
+    { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${TOKEN}`, 'Idempotency-Key': uuid() } },
   );
   check(response, { 'entry recorded': (r) => r.status === 201 });
 }

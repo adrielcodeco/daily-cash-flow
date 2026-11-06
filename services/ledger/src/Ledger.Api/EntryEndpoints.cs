@@ -1,7 +1,7 @@
 // @anchors
 //   code: LDEPT
 //   layer: host
-//   updated_at: 2026-11-05
+//   updated_at: 2026-11-06
 using Ledger.Core;
 using Microsoft.AspNetCore.Mvc;
 
@@ -56,7 +56,7 @@ public static class EntryEndpoints
                 cancellationToken);
 
             return Results.Created($"/v1/entries/{entry.Id}", EntryResponse.From(entry));
-        });
+        }).RequireAuthorization(ApiSecurity.EntriesWrite);
 
         entries.MapGet("/", async (
             DateOnly date,
@@ -73,7 +73,7 @@ public static class EntryEndpoints
 
             var page = await listEntries.ExecuteAsync(merchantId, date, cursor, limit ?? ListEntries.DefaultLimit, cancellationToken);
             return Results.Ok(new EntryPageResponse(page.Items.Select(EntryResponse.From).ToList(), page.NextCursor));
-        });
+        }).RequireAuthorization(ApiSecurity.EntriesRead);
 
         entries.MapGet("/{id:guid}", async (Guid id, HttpContext context, IEntryStore store, CancellationToken cancellationToken) =>
         {
@@ -86,7 +86,7 @@ public static class EntryEndpoints
             return entry is null
                 ? Results.Problem(title: "The entry was not found.", statusCode: StatusCodes.Status404NotFound, type: "entry_not_found")
                 : Results.Ok(EntryResponse.From(entry));
-        });
+        }).RequireAuthorization(ApiSecurity.EntriesRead);
 
         entries.MapPost("/{id:guid}/reversal", async (
             Guid id,
@@ -107,7 +107,7 @@ public static class EntryEndpoints
 
             var reversal = await reverseEntry.ExecuteAsync(merchantId, id, key!, cancellationToken);
             return Results.Created($"/v1/entries/{reversal.Id}", EntryResponse.From(reversal));
-        });
+        }).RequireAuthorization(ApiSecurity.EntriesWrite);
     }
 
     private static bool IsValidKey(string? key) => key?.Length is >= MinKeyLength and <= MaxKeyLength;

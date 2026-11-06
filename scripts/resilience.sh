@@ -5,6 +5,8 @@ set -euo pipefail
 BALANCES=http://localhost:18082
 DATE=$(TZ=America/Sao_Paulo date +%F)
 MERCHANT=$(uuidgen | tr '[:upper:]' '[:lower:]')
+. scripts/auth.sh
+TOKEN=$(new_client "$MERCHANT")
 RESULTS=load-tests/results
 mkdir -p "$RESULTS"
 
@@ -19,13 +21,13 @@ pending_events() {
 }
 
 closing() {
-  curl -sf -H "X-Merchant-Id: $MERCHANT" "$BALANCES/v1/balances/period?start=$DATE&end=$DATE" |
+  curl -sf -H "Authorization: Bearer $TOKEN" "$BALANCES/v1/balances/period?start=$DATE&end=$DATE" |
     python3 -c "import json,sys; print(json.load(sys.stdin)['items'][0]['closingCents'])"
 }
 
 echo '== 50 writes per second for 90 seconds'
 k6 run --quiet --summary-export "$RESULTS/resilience.json" \
-  -e MERCHANT="$MERCHANT" -e DATE="$DATE" -e DURATION=90s load-tests/ledger-outage.js &
+  -e TOKEN="$TOKEN" -e DATE="$DATE" -e DURATION=90s load-tests/ledger-outage.js &
 K6=$!
 
 sleep 10

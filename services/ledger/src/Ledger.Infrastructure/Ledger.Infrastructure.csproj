@@ -5,6 +5,9 @@
     <PackageReference Include="Google.Cloud.PubSub.V1" />
     <PackageReference Include="Npgsql" />
     <PackageReference Include="Npgsql.DependencyInjection" />
+    <PackageReference Include="Npgsql.OpenTelemetry" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" />
     <EmbeddedResource Include="Migrations/*.sql" />
   </ItemGroup>
 </Project>

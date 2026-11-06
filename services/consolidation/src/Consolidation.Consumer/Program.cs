@@ -1,7 +1,7 @@
 // @anchors
 //   code: CNCSM
 //   layer: host
-//   updated_at: 2026-11-05
+//   updated_at: 2026-11-06
 using Consolidation.Consumer;
 using Consolidation.Core;
 using Consolidation.Infrastructure;
@@ -34,6 +34,8 @@ if (args.Contains("--reset"))
     builder.Services.AddSingleton<ResetBalances>();
     using var resetHost = builder.Build();
     await resetHost.Services.GetRequiredService<ResetBalances>().ExecuteAsync(CancellationToken.None);
+    resetHost.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Audit")
+        .LogInformation("Maintenance {Operation} finished.", "reset");
     return;
 }
 
@@ -41,5 +43,6 @@ builder.Services.AddSingleton<IBalanceCache>(RedisBalanceCache.Connect(redisConn
 builder.Services.AddSingleton<ApplyEntryRecorded>();
 builder.Services.AddSingleton(new EventSubscription(projectId, subscriptionId));
 builder.Services.AddHostedService<EntryRecordedWorker>();
+builder.Services.AddServiceTelemetry("consolidation-consumer");
 
 await builder.Build().RunAsync();

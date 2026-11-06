@@ -43,6 +43,10 @@ O SDK do provedor é mais direto e integrado, mas prende a instrumentação ao G
 - Exige mais configuração inicial
 - O coletor é mais um componente para operar
 
+## Resultado
+
+Implementado no M6. `smoke.sh` prova que um traço liga a API, o publicador e o consumidor, e que a queda do coletor não afeta a escrita. O custo medido da telemetria está nos [resultados de testes](../09-resultados-de-testes.md).
+
 ## Gatilho de revisão
 
 Rever se o cliente tiver um APM corporativo. Nesse caso, basta trocar o destino do coletor.

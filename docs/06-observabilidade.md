@@ -18,9 +18,18 @@ A instrumentação usa OpenTelemetry, conforme o [ADR-0009](adr/0009-observabili
 | Item | Situação |
 |---|---|
 | Verificações `/health/live` e `/health/ready` nas APIs | Implementado |
-| Logs de erro do publicador e do consumidor | Implementado, em texto simples |
-| Métricas, traços, logs estruturados, dashboards e alertas | Desenho deste documento, a implementar no M6 |
+| Métricas, traços e logs JSON | Implementado e testado localmente |
+| Dashboards "Visão de serviço" e "Fluxo de eventos" | Implementado. Os outros três são proposta |
+| Alertas locais, em `infra/prometheus/alerts.yaml` | Implementado, sem envio de notificações |
+| Alertas sobre sinais do Pub/Sub e do Cloud SQL | Proposta: o emulador não expõe esses sinais |
+| Métrica de reconciliação | Proposta, porque a reconciliação ainda não existe |
 | Exportação para o Google Cloud Observability | Proposta, sem deploy |
+
+| Ferramenta local | Endereço |
+|---|---|
+| Grafana | `http://localhost:18084` |
+| Prometheus | `http://localhost:18085` |
+| Tempo | `http://localhost:18086` |
 
 ## Fluxo da telemetria
 
@@ -58,7 +67,7 @@ Se o orçamento de erro acabar, mudanças de funcionalidade param até a confiab
 | Latência de escrita | Respostas em até 300 ms | Respostas abaixo de 500 | Erros, que já contam na disponibilidade |
 | Sucesso de consultas | Respostas abaixo de 500 | Todas as requisições de `/v1/balances` | Verificações de saúde |
 | Latência de leitura | Respostas em até 200 ms | Respostas abaixo de 500 | Erros |
-| Defasagem | Eventos aplicados em até 5 s | Eventos aplicados | Reenvios de uma reconstrução |
+| Defasagem | Eventos aplicados em até 5 s | Eventos aplicados | Reenvios de uma reconstrução, na proposta. Hoje eles entram na métrica e elevam o valor |
 
 Respostas 4xx contam como boas, porque indicam erro do cliente, e não do sistema. Um aumento de 401 ou de 429 tem alerta próprio.
 
@@ -111,7 +120,7 @@ O contexto usa o padrão W3C Trace Context. Como a publicação acontece depois 
 | `POST /v1/entries` | `ledger-api` | Rota e status |
 | `outbox publish` | `outbox-publisher` | `eventId` |
 | `entry.recorded process` | `consolidation-consumer` | `eventId` e resultado |
-| Comandos SQL | Todos | Só o tipo da operação, sem parâmetros |
+| Comandos SQL | Todos | Texto do comando, sem os valores dos parâmetros |
 
 **Amostragem:** 100% no ambiente local e 10% na nuvem, decidida no início do traço e mantida até o fim. Erros devem ser preservados quando o coletor permitir amostragem na cauda. Esse valor é uma estimativa, compatível com os spans previstos nos [custos](05-custos.md). O perfil real de uso pode pedir outro valor.
 
@@ -121,13 +130,14 @@ Os logs são JSON na saída padrão, sem arquivo local.
 
 | Campo | Conteúdo |
 |---|---|
-| `timestamp` | UTC |
-| `severity` | `Information`, `Warning` ou `Error` |
-| `service` | Nome do processo |
-| `traceId` e `spanId` | Ligação com o traço |
-| `merchantId` | Comerciante da operação |
-| `entryId` e `eventId` | Quando houver |
-| `message` | Texto fixo, com campos separados |
+| `Timestamp` | UTC |
+| `LogLevel` | `Information`, `Warning` ou `Error` |
+| `Category` | Origem do log. A categoria `Audit` separa a trilha de auditoria |
+| `Message` | Texto formatado |
+| `State` | Campos do log, como `MerchantId` e `Status` |
+| `Scopes` | `TraceId` e `SpanId`, que ligam o log ao traço |
+
+O nome do processo vem do contêiner, e não de um campo do log. Os logs ficam na saída padrão e não passam pelo coletor, porque o Cloud Run já os envia ao Cloud Logging.
 
 | Nível | Quando usar |
 |---|---|
@@ -137,9 +147,9 @@ Os logs são JSON na saída padrão, sem arquivo local.
 
 Requisições bem-sucedidas não geram log. As métricas e os traços já as cobrem, e isso controla o custo.
 
-**Nunca registrar:** descrição do lançamento, token, cabeçalho `Authorization`, senha ou corpo de requisição. Um teste automatizado deve garantir isso no M6.
+**Nunca registrar:** descrição do lançamento, token, cabeçalho `Authorization`, senha ou corpo de requisição. Uma verificação manual no M6 não achou descrição nem token nos logs. Ainda falta um teste automatizado.
 
-**Trilha de auditoria:** escritas, estornos, acessos negados e operações de manutenção, como `--reset` e `--republish`, precisam de um registro separado, com cliente, operação e resultado. A retenção dessa trilha é definida pela conformidade.
+**Trilha de auditoria:** escritas, estornos, acessos negados e as operações `--reset` e `--republish` são registrados na categoria `Audit`, com cliente, comerciante, operação e resultado. Hoje ela sai junto dos demais logs. Em produção, um coletor de logs deve levá-la a um armazenamento separado, com a retenção definida pela conformidade.
 
 ## Verificações de saúde
 
@@ -187,13 +197,17 @@ Cada alerta precisa exigir uma ação. Se não houver ação, ele vira informaç
 
 A janela dupla evita que um alerta continue ativo depois que o problema passou. A janela longa confirma o impacto, e a curta confirma que ele ainda existe.
 
+Os alertas de orçamento com janela dupla são a proposta para produção. O ambiente local tem sete regras: `WritesFailing`, `OutboxStuck`, `BalanceLagHigh`, `EventsFailing`, `CacheDisconnected`, `AccessDeniedHigh` e `TelemetryMissing`.
+
+`OutboxStuck` depende de uma métrica do próprio publicador. Se o processo morrer, quem avisa é `TelemetryMissing`.
+
 ## Ferramentas
 
 | Função | Local | GCP |
 |---|---|---|
 | Coleta | OpenTelemetry Collector | OpenTelemetry Collector |
 | Métricas | Prometheus | Cloud Monitoring |
-| Traços | Tempo ou Jaeger | Cloud Trace |
+| Traços | Tempo | Cloud Trace |
 | Logs | Saída do contêiner | Cloud Logging |
 | Dashboards | Grafana | Cloud Monitoring |
 
@@ -210,17 +224,18 @@ Esses prazos são propostas iniciais. Os custos previstos para telemetria estão
 
 ## Como validar
 
-| Validação | Quando |
-|---|---|
-| Um lançamento forma um único traço, da API até o saldo | M6 |
-| `resilience.sh` dispara os alertas de outbox e de consumidor | M6 |
-| A queda do coletor não afeta a escrita | M6 |
-| Logs não contêm dados proibidos | M6 |
-| Carga repetida com a telemetria ativa, para medir o custo dela | M6 |
+| Validação | Como | Resultado |
+|---|---|---|
+| Um lançamento forma um único traço, da API até o saldo | Passo 14 de `smoke.sh` | Traço com `ledger-api`, `outbox-publisher` e `consolidation-consumer` |
+| A queda do coletor não afeta a escrita | Passo 13 de `smoke.sh` | Escrita aceita |
+| `OutboxStuck` dispara | Mensageria congelada, com escritas | Disparou em 137 s, e as escritas seguiram aceitas |
+| Logs não contêm dados proibidos | Busca nos logs dos quatro processos | Nenhuma descrição ou token encontrado |
+| Carga repetida com a telemetria ativa | `load-test.sh` | Ver os [resultados de testes](09-resultados-de-testes.md) |
+| Demais alertas | Não forçados | Só a regra foi validada pelo Prometheus |
 
 ## Capacidade
 
-Medições locais estão nos [resultados de testes](09-resultados-de-testes.md). Com 50 leituras e 10 escritas por segundo, o p95 ficou abaixo de 12 ms, com folga sobre as metas.
+Medições locais estão nos [resultados de testes](09-resultados-de-testes.md). Com 50 leituras e 10 escritas por segundo, o p95 ficou abaixo de 12 ms, com folga sobre as metas, inclusive com a telemetria ativa.
 
 O limite mais provável são as conexões do banco, então cada processo precisa de um pool definido:
 

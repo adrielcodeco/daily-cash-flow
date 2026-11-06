@@ -46,17 +46,17 @@ flowchart LR
 
 | Ameaça | Exemplo | Controle | Situação |
 |---|---|---|---|
-| Falsificação | Cliente se passa por outro comerciante | Token assinado, com `merchantId` vindo do token | M6. Hoje há cabeçalho provisório |
+| Falsificação | Cliente se passa por outro comerciante | Token assinado, com `merchantId` vindo do token | Implementado e testado |
 | Falsificação | Sistema publica evento falso | Permissão de publicação apenas para `outbox-publisher` | Proposta no GCP |
 | Adulteração | Alteração de um lançamento | Lançamento imutável, sem rota de edição | Implementado |
 | Adulteração | Manipulação do valor em trânsito | TLS em todas as conexões | Proposta no GCP |
-| Repúdio | Comerciante nega um lançamento | Registro imutável e auditoria com identidade | Parcial. Auditoria completa é proposta |
+| Repúdio | Comerciante nega um lançamento | Registro imutável e auditoria com identidade | Parcial: há auditoria, sem armazenamento separado |
 | Divulgação | Acesso a dados de outro comerciante | Toda consulta filtra pelo comerciante, com resposta 404 | Implementado |
-| Divulgação | Vazamento por logs | Logs sem descrição nem token | M6 |
+| Divulgação | Vazamento por logs | Logs sem descrição nem token | Implementado e verificado |
 | Divulgação | Banco exposto | Sem IP público e com criptografia em repouso | Proposta no GCP |
-| Negação de serviço | Excesso de requisições | Rate limiting e Cloud Armor | M6 e proposta no GCP |
+| Negação de serviço | Excesso de requisições | Rate limiting e Cloud Armor | Rate limiting implementado e testado. Cloud Armor é proposta |
 | Negação de serviço | Fila cheia derruba o banco | Limite de eventos em processamento e pools | Implementado e testado |
-| Elevação de privilégio | Token de leitura faz escrita | Escopos por operação | M6 |
+| Elevação de privilégio | Token de leitura faz escrita | Escopos por operação | Implementado e testado |
 | Elevação de privilégio | Serviço acessa o banco de outro | Identidade por serviço e bancos separados | Proposta no GCP |
 
 Os problemas concretos e sua correção estão no [registro de vulnerabilidades](18-vulnerabilidades.md).

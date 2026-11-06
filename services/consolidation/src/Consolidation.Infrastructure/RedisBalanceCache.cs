@@ -1,7 +1,7 @@
 // @anchors
 //   code: RDBCH
 //   ref: GTBAL
-//   updated_at: 2026-11-05
+//   updated_at: 2026-11-06
 using System.Text.Json;
 using Consolidation.Core;
 using StackExchange.Redis;
@@ -25,11 +25,13 @@ public sealed class RedisBalanceCache(IConnectionMultiplexer redis) : IBalanceCa
     {
         if (!redis.IsConnected)
         {
+            Count("disconnected");
             return null;
         }
 
         var database = redis.GetDatabase();
         var cached = await database.StringGetAsync(await BalanceKeyAsync(database, merchantId, date));
+        Count(cached.HasValue ? "hit" : "miss");
         return cached.HasValue ? JsonSerializer.Deserialize<DailyBalance>(cached.ToString(), Json) : null;
     }
 
@@ -53,6 +55,9 @@ public sealed class RedisBalanceCache(IConnectionMultiplexer redis) : IBalanceCa
         var version = await database.StringGetAsync(VersionKey(merchantId));
         return $"balance:{merchantId}:{(version.HasValue ? version.ToString() : "0")}:{date:O}";
     }
+
+    private static void Count(string result) =>
+        ConsolidationTelemetry.CacheRequests.Add(1, new KeyValuePair<string, object?>("result", result));
 
     private static RedisKey VersionKey(Guid merchantId) => $"balance-version:{merchantId}";
 }

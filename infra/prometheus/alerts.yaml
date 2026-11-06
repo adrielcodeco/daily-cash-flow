@@ -1,0 +1,55 @@
+# Local version of the alerts in docs/06-observabilidade.md.
+# The emulator exposes no queue metrics, so alerts on Pub/Sub signals exist only in the target architecture.
+groups:
+  - name: daily-cash-flow
+    rules:
+      - alert: WritesFailing
+        expr: |
+          sum(rate(http_server_request_duration_seconds_count{service_name="ledger-api",http_request_method="POST",http_response_status_code=~"5.."}[5m]))
+          / sum(rate(http_server_request_duration_seconds_count{service_name="ledger-api",http_request_method="POST"}[5m])) > 0.01
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: More than 1% of the writes are failing.
+      - alert: OutboxStuck
+        expr: max(outbox_oldest_age_seconds) > 120
+        labels:
+          severity: high
+        annotations:
+          summary: An event has been pending in the outbox for more than 2 minutes.
+      - alert: BalanceLagHigh
+        expr: histogram_quantile(0.95, sum by (le) (rate(balance_lag_seconds_bucket[5m]))) > 5
+        for: 5m
+        labels:
+          severity: high
+        annotations:
+          summary: The balance is more than 5 seconds behind the ledger.
+      - alert: EventsFailing
+        expr: sum(rate(consumer_processed_events_total{result="error"}[5m])) > 0
+        for: 1m
+        labels:
+          severity: high
+        annotations:
+          summary: The consumer is failing to apply events.
+      - alert: CacheDisconnected
+        expr: sum(rate(cache_requests_total{result="disconnected"}[5m])) > 0
+        for: 5m
+        labels:
+          severity: low
+        annotations:
+          summary: The balance API is reading without the cache.
+      - alert: AccessDeniedHigh
+        expr: sum(rate(http_server_request_duration_seconds_count{http_response_status_code=~"401|403"}[5m])) > 1
+        for: 10m
+        labels:
+          severity: medium
+        annotations:
+          summary: Refused requests are above the usual level.
+      - alert: TelemetryMissing
+        expr: absent(target_info{exported_job="ledger-api"}) or absent(target_info{exported_job="outbox-publisher"}) or absent(target_info{exported_job="consolidation-api"}) or absent(target_info{exported_job="consolidation-consumer"})
+        for: 5m
+        labels:
+          severity: high
+        annotations:
+          summary: A process stopped sending telemetry.

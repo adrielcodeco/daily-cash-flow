@@ -93,9 +93,35 @@ nodes:
         - doctrine
       evidence_rev: b2ffc9e9fdfe
       line_rev: 6bf710f6e25b
+    - id: services/consolidation/src/Consolidation.Api/ApiSecurity.cs
+      kind: code
+      rev: f9d3363aaecc
+      code: CNSEC
+      file_code: CNSEC
+      layer: host
+      code_declared: true
+      tags:
+        - code
+        - host
+      regime: declarativo
+      evidence_rev: ef3ade7af58b
+      line_rev: 974a5776016f
+    - id: services/consolidation/src/Consolidation.Api/AuditMiddleware.cs
+      kind: code
+      rev: 378356e6613c
+      code: CNAUD
+      file_code: CNAUD
+      layer: host
+      code_declared: true
+      tags:
+        - code
+        - host
+      regime: declarativo
+      evidence_rev: 05170332e8ae
+      line_rev: a0d0b7913d66
     - id: services/consolidation/src/Consolidation.Api/Program.cs
       kind: code
-      rev: 11e72a961f0e
+      rev: "154362267636"
       updated_at: "2026-11-05"
       code: CNAPI
       file_code: CNAPI
@@ -105,11 +131,11 @@ nodes:
         - code
         - host
       regime: declarativo
-      evidence_rev: d449818e08b7
-      line_rev: 1c6944a66b42
+      evidence_rev: 2658b7e80373
+      line_rev: abd9d54993c9
     - id: services/consolidation/src/Consolidation.Consumer/EntryRecordedWorker.cs
       kind: code
-      rev: eb67d47eb93e
+      rev: a8d4aee5aad3
       updated_at: "2026-11-05"
       code: CNWRK
       file_code: CNWRK
@@ -119,11 +145,11 @@ nodes:
         - code
         - host
       regime: declarativo
-      evidence_rev: 372cc66b397e
-      line_rev: 3b0d951d2ba7
+      evidence_rev: a93981469dc5
+      line_rev: 5e820ba286b4
     - id: services/consolidation/src/Consolidation.Consumer/Program.cs
       kind: code
-      rev: b3f0def24610
+      rev: c2c85d77411d
       updated_at: "2026-11-05"
       code: CNCSM
       file_code: CNCSM
@@ -133,12 +159,12 @@ nodes:
         - code
         - host
       regime: declarativo
-      evidence_rev: 5ba7983daff2
-      line_rev: 555c8799ddfa
+      evidence_rev: 9bc07858fba8
+      line_rev: 4ba4484f9745
     - id: services/consolidation/src/Consolidation.Core/ApplyEntryRecorded.cs
       kind: code
       rev: 3256c3d00986
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: APENT
       file_code: APECD
       layer: core
@@ -150,7 +176,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Core/ApplyEntryRecorded.feature
       kind: feature
       rev: 3ecb250b2860
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: APENT
       file_code: APEFT
       layer: feature
@@ -161,7 +187,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Core/ApplyEntryRecorded.spec.md
       kind: spec
       rev: 10ab25b0f78b
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: APENT
       file_code: APENT
       layer: spec
@@ -174,7 +200,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Core/ApplyEntryRecorded.test.cs
       kind: test
       rev: 06d85dcd1c70
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: APENT
       file_code: APETS
       layer: test
@@ -185,7 +211,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Core/BalanceFakes.test.cs
       kind: test
       rev: 9a6d1a6e38e8
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: CNFKS
       file_code: CNFKS
       layer: test
@@ -197,7 +223,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Core/DailyBalance.cs
       kind: code
       rev: 83524a43afd7
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: DYBAL
       file_code: DYBCD
       layer: core
@@ -209,7 +235,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Core/DailyBalance.feature
       kind: feature
       rev: c2e86e52dca0
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: DYBAL
       file_code: DYBFT
       layer: feature
@@ -220,7 +246,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Core/DailyBalance.spec.md
       kind: spec
       rev: 40b3abd043bc
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: DYBAL
       file_code: DYBAL
       layer: spec
@@ -233,7 +259,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Core/DailyBalance.test.cs
       kind: test
       rev: dc717b86e521
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: DYBAL
       file_code: DYBTS
       layer: test
@@ -244,7 +270,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Core/EntryRecorded.cs
       kind: code
       rev: 7b6027b5dccb
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: APENT
       file_code: CERCD
       layer: core
@@ -456,6 +482,19 @@ nodes:
         - test
       evidence_rev: 09c5be2e6706
       line_rev: d54a70582e38
+    - id: services/consolidation/src/Consolidation.Infrastructure/ConsolidationTelemetry.cs
+      kind: code
+      rev: 921c8aafdfc0
+      code: CNOTL
+      file_code: CNOTL
+      layer: infrastructure
+      code_declared: true
+      tags:
+        - code
+        - infrastructure
+      regime: declarativo
+      evidence_rev: 3a9d75c2c93b
+      line_rev: 5968d7ea3950
     - id: services/consolidation/src/Consolidation.Infrastructure/DatabaseMigrator.cs
       kind: code
       rev: a2cdf2d93c4d
@@ -499,7 +538,7 @@ nodes:
       line_rev: "422143459e10"
     - id: services/consolidation/src/Consolidation.Infrastructure/RedisBalanceCache.cs
       kind: code
-      rev: a324de6081c7
+      rev: a9630ca63294
       updated_at: "2026-11-05"
       code: GTBAL
       file_code: RDBCH
@@ -508,11 +547,50 @@ nodes:
         - code
         - infrastructure
       regime: declarativo
-      evidence_rev: cda90b81a58b
-      line_rev: 5a20e121fe0c
+      evidence_rev: 07686ec3d498
+      line_rev: 570259cf3f0f
+    - id: services/consolidation/src/Consolidation.Infrastructure/ServiceTelemetry.cs
+      kind: code
+      rev: 950d6f7972d0
+      code: CNTEL
+      file_code: CNTEL
+      layer: infrastructure
+      code_declared: true
+      tags:
+        - code
+        - infrastructure
+      regime: declarativo
+      evidence_rev: 750db5e965d7
+      line_rev: eb7528f05791
+    - id: services/ledger/src/Ledger.Api/ApiSecurity.cs
+      kind: code
+      rev: c7a2b94d0c01
+      code: LDSEC
+      file_code: LDSEC
+      layer: host
+      code_declared: true
+      tags:
+        - code
+        - host
+      regime: declarativo
+      evidence_rev: bc76e09a535e
+      line_rev: f7e1c648a7f6
+    - id: services/ledger/src/Ledger.Api/AuditMiddleware.cs
+      kind: code
+      rev: c6964fcd686a
+      code: LDAUD
+      file_code: LDAUD
+      layer: host
+      code_declared: true
+      tags:
+        - code
+        - host
+      regime: declarativo
+      evidence_rev: 75f76ee337ec
+      line_rev: 3025eeba9a92
     - id: services/ledger/src/Ledger.Api/EntryEndpoints.cs
       kind: code
-      rev: b153141b6477
+      rev: a00cec1da1fd
       updated_at: "2026-11-05"
       code: LDEPT
       file_code: LDEPT
@@ -522,11 +600,11 @@ nodes:
         - code
         - host
       regime: declarativo
-      evidence_rev: 58b6265723fd
-      line_rev: 65b41f15d470
+      evidence_rev: 7bcf4e2eb031
+      line_rev: aeacb0c6b03a
     - id: services/ledger/src/Ledger.Api/MerchantContext.cs
       kind: code
-      rev: f4c4d666aae3
+      rev: 1071cc4a99b4
       updated_at: "2026-11-05"
       code: LDMCT
       file_code: LDMCT
@@ -536,11 +614,11 @@ nodes:
         - code
         - host
       regime: declarativo
-      evidence_rev: 5c976304637f
-      line_rev: e5d00ba13cf0
+      evidence_rev: 085601327f2b
+      line_rev: ddce13b5d89b
     - id: services/ledger/src/Ledger.Api/Program.cs
       kind: code
-      rev: 02a424d1a148
+      rev: ada78f75c754
       updated_at: "2026-11-05"
       code: LDAPI
       file_code: LDAPI
@@ -550,8 +628,8 @@ nodes:
         - code
         - host
       regime: declarativo
-      evidence_rev: 8bfd6a1219aa
-      line_rev: 34972505a8f7
+      evidence_rev: 01af11070673
+      line_rev: 824220fc13e2
     - id: services/ledger/src/Ledger.Core/DomainRuleException.cs
       kind: code
       rev: 4ec4fc6c83a8
@@ -597,7 +675,7 @@ nodes:
     - id: services/ledger/src/Ledger.Core/EntryStoreIntegration.test.cs
       kind: test
       rev: 6f4054782faf
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: ESITS
       file_code: ESITS
       layer: test
@@ -609,7 +687,7 @@ nodes:
     - id: services/ledger/src/Ledger.Core/EntryType.cs
       kind: code
       rev: 188d14e46162
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: LEDEN
       file_code: ETYCD
       layer: core
@@ -669,7 +747,7 @@ nodes:
     - id: services/ledger/src/Ledger.Core/LedgerEntry.cs
       kind: code
       rev: ca91d9cfc222
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: LEDEN
       file_code: LEDCD
       layer: core
@@ -681,7 +759,7 @@ nodes:
     - id: services/ledger/src/Ledger.Core/LedgerEntry.feature
       kind: feature
       rev: 41fdb44d0232
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: LEDEN
       file_code: LEDFT
       layer: feature
@@ -692,7 +770,7 @@ nodes:
     - id: services/ledger/src/Ledger.Core/LedgerEntry.spec.md
       kind: spec
       rev: cc2a7ca778cf
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: LEDEN
       file_code: LEDEN
       layer: spec
@@ -705,7 +783,7 @@ nodes:
     - id: services/ledger/src/Ledger.Core/LedgerEntry.test.cs
       kind: test
       rev: 9f58a1ed327f
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: LEDEN
       file_code: LEDTS
       layer: test
@@ -789,7 +867,7 @@ nodes:
       line_rev: c8264c58a1f9
     - id: services/ledger/src/Ledger.Core/OutboxRelay.cs
       kind: code
-      rev: b0977b4809a4
+      rev: 27505fc1b85a
       updated_at: "2026-11-05"
       code: OBRLY
       file_code: OBRCD
@@ -797,25 +875,8 @@ nodes:
       tags:
         - code
         - core
-      signal:
-        mutants_killed: 9
-        mutants_survived: 1
-        mutation_score: 90
-        mutants_ignored: 5
-        mutation_by_scope:
-            full:
-                killed: 9
-                survived: 1
-                ignored: 5
-                score: 90
-                at_rev: b0977b4809a4
-        mutation_low: 80
-        mutation_high: 90
-        at_rev: b0977b4809a4
-        mutation_at_rev: b0977b4809a4
-        ingested_at: "2026-11-05T23:53:52-03:00"
-      evidence_rev: 6b03170cd9a1
-      line_rev: 175bbdb968b4
+      evidence_rev: d7c2d5bd8e74
+      line_rev: 458670fea527
     - id: services/ledger/src/Ledger.Core/OutboxRelay.feature
       kind: feature
       rev: f2e1e1975aa6
@@ -1052,10 +1113,23 @@ nodes:
       regime: declarativo
       evidence_rev: e1eafb0d6b85
       line_rev: 2d235e8d1894
+    - id: services/ledger/src/Ledger.Infrastructure/OutboxTelemetry.cs
+      kind: code
+      rev: e7808720e1a1
+      code: OBTEL
+      file_code: OBTEL
+      layer: infrastructure
+      code_declared: true
+      tags:
+        - code
+        - infrastructure
+      regime: declarativo
+      evidence_rev: 66fb34292395
+      line_rev: aab97bb1b2fb
     - id: services/ledger/src/Ledger.Infrastructure/PostgresEntryStore.cs
       kind: code
-      rev: 4e45dbe8ab93
-      updated_at: "2026-11-05"
+      rev: 03e1a8779a34
+      updated_at: "2026-11-06"
       code: RCENT
       file_code: PGEST
       layer: infrastructure
@@ -1063,11 +1137,11 @@ nodes:
         - code
         - infrastructure
       regime: declarativo
-      evidence_rev: 5bcb0ec37147
-      line_rev: d37550bb8f0c
+      evidence_rev: 759ec9a45664
+      line_rev: e21dd7ee20b6
     - id: services/ledger/src/Ledger.Infrastructure/PostgresOutbox.cs
       kind: code
-      rev: 851822c7d994
+      rev: d9e02c1802a2
       updated_at: "2026-11-05"
       code: OBRLY
       file_code: PGOBX
@@ -1076,11 +1150,11 @@ nodes:
         - code
         - infrastructure
       regime: declarativo
-      evidence_rev: b59464d17f78
-      line_rev: 28d0cb278eed
+      evidence_rev: ac6abe33b6a1
+      line_rev: d633a8b381c0
     - id: services/ledger/src/Ledger.Infrastructure/PubSubEventPublisher.cs
       kind: code
-      rev: 40437f54d4d5
+      rev: ecd542449376
       updated_at: "2026-11-05"
       code: OBRLY
       file_code: PSEPB
@@ -1089,8 +1163,34 @@ nodes:
         - code
         - infrastructure
       regime: declarativo
-      evidence_rev: 69cb8c6f5f82
-      line_rev: b095ddbb55cd
+      evidence_rev: d1017614ddef
+      line_rev: 30aa7a8bc571
+    - id: services/ledger/src/Ledger.Infrastructure/ServiceTelemetry.cs
+      kind: code
+      rev: 4ea598e0ad42
+      code: LDTEL
+      file_code: LDTEL
+      layer: infrastructure
+      code_declared: true
+      tags:
+        - code
+        - infrastructure
+      regime: declarativo
+      evidence_rev: 8913e12127d2
+      line_rev: ae1bb8b8e1bb
+    - id: services/ledger/src/Ledger.Publisher/OutboxBacklogWorker.cs
+      kind: code
+      rev: 85b42bcfa616
+      code: OBBWK
+      file_code: OBBWK
+      layer: host
+      code_declared: true
+      tags:
+        - code
+        - host
+      regime: declarativo
+      evidence_rev: afd988793199
+      line_rev: e7cde1e2f22b
     - id: services/ledger/src/Ledger.Publisher/OutboxWorker.cs
       kind: code
       rev: 405fa8e6fccb
@@ -1107,7 +1207,7 @@ nodes:
       line_rev: 2f28839262da
     - id: services/ledger/src/Ledger.Publisher/Program.cs
       kind: code
-      rev: f45883f0ab19
+      rev: f86d400931db
       updated_at: "2026-11-05"
       code: LDPUB
       file_code: LDPUB
@@ -1117,8 +1217,8 @@ nodes:
         - code
         - host
       regime: declarativo
-      evidence_rev: b37b4a2f2f5f
-      line_rev: 1a0a451952d1
+      evidence_rev: 81b78aae750b
+      line_rev: bf5468bed8c5
 edges:
     - from: guides/HEADER_GUIDE.md
       to: services/consolidation/src/Consolidation.Core/ApplyEntryRecorded.feature
@@ -1720,9 +1820,9 @@ edges:
       method: LDIMM-R02
       dep: LEDEN-R02
       stamp:
-        validated_from_rev: 655a01221260
+        validated_from_rev: cc2a7ca778cf
         validated_to_rev: 22a9942c1d5a
-        changed_at: "2026-11-05"
+        changed_at: "2026-11-06"
         verdict: ok
     - from: services/ledger/src/Ledger.Core/LedgerEntry.spec.md
       to: product/ledger-immutability.doctrine.md
@@ -1731,9 +1831,9 @@ edges:
       method: LDIMM-R01
       dep: LEDEN-R05
       stamp:
-        validated_from_rev: 655a01221260
+        validated_from_rev: cc2a7ca778cf
         validated_to_rev: 22a9942c1d5a
-        changed_at: "2026-11-05"
+        changed_at: "2026-11-06"
         verdict: ok
     - from: services/ledger/src/Ledger.Core/LedgerEntry.spec.md
       to: product/ledger-immutability.doctrine.md
@@ -1828,8 +1928,8 @@ edges:
       origin: convention
       stamp:
         validated_from_rev: 6f67a26ba8ff
-        validated_to_rev: b0977b4809a4
-        changed_at: "2026-11-05"
+        validated_to_rev: 27505fc1b85a
+        changed_at: "2026-11-06"
         verdict: ok
     - from: services/ledger/src/Ledger.Core/OutboxRelay.spec.md
       to: services/ledger/src/Ledger.Core/OutboxRelay.feature

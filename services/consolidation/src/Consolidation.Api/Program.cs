@@ -1,13 +1,16 @@
 // @anchors
 //   code: CNAPI
 //   layer: host
-//   updated_at: 2026-11-05
+//   updated_at: 2026-11-06
+using Consolidation.Api;
 using Consolidation.Core;
 using Consolidation.Infrastructure;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Npgsql;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("Consolidation")
@@ -37,8 +40,19 @@ builder.Services.AddHealthChecks()
         return HealthCheckResult.Healthy();
     }, tags: ["ready"]);
 
+builder.Services.AddServiceTelemetry(
+    "consolidation-api",
+    tracing => tracing.AddAspNetCoreInstrumentation(options => options.Filter = context => !context.Request.Path.StartsWithSegments("/health")),
+    metrics => metrics.AddAspNetCoreInstrumentation());
+builder.AddApiSecurity();
+
+// Successful requests are covered by metrics and traces, so they do not need logs.
+builder.Logging.AddFilter("Microsoft.AspNetCore", LogLevel.Warning);
+
 var app = builder.Build();
 
+// Audit runs outside the exception handler, so it sees the final status of refused requests.
+app.UseMiddleware<AuditMiddleware>();
 app.UseExceptionHandler(handler => handler.Run(async context =>
 {
     var failure = context.Features.Get<IExceptionHandlerFeature>()?.Error;
@@ -51,12 +65,13 @@ app.UseExceptionHandler(handler => handler.Run(async context =>
 
     await Results.Problem(title: title, statusCode: status, type: type).ExecuteAsync(context);
 }));
+app.UseApiSecurity();
+
 app.MapHealthChecks("/health/live", new HealthCheckOptions { Predicate = check => check.Name == "live" });
 app.MapHealthChecks("/health/ready", new HealthCheckOptions { Predicate = check => check.Tags.Contains("ready") });
 
-// Local placeholder until token validation lands in milestone M6.
 static bool TryReadMerchant(HttpContext context, out Guid merchantId) =>
-    Guid.TryParse(context.Request.Headers["X-Merchant-Id"], out merchantId);
+    Guid.TryParse(context.User.FindFirst(ApiSecurity.MerchantClaim)?.Value, out merchantId);
 
 static IResult UnknownMerchant() =>
     Results.Problem(title: "The merchant could not be identified.", statusCode: StatusCodes.Status401Unauthorized);
@@ -64,11 +79,11 @@ static IResult UnknownMerchant() =>
 app.MapGet("/v1/balances/daily", async (DateOnly date, HttpContext context, GetDailyBalance getDailyBalance, CancellationToken cancellationToken) =>
     TryReadMerchant(context, out var merchantId)
         ? Results.Ok(await getDailyBalance.ExecuteAsync(merchantId, date, cancellationToken))
-        : UnknownMerchant());
+        : UnknownMerchant()).RequireAuthorization(ApiSecurity.BalancesRead);
 
 app.MapGet("/v1/balances/period", async (DateOnly start, DateOnly end, HttpContext context, GetPeriodBalance getPeriodBalance, CancellationToken cancellationToken) =>
     TryReadMerchant(context, out var merchantId)
         ? Results.Ok(await getPeriodBalance.ExecuteAsync(merchantId, start, end, cancellationToken))
-        : UnknownMerchant());
+        : UnknownMerchant()).RequireAuthorization(ApiSecurity.BalancesRead);
 
 await app.RunAsync();

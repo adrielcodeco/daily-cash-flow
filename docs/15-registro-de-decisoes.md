@@ -209,6 +209,19 @@ A coluna **Base** diz de onde veio cada escolha:
 | D-117 | Restrição do banco com `NOT VALID` | Validar linhas antigas | Linhas antigas fora do limite não são verificadas | Julgamento | Antes de produção, validar a restrição |
 | D-118 | Enum começa em 1, para o valor ausente nunca ser válido | Campo obrigatório só na API | Os números do enum mudaram, sem efeito externo: o tipo é gravado por nome | Julgamento | Não previsto |
 | D-119 | Consumidor recusa evento de tipo desconhecido | Ignorar o evento | Um evento ruim vai para as mensagens mortas e exige ação | Julgamento | Não previsto |
+| D-120 | Um cliente por comerciante, com `merchant_id` fixo no token | Comerciante como usuário, token de usuário | Cada comerciante exige um cliente no provedor | Julgamento | Houver integração por usuário final |
+| D-121 | Limite de 100 requisições por segundo por comerciante, em cada instância | Limite global com Redis | O limite real cresce com as instâncias: V-19 | Valor inicial | Houver dados de uso |
+| D-122 | Cada serviço valida o JWT, com tolerância de 30 s no horário | Confiar só no gateway | Validação repetida, em troca de defesa em profundidade | Julgamento | Não previsto |
+| D-123 | Falta de escopo responde 403, e token inválido responde 401 | Responder sempre 401 | Revela que o token é válido | Julgamento | Não previsto |
+| D-124 | Issuer fixo no Keycloak local | Dois endereços aceitos | O endereço interno aparece no token local | Julgamento | Não previsto: vale só no ambiente local |
+| D-125 | Cada teste cria seu comerciante no Keycloak | Clientes fixos no realm | Testes dependem da API de administração | Julgamento | Não previsto |
+| D-126 | Configuração de telemetria e segurança repetida em cada serviço | Biblioteca compartilhada | Código repetido, em troca de serviços sem dependência entre si | Julgamento | Surgirem mais serviços |
+| D-127 | Tempo para traços locais | Jaeger | Mais um componente da família Grafana | Julgamento | Não previsto |
+| D-128 | Logs na saída padrão, fora do coletor | Enviar por OTLP | Sem logs no Grafana local | Julgamento | Precisar correlacionar logs no ambiente local |
+| D-129 | Auditoria como categoria de log | Armazenamento próprio agora | Sem proteção contra alteração: V-06 | Julgamento | Antes de produção |
+| D-130 | Publicador lê o tamanho da outbox a cada 5 s | Ler a cada exportação | A métrica para se o publicador morrer | Valor inicial | Não previsto: `TelemetryMissing` cobre esse caso |
+| D-131 | Nível de log do ASP.NET definido no código | Variável de ambiente | Mudar exige novo build. O `sh` do contêiner descarta variáveis com ponto | Medição | Trocar o ponto de entrada da imagem |
+| D-132 | Métricas expiram em 1 minuto no coletor | Padrão de 5 minutos | Queda curta some mais rápido dos gráficos | Valor inicial | Não previsto |
 | D-115 | Horizonte de 36 meses, sem impostos e sem cancelamento de clientes | Modelo completo | O resultado tende a ser otimista | Julgamento | Houver dados reais |
 
 ## Decisões revistas
@@ -218,6 +231,7 @@ A coluna **Base** diz de onde veio cada escolha:
 | 2026-11-05 | RabbitMQ como plano B no ambiente local | Descartado | O emulador validou entrega e mensagens mortas |
 | 2026-11-05 | Pool padrão e consumo sem limite | Limite de 16 eventos e pool definido | O teste de resiliência esgotou as conexões: ver ADR-0017 |
 | 2026-11-05 | Esperar o tempo limite do Redis | Ignorar o cache desconectado | A carga mostrou p95 de 2,2 s |
+| 2026-11-06 | `X-Merchant-Id` provisório | JWT, com o comerciante vindo do token | Previsto para o M6 |
 | 2026-11-06 | Recuperação de desastres dentro de Operação | Documento próprio | O plano precisa de escopo, papéis e procedimentos próprios |
 | 2026-11-06 | RTO de 1 hora para a perda do consolidado | RTO condicionado ao volume | A medição mostrou cerca de 266 mil lançamentos por hora |
 | 2026-11-05 | Cache como ganho de latência | Cache como proteção do banco | A carga não mostrou ganho de latência: ver ADR-0005 |

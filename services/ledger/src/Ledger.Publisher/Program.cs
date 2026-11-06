@@ -1,7 +1,7 @@
 // @anchors
 //   code: LDPUB
 //   layer: host
-//   updated_at: 2026-11-05
+//   updated_at: 2026-11-06
 using Ledger.Core;
 using Ledger.Infrastructure;
 using Ledger.Publisher;
@@ -24,14 +24,18 @@ if (args.Contains("--republish"))
     builder.Services.AddSingleton<RepublishEntries>();
     using var republishHost = builder.Build();
     var total = await republishHost.Services.GetRequiredService<RepublishEntries>().ExecuteAsync(RepublishBatchSize, CancellationToken.None);
-    Console.WriteLine($"{total} entries queued for publishing.");
+    republishHost.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Audit")
+        .LogInformation("Maintenance {Operation} queued {Entries} entries.", "republish", total);
     return;
 }
 
 builder.Services.AddSingleton(TimeProvider.System);
-builder.Services.AddSingleton<IOutbox, PostgresOutbox>();
+builder.Services.AddSingleton<PostgresOutbox>();
+builder.Services.AddSingleton<IOutbox>(services => services.GetRequiredService<PostgresOutbox>());
 builder.Services.AddSingleton<IEventPublisher>(await PubSubEventPublisher.CreateAsync(projectId, topicId));
 builder.Services.AddSingleton<OutboxRelay>();
 builder.Services.AddHostedService<OutboxWorker>();
+builder.Services.AddHostedService<OutboxBacklogWorker>();
+builder.Services.AddServiceTelemetry("outbox-publisher");
 
 await builder.Build().RunAsync();

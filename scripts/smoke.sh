@@ -10,30 +10,33 @@ YESTERDAY=$(TZ=America/Sao_Paulo date -v-1d +%F 2>/dev/null || TZ=America/Sao_Pa
 
 new_key() { uuidgen; }
 
+. scripts/auth.sh
+TOKEN=$(new_client "$MERCHANT")
+
 # Prints the HTTP status. The response body goes to $BODY_FILE.
 BODY_FILE=$(mktemp)
 trap 'rm -f "$BODY_FILE"' EXIT
 
 post_entry() { # type amount [date] [key]
   curl -s -o "$BODY_FILE" -w '%{http_code}' -X POST "$LEDGER/v1/entries" \
-    -H 'Content-Type: application/json' -H "X-Merchant-Id: $MERCHANT" -H "Idempotency-Key: ${4:-$(new_key)}" \
+    -H 'Content-Type: application/json' -H "Authorization: Bearer $TOKEN" -H "Idempotency-Key: ${4:-$(new_key)}" \
     -d "{\"entryType\":\"$1\",\"amountCents\":$2,\"accountingDate\":\"${3:-$TODAY}\"}"
 }
 
 reverse_entry() { # id key
   curl -s -o /dev/null -w '%{http_code}' -X POST "$LEDGER/v1/entries/$1/reversal" \
-    -H "X-Merchant-Id: $MERCHANT" -H "Idempotency-Key: $2"
+    -H "Authorization: Bearer $TOKEN" -H "Idempotency-Key: $2"
 }
 
 body_field() { python3 -c "import json; print(json.load(open('$BODY_FILE'))['$1'])"; }
 
 balance_field() { # field
-  curl -sf -H "X-Merchant-Id: $MERCHANT" "$BALANCES/v1/balances/daily?date=$TODAY" |
+  curl -sf -H "Authorization: Bearer $TOKEN" "$BALANCES/v1/balances/daily?date=$TODAY" |
     python3 -c "import json,sys; print(json.load(sys.stdin)['$1'])"
 }
 
 period_closing() {
-  curl -sf -H "X-Merchant-Id: $MERCHANT" "$BALANCES/v1/balances/period?start=$TODAY&end=$TODAY" |
+  curl -sf -H "Authorization: Bearer $TOKEN" "$BALANCES/v1/balances/period?start=$TODAY&end=$TODAY" |
     python3 -c "import json,sys; print(json.load(sys.stdin)['items'][0]['closingCents'])"
 }
 
@@ -73,7 +76,7 @@ echo '3. Concurrent calls with the same key create one entry'
 KEY=$(new_key)
 for _ in 1 2 3 4 5 6 7 8; do
   curl -s -o /dev/null -X POST "$LEDGER/v1/entries" -H 'Content-Type: application/json' \
-    -H "X-Merchant-Id: $MERCHANT" -H "Idempotency-Key: $KEY" \
+    -H "Authorization: Bearer $TOKEN" -H "Idempotency-Key: $KEY" \
     -d "{\"entryType\":\"CREDIT\",\"amountCents\":100,\"accountingDate\":\"$TODAY\"}" &
 done
 wait
@@ -117,7 +120,7 @@ expect 5600 "$REBUILT" 'rebuilt closing, without cache'
 echo '10. Invalid entries are refused and never reach the balance'
 post_body() { # json
   curl -s -o /dev/null -w '%{http_code}' -X POST "$LEDGER/v1/entries" \
-    -H 'Content-Type: application/json' -H "X-Merchant-Id: $MERCHANT" -H "Idempotency-Key: $(new_key)" -d "$1"
+    -H 'Content-Type: application/json' -H "Authorization: Bearer $TOKEN" -H "Idempotency-Key: $(new_key)" -d "$1"
 }
 NUMERIC_TYPE="{\"entryType\":7,\"amountCents\":500,\"accountingDate\":\"$TODAY\"}"
 MISSING_TYPE="{\"amountCents\":500,\"accountingDate\":\"$TODAY\"}"
@@ -125,5 +128,59 @@ expect 400 "$(post_body "$NUMERIC_TYPE")" 'numeric type'
 expect 422 "$(post_body "$MISSING_TYPE")" 'missing type'
 expect 422 "$(post_entry CREDIT 100000000001)" 'amount above the limit'
 expect 5600 "$(period_closing)" 'closing after refused entries'
+
+echo '11. Access depends on the token'
+OTHER=$(uuidgen | tr '[:upper:]' '[:lower:]')
+OTHER_TOKEN=$(new_client "$OTHER")
+READ_ONLY=$(uuidgen | tr '[:upper:]' '[:lower:]')
+READ_ONLY_TOKEN=$(new_client "$READ_ONLY" '"api-audience","entries.read"')
+get_status() { # url [token]
+  curl -s -o /dev/null -w '%{http_code}' ${2:+-H "Authorization: Bearer $2"} "$1"
+}
+post_with_token() { # token
+  curl -s -o /dev/null -w '%{http_code}' -X POST "$LEDGER/v1/entries" -H 'Content-Type: application/json' \
+    -H "Authorization: Bearer $1" -H "Idempotency-Key: $(new_key)" -d "$NEW_ENTRY"
+}
+NEW_ENTRY="{\"entryType\":\"CREDIT\",\"amountCents\":100,\"accountingDate\":\"$TODAY\"}"
+expect 401 "$(get_status "$BALANCES/v1/balances/daily?date=$TODAY")" 'no token'
+expect 401 "$(get_status "$BALANCES/v1/balances/daily?date=$TODAY" 'not-a-token')" 'invalid token'
+expect 401 "$(curl -s -o /dev/null -w '%{http_code}' -H "X-Merchant-Id: $MERCHANT" "$BALANCES/v1/balances/daily?date=$TODAY")" 'merchant header alone'
+expect 403 "$(post_with_token "$READ_ONLY_TOKEN")" 'write without the write scope'
+expect 403 "$(get_status "$BALANCES/v1/balances/daily?date=$TODAY" "$READ_ONLY_TOKEN")" 'balance without the balance scope'
+expect 404 "$(get_status "$LEDGER/v1/entries/$FIRST_ID" "$OTHER_TOKEN")" 'entry of another merchant'
+OTHER_CLOSING=$(curl -sf -H "Authorization: Bearer $OTHER_TOKEN" -H "X-Merchant-Id: $MERCHANT" "$BALANCES/v1/balances/period?start=$TODAY&end=$TODAY" |
+  python3 -c "import json,sys; print(json.load(sys.stdin)['items'][0]['closingCents'])")
+expect 0 "$OTHER_CLOSING" 'the merchant header is ignored'
+
+echo '12. Excess requests get 429 without affecting other clients'
+STATUSES=$(seq 1 400 | xargs -P 40 -I{} curl -s -o /dev/null -w '%{http_code}\n' -H "Authorization: Bearer $TOKEN" "$BALANCES/v1/balances/daily?date=$TODAY" | sort | uniq -c)
+echo "$STATUSES" | grep -q ' 429$' || { echo "no 429 in: $STATUSES" >&2; exit 1; }
+expect 200 "$(get_status "$BALANCES/v1/balances/daily?date=$TODAY" "$OTHER_TOKEN")" 'another client during the burst'
+
+echo '13. A collector outage does not affect writes'
+docker compose stop otel-collector >/dev/null 2>&1
+sleep 1
+expect 201 "$(post_entry CREDIT 100)" 'write without the collector'
+docker compose start otel-collector >/dev/null 2>&1
+
+echo '14. One trace follows an entry from the API to the balance'
+sleep 5
+TRACE=$(python3 -c "import secrets; print(secrets.token_hex(16))")
+curl -s -o /dev/null -X POST "$LEDGER/v1/entries" -H 'Content-Type: application/json' -H "Authorization: Bearer $TOKEN" \
+  -H "Idempotency-Key: $(new_key)" -H "traceparent: 00-$TRACE-$(python3 -c "import secrets; print(secrets.token_hex(8))")-01" -d "$NEW_ENTRY"
+SERVICES=0
+for _ in $(seq 1 40); do
+  SERVICES=$(curl -s "http://localhost:18086/api/traces/$TRACE" | python3 -c "
+import json,sys
+try:
+    data=json.load(sys.stdin)
+except ValueError:
+    print(0); raise SystemExit
+names={a['value'].get('stringValue') for b in data.get('batches',[]) for a in b['resource']['attributes'] if a['key']=='service.name'}
+print(len(names & {'ledger-api','outbox-publisher','consolidation-consumer'}))")
+  [ "$SERVICES" = 3 ] && break
+  sleep 1
+done
+expect 3 "$SERVICES" 'services in the trace'
 
 echo 'smoke test passed'

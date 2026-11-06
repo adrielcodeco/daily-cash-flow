@@ -2,6 +2,7 @@
 //   code: PGEST
 //   ref: RCENT
 //   updated_at: 2026-11-06
+using System.Diagnostics;
 using System.Text.Json;
 using Ledger.Core;
 using Npgsql;
@@ -51,9 +52,10 @@ public sealed class PostgresEntryStore(NpgsqlDataSource dataSource) : IEntryStor
             }
 
             await using (var insertEvent = new NpgsqlCommand(
-                "INSERT INTO outbox (id, type, payload, created_at) VALUES ($1, $2, $3, $4)", connection, transaction))
+                "INSERT INTO outbox (id, type, payload, created_at, trace_context) VALUES ($1, $2, $3, $4, $5)", connection, transaction))
             {
                 AddEventParameters(insertEvent, recorded);
+                insertEvent.Parameters.Add(new() { Value = (object?)Activity.Current?.Id ?? DBNull.Value, NpgsqlDbType = NpgsqlDbType.Text });
                 await insertEvent.ExecuteNonQueryAsync(cancellationToken);
             }
 

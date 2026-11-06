@@ -1,10 +1,10 @@
 // @anchors
 //   code: OBRCD
 //   ref: OBRLY
-//   updated_at: 2026-11-05
+//   updated_at: 2026-11-06
 namespace Ledger.Core;
 
-public sealed record OutboxMessage(Guid Id, string Type, string Payload);
+public sealed record OutboxMessage(Guid Id, string Type, string Payload, string? TraceContext = null);
 
 public interface IOutbox
 {

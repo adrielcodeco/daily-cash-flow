@@ -1,6 +1,6 @@
 # Resumo das decisões
 
-Lista de tudo o que ficou decidido, com 270 itens, sem os trade-offs. Os motivos estão nos [ADRs](adr/README.md) e no [registro de decisões](15-registro-de-decisoes.md).
+Lista de tudo o que ficou decidido, com 284 itens, sem os trade-offs. Os motivos estão nos [ADRs](adr/README.md) e no [registro de decisões](15-registro-de-decisoes.md).
 
 Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decisions/generate.mjs`.
 
@@ -292,6 +292,19 @@ Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decis
 | D-117 | Restrição do banco com `NOT VALID` |
 | D-118 | Enum começa em 1, para o valor ausente nunca ser válido |
 | D-119 | Consumidor recusa evento de tipo desconhecido |
+| D-120 | Um cliente por comerciante, com `merchant_id` fixo no token |
+| D-121 | Limite de 100 requisições por segundo por comerciante, em cada instância |
+| D-122 | Cada serviço valida o JWT, com tolerância de 30 s no horário |
+| D-123 | Falta de escopo responde 403, e token inválido responde 401 |
+| D-124 | Issuer fixo no Keycloak local |
+| D-125 | Cada teste cria seu comerciante no Keycloak |
+| D-126 | Configuração de telemetria e segurança repetida em cada serviço |
+| D-127 | Tempo para traços locais |
+| D-128 | Logs na saída padrão, fora do coletor |
+| D-129 | Auditoria como categoria de log |
+| D-130 | Publicador lê o tamanho da outbox a cada 5 s |
+| D-131 | Nível de log do ASP.NET definido no código |
+| D-132 | Métricas expiram em 1 minuto no coletor |
 | D-115 | Horizonte de 36 meses, sem impostos e sem cancelamento de clientes |
 
 ## Regras de negócio
@@ -393,6 +406,7 @@ Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decis
 | 2026-11-05 | Pool padrão e consumo sem limite | Limite de 16 eventos e pool definido |
 | 2026-11-05 | Portas locais 8081 e 8082 | Portas 18081 e 18082 |
 | 2026-11-05 | Esperar o tempo limite do Redis | Ignorar o cache desconectado |
+| 2026-11-06 | `X-Merchant-Id` provisório | JWT, com o comerciante vindo do token |
 | 2026-11-06 | Recuperação de desastres dentro de Operação | Documento próprio |
 | 2026-11-06 | RTO de 1 hora para a perda do consolidado | RTO condicionado ao volume |
 | 2026-11-05 | Cache como ganho de latência | Cache como proteção do banco |

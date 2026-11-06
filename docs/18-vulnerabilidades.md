@@ -8,12 +8,12 @@ Este registro acompanha as fraquezas conhecidas da solução, do achado à corre
 
 | Severidade | Sem correção | Riscos aceitos |
 |---|---:|---:|
-| Crítica | 1 | 0 |
-| Alta | 2 | 0 |
-| Média | 7 | 0 |
-| Baixa | 3 | 2 |
+| Crítica | 0 | 0 |
+| Alta | 1 | 0 |
+| Média | 8 | 0 |
+| Baixa | 5 | 2 |
 
-Três itens já foram corrigidos: V-02, V-03 e V-04.
+Já foram corrigidos V-01 a V-05. A V-06 está parcial e ainda bloqueia produção.
 
 **Nenhuma vulnerabilidade Crítica ou Alta pode ir para produção.**
 
@@ -36,6 +36,7 @@ Três itens já foram corrigidos: V-02, V-03 e V-04.
 |---|---|
 | Aberta | Conhecida e sem correção |
 | Planejada | Com marco definido |
+| Parcial | Reduzida, mas ainda com risco |
 | Corrigida | Corrigida, com teste que impede a volta |
 | Aceita | Risco assumido, com motivo registrado |
 
@@ -43,12 +44,12 @@ Três itens já foram corrigidos: V-02, V-03 e V-04.
 
 | ID | Vulnerabilidade | Classe | Severidade | Evidência | Situação | Correção |
 |---|---|---|---|---|---|---|
-| V-01 | Quem chama escolhe o comerciante por `X-Merchant-Id` | API1, CWE-639 | Crítica | Código | Planejada: M6 | JWT, com `merchantId` vindo do token |
+| V-01 | Quem chama escolhe o comerciante por `X-Merchant-Id` | API1, CWE-639 | Crítica | Testada | Corrigida | JWT validado em cada serviço, com `merchantId` vindo do token. Passo 11 de `smoke.sh` |
 | V-02 | `entryType` numérico inválido é aceito, e o débito some do saldo | CWE-20 | Crítica | Testada | Corrigida | Número recusado na leitura, tipo validado no domínio e no consumidor. Regras `LEDEN-R09` e `APENT-R07` |
 | V-03 | Lançamento sem `entryType` vira crédito | CWE-20 | Alta | Testada | Corrigida | Enum começa em 1, então o valor ausente é recusado. Regra `LEDEN-R09` |
 | V-04 | Valor sem limite estoura a soma do saldo | CWE-190 | Alta | Testada | Corrigida | Limite de R$ 1 bilhão no domínio e no banco, e estouro gera erro. Regras `LEDEN-R08` e `DYBAL-R03` |
-| V-05 | Não há limite de requisições | API4, CWE-770 | Alta | Código | Planejada: M6 | Rate limiting e Cloud Armor |
-| V-06 | Não há trilha de auditoria | CWE-778 | Alta | Código | Planejada: M6 | Registro separado de operações e acessos negados |
+| V-05 | Não há limite de requisições | API4, CWE-770 | Alta | Testada | Corrigida | 100 requisições por segundo por comerciante, com resposta 429. Passo 12 de `smoke.sh`. Ver a V-19 |
+| V-06 | Não há trilha de auditoria | CWE-778 | Alta | Testada | Parcial | Categoria `Audit` nos logs. Falta armazenamento separado, à prova de alteração |
 | V-07 | Contêineres rodam como root | CWE-250 | Média | Testada | Aberta | Declarar `USER` sem privilégio nas imagens |
 | V-08 | Durante a reconstrução, a API responde 200 com saldo parcial | Integridade | Média | Testada | Aberta | Modo de manutenção, com resposta 503 |
 | V-09 | `--reset` apaga o consolidado e está na imagem de produção | CWE-749 | Média | Código | Aberta | Separar a manutenção da imagem de produção e exigir aprovação |
@@ -61,6 +62,9 @@ Três itens já foram corrigidos: V-02, V-03 e V-04.
 | V-16 | Portas das APIs ficam abertas em todas as interfaces da máquina | CWE-1327 | Baixa | Código | Aberta | Publicar só em `127.0.0.1` |
 | V-17 | Senha fixa `local-only` no `docker-compose.yml` | CWE-798 | Baixa | Código | Aceita | Vale só no ambiente local. Nunca reutilizar |
 | V-18 | UUID v7 revela o momento da criação | CWE-200 | Baixa | Código | Aceita | Dado de baixo valor, já presente na resposta |
+| V-19 | O limite de requisições é por instância, então cresce com a escala | CWE-770 | Média | Código | Aberta | Limite global no Cloud Armor ou no gateway |
+| V-20 | Keycloak local em modo de desenvolvimento, com senha fixa de administrador | CWE-798 | Baixa | Código | Aberta | Só no ambiente local. Em produção, usar o provedor de identidade do cliente |
+| V-21 | A API aceita `traceparent` de quem chama | CWE-345 | Baixa | Testada | Aberta | Remover o cabeçalho no gateway |
 
 As classes usam a [OWASP API Security Top 10 2023](https://owasp.org/API-Security/editions/2023/en/0x11-t10/) e a [CWE](https://cwe.mitre.org/).
 
@@ -110,7 +114,7 @@ Além disso, o cálculo do fechamento em C# não verifica estouro, então a soma
 - Pentest e testes dinâmicos de segurança
 - Vulnerabilidades nas imagens de contêiner
 - Configuração real do GCP: IAM, rede e criptografia
-- Autenticação, escopos e rate limiting, que só existem a partir do M6
+- Ataques ao token, como troca de algoritmo e reuso de token expirado, que dependem da biblioteca e não foram testados
 
 ## Como manter
 

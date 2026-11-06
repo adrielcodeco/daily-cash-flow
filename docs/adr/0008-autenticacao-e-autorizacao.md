@@ -43,6 +43,10 @@ Chaves de API são simples, mas não expiram sozinhas e têm autorização fraca
 - Depende da disponibilidade do provedor de identidade
 - Exige gestão de chaves e de clientes
 
+## Resultado
+
+Implementado no M6, com Keycloak no ambiente local. `smoke.sh` prova que token ausente ou inválido responde 401, falta de escopo responde 403, e que o cabeçalho `X-Merchant-Id` é ignorado.
+
 ## Gatilho de revisão
 
 Rever se houver integrações reguladas com perfis como FAPI. Nesse caso, mTLS e tokens vinculados ao certificado passam a ser exigidos.

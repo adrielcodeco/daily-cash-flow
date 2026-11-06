@@ -8,6 +8,20 @@ x-pubsub-env: &pubsub-env
   PubSub__TopicId: entries-recorded-v1
   PubSub__SubscriptionId: consolidation-entries-recorded-v1
 
+x-telemetry-env: &telemetry-env
+  OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+  OTEL_METRIC_EXPORT_INTERVAL: '5000'
+  Logging__Console__FormatterName: json
+  Logging__Console__FormatterOptions__IncludeScopes: 'true'
+  Logging__Console__FormatterOptions__TimestampFormat: yyyy-MM-ddTHH:mm:ss.fffZ
+  Logging__Console__FormatterOptions__UseUtcTimestamp: 'true'
+
+x-auth-env: &auth-env
+  Auth__Authority: http://keycloak:8080/realms/daily-cash-flow
+  Auth__Audience: daily-cash-flow-api
+  Auth__RequireHttps: 'false'
+  RateLimit__PermitsPerSecond: '100'
+
 x-ledger-db-env: &ledger-db-env
   ConnectionStrings__Ledger: Host=ledger-db;Database=ledger;Username=ledger;Password=local-only;Maximum Pool Size=30
 
@@ -117,7 +131,7 @@ services:
   ledger-api:
     image: daily-cash-flow/ledger-api
     environment:
-      <<: *ledger-db-env
+      <<: [*ledger-db-env, *telemetry-env, *auth-env]
       ASPNETCORE_URLS: http://+:8080
       Logging__LogLevel__Default: Information
       Logging__LogLevel__Npgsql: Warning
@@ -126,6 +140,8 @@ services:
     depends_on:
       ledger-migrate:
         condition: service_completed_successfully
+      keycloak:
+        condition: service_healthy
     mem_limit: 256m
 
   outbox-publisher:
@@ -137,7 +153,7 @@ services:
         ENTRYPOINT_DLL: Ledger.Publisher.dll
     image: daily-cash-flow/outbox-publisher
     environment:
-      <<: [*ledger-db-env, *pubsub-env]
+      <<: [*ledger-db-env, *pubsub-env, *telemetry-env]
     depends_on:
       ledger-migrate:
         condition: service_completed_successfully
@@ -148,7 +164,7 @@ services:
   consolidation-api:
     image: daily-cash-flow/consolidation-api
     environment:
-      <<: *consolidation-db-env
+      <<: [*consolidation-db-env, *telemetry-env, *auth-env]
       ASPNETCORE_URLS: http://+:8080
       Logging__LogLevel__Default: Information
       Logging__LogLevel__Npgsql: Warning
@@ -157,17 +173,78 @@ services:
     depends_on:
       consolidation-migrate:
         condition: service_completed_successfully
+      keycloak:
+        condition: service_healthy
     mem_limit: 256m
 
   consolidation-consumer:
     image: daily-cash-flow/consolidation-consumer
     environment:
-      <<: [*consolidation-db-env, *pubsub-env]
+      <<: [*consolidation-db-env, *pubsub-env, *telemetry-env]
     depends_on:
       consolidation-migrate:
         condition: service_completed_successfully
       messaging-init:
         condition: service_completed_successfully
+    mem_limit: 256m
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.7
+    command: [start-dev, --import-realm]
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: local-only
+      KC_HEALTH_ENABLED: 'true'
+      # A fixed issuer makes tokens requested from the host valid inside the containers.
+      KC_HOSTNAME: http://keycloak:8080
+    volumes:
+      - ./infra/keycloak/daily-cash-flow-realm.json:/opt/keycloak/data/import/daily-cash-flow-realm.json:ro
+    ports:
+      - 18083:8080
+    healthcheck:
+      test: [CMD-SHELL, 'exec 3<>/dev/tcp/127.0.0.1/9000 && printf "GET /health/ready HTTP/1.0\r\n\r\n" >&3 && grep -q UP <&3']
+      interval: 5s
+      timeout: 3s
+      retries: 40
+    mem_limit: 1g
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.116.1
+    command: [--config=/etc/otel/collector.yaml]
+    volumes:
+      - ./infra/otel/collector.yaml:/etc/otel/collector.yaml:ro
+    mem_limit: 256m
+
+  tempo:
+    image: grafana/tempo:2.6.1
+    command: [-config.file=/etc/tempo/tempo.yaml]
+    user: root
+    volumes:
+      - ./infra/tempo/tempo.yaml:/etc/tempo/tempo.yaml:ro
+    ports:
+      - 18086:3200
+    mem_limit: 512m
+
+  prometheus:
+    image: prom/prometheus:v3.1.0
+    command: [--config.file=/etc/prometheus/prometheus.yaml]
+    volumes:
+      - ./infra/prometheus:/etc/prometheus:ro
+    ports:
+      - 18085:9090
+    mem_limit: 512m
+
+  grafana:
+    image: grafana/grafana:11.4.0
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: 'true'
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+      GF_SECURITY_ADMIN_PASSWORD: local-only
+    volumes:
+      - ./infra/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./infra/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports:
+      - 18084:3000
     mem_limit: 256m
 
 volumes:

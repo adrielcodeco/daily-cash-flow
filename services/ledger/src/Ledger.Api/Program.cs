@@ -1,7 +1,7 @@
 // @anchors
 //   code: LDAPI
 //   layer: host
-//   updated_at: 2026-11-05
+//   updated_at: 2026-11-06
 using Ledger.Api;
 using Ledger.Core;
 using Ledger.Infrastructure;
@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Npgsql;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("Ledger")
@@ -36,8 +38,19 @@ builder.Services.AddHealthChecks()
         return HealthCheckResult.Healthy();
     }, tags: ["ready"]);
 
+builder.Services.AddServiceTelemetry(
+    "ledger-api",
+    tracing => tracing.AddAspNetCoreInstrumentation(options => options.Filter = context => !context.Request.Path.StartsWithSegments("/health")),
+    metrics => metrics.AddAspNetCoreInstrumentation());
+builder.AddApiSecurity();
+
+// Successful requests are covered by metrics and traces, so they do not need logs.
+builder.Logging.AddFilter("Microsoft.AspNetCore", LogLevel.Warning);
+
 var app = builder.Build();
 
+// Audit runs outside the exception handler, so it sees the final status of refused requests.
+app.UseMiddleware<AuditMiddleware>();
 app.UseExceptionHandler(handler => handler.Run(async context =>
 {
     var failure = context.Features.Get<IExceptionHandlerFeature>()?.Error;
@@ -53,6 +66,8 @@ app.UseExceptionHandler(handler => handler.Run(async context =>
 
     await Results.Problem(title: title, statusCode: status, type: (failure as DomainRuleException)?.Code).ExecuteAsync(context);
 }));
+
+app.UseApiSecurity();
 
 app.MapHealthChecks("/health/live", new HealthCheckOptions { Predicate = check => check.Name == "live" });
 app.MapHealthChecks("/health/ready", new HealthCheckOptions { Predicate = check => check.Tags.Contains("ready") });

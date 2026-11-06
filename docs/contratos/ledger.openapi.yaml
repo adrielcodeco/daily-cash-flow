@@ -148,7 +148,7 @@ components:
   securitySchemes:
     oidc:
       type: openIdConnect
-      openIdConnectUrl: http://localhost:8080/realms/cash-flow/.well-known/openid-configuration
+      openIdConnectUrl: http://localhost:18083/realms/daily-cash-flow/.well-known/openid-configuration
   parameters:
     Id:
       name: id
