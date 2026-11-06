@@ -16,11 +16,12 @@ public sealed class ApplyEntryRecordedTests
     private static readonly Guid Merchant = Guid.NewGuid();
 
     private readonly InMemoryBalanceStore store = new();
+    private readonly InMemoryBalanceCache cache = new();
 
     private static EntryRecorded Event(EntryType type, long amount, Guid? merchant = null) =>
         new(Guid.NewGuid(), DateTimeOffset.Parse("2026-11-05T14:32:00-03:00"), merchant ?? Merchant, type, amount, Day);
 
-    private Task Apply(EntryRecorded recorded) => new ApplyEntryRecorded(store).ExecuteAsync(recorded, CancellationToken.None);
+    private Task Apply(EntryRecorded recorded) => new ApplyEntryRecorded(store, cache).ExecuteAsync(recorded, CancellationToken.None);
 
     [Fact(DisplayName = "APENT-R01 a credit adds to the day's credits")]
     public async Task AppliesCredit()
@@ -58,7 +59,7 @@ public sealed class ApplyEntryRecordedTests
 
         await Apply(credit);
         await Apply(debit);
-        var useCase = new ApplyEntryRecorded(reversedStore);
+        var useCase = new ApplyEntryRecorded(reversedStore, cache);
         await useCase.ExecuteAsync(debit, CancellationToken.None);
         await useCase.ExecuteAsync(credit, CancellationToken.None);
 
@@ -77,27 +78,19 @@ public sealed class ApplyEntryRecordedTests
         Assert.Equal((200, 0), store.Totals(other, Day));
     }
 
-    private sealed class InMemoryBalanceStore : IBalanceStore
+    [Fact(DisplayName = "APENT-R05 an applied event invalidates the cache")]
+    public async Task InvalidatesCache()
     {
-        private readonly HashSet<Guid> applied = [];
-        private readonly Dictionary<(Guid, DateOnly), (long Credits, long Debits)> totals = [];
+        await Apply(Event(EntryType.Credit, 100));
 
-        public (long Credits, long Debits) Totals(Guid merchantId, DateOnly date) =>
-            totals.GetValueOrDefault((merchantId, date));
+        Assert.Equal(Merchant, Assert.Single(cache.Invalidated));
+    }
 
-        public Task<bool> ApplyOnceAsync(BalanceChange change, CancellationToken cancellationToken)
-        {
-            if (!applied.Add(change.EventId))
-            {
-                return Task.FromResult(false);
-            }
+    [Fact(DisplayName = "APENT-R06 a cache failure does not stop the event")]
+    public async Task SurvivesCacheFailure()
+    {
+        await new ApplyEntryRecorded(store, new BrokenBalanceCache()).ExecuteAsync(Event(EntryType.Credit, 100), CancellationToken.None);
 
-            var current = Totals(change.MerchantId, change.Date);
-            totals[(change.MerchantId, change.Date)] = (current.Credits + change.CreditsCents, current.Debits + change.DebitsCents);
-            return Task.FromResult(true);
-        }
-
-        public Task<DailyBalance> GetDailyAsync(Guid merchantId, DateOnly date, CancellationToken cancellationToken) =>
-            throw new NotSupportedException();
+        Assert.Equal((100, 0), store.Totals(Merchant, Day));
     }
 }

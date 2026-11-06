@@ -6,7 +6,7 @@
   "additionalProperties": true,
   "required": ["eventId", "type", "version", "occurredAt", "merchantId", "entryId", "entryType", "amountCents", "accountingDate"],
   "properties": {
-    "eventId": { "type": "string", "format": "uuid", "description": "Identidade usada na deduplicação" },
+    "eventId": { "type": "string", "format": "uuid", "description": "Igual a entryId. Usado na deduplicação, inclusive em reenvios" },
     "type": { "const": "entry.recorded" },
     "version": { "const": 1 },
     "occurredAt": { "type": "string", "format": "date-time" },

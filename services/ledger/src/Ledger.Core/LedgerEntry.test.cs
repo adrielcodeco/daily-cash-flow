@@ -54,9 +54,27 @@ public sealed class LedgerEntryTests
         Assert.NotEqual(Guid.Empty, entry.Id);
         Assert.Equal(DateTimeOffset.Parse("2026-11-05T15:00:00Z"), entry.CreatedAt);
     }
-}
 
-internal sealed class FixedClock(DateTimeOffset now) : TimeProvider
-{
-    public override DateTimeOffset GetUtcNow() => now;
+    [Fact(DisplayName = "LEDEN-R06 a reversal inverts the type and keeps amount and date")]
+    public void ReversesEntry()
+    {
+        var clock = At("2026-11-05T15:00:00Z");
+        var original = LedgerEntry.Record(Merchant, EntryType.Credit, 35000, Today, null, clock);
+
+        var reversal = LedgerEntry.Reverse(original, clock);
+
+        Assert.Equal(EntryType.Debit, reversal.EntryType);
+        Assert.Equal(35000, reversal.AmountCents);
+        Assert.Equal(Today, reversal.AccountingDate);
+        Assert.Equal(original.Id, reversal.ReversalOf);
+    }
+
+    [Fact(DisplayName = "LEDEN-R07 a reversal cannot be reversed")]
+    public void RefusesReversalOfReversal()
+    {
+        var clock = At("2026-11-05T15:00:00Z");
+        var reversal = LedgerEntry.Reverse(LedgerEntry.Record(Merchant, EntryType.Credit, 100, Today, null, clock), clock);
+
+        Assert.Equal("reversal_not_allowed", RefusalCode(() => LedgerEntry.Reverse(reversal, clock)));
+    }
 }

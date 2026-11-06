@@ -23,9 +23,21 @@ if (args.Contains("--provision"))
 var connectionString = builder.Configuration.GetConnectionString("Consolidation")
     ?? throw new InvalidOperationException("ConnectionStrings:Consolidation is required.");
 
+var redisConnection = builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379,abortConnect=false";
+
 builder.Services.AddNpgsqlDataSource(connectionString);
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddSingleton<IBalanceStore, PostgresBalanceStore>();
+
+if (args.Contains("--reset"))
+{
+    builder.Services.AddSingleton<ResetBalances>();
+    using var resetHost = builder.Build();
+    await resetHost.Services.GetRequiredService<ResetBalances>().ExecuteAsync(CancellationToken.None);
+    return;
+}
+
+builder.Services.AddSingleton<IBalanceCache>(RedisBalanceCache.Connect(redisConnection));
 builder.Services.AddSingleton<ApplyEntryRecorded>();
 builder.Services.AddSingleton(new EventSubscription(projectId, subscriptionId));
 builder.Services.AddHostedService<EntryRecordedWorker>();

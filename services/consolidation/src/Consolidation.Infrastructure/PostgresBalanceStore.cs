@@ -72,4 +72,53 @@ public sealed class PostgresBalanceStore(NpgsqlDataSource dataSource, TimeProvid
             reader.GetInt64(2),
             reader.IsDBNull(3) ? null : reader.GetFieldValue<DateTimeOffset>(3));
     }
+
+    public async Task<PeriodTotals> GetPeriodAsync(Guid merchantId, DateOnly start, DateOnly end, CancellationToken cancellationToken)
+    {
+        await using var summary = dataSource.CreateCommand(
+            """
+            SELECT COALESCE(SUM(credits_cents - debits_cents) FILTER (WHERE date < $2), 0)::bigint, MAX(updated_at)
+            FROM daily_balance
+            WHERE merchant_id = $1
+            """);
+        summary.Parameters.Add(new() { Value = merchantId });
+        summary.Parameters.Add(new() { Value = start });
+
+        long opening;
+        DateTimeOffset? updatedThrough;
+        await using (var reader = await summary.ExecuteReaderAsync(cancellationToken))
+        {
+            await reader.ReadAsync(cancellationToken);
+            opening = reader.GetInt64(0);
+            updatedThrough = reader.IsDBNull(1) ? null : reader.GetFieldValue<DateTimeOffset>(1);
+        }
+
+        await using var daily = dataSource.CreateCommand(
+            """
+            SELECT date, credits_cents, debits_cents
+            FROM daily_balance
+            WHERE merchant_id = $1 AND date BETWEEN $2 AND $3
+            ORDER BY date
+            """);
+        daily.Parameters.Add(new() { Value = merchantId });
+        daily.Parameters.Add(new() { Value = start });
+        daily.Parameters.Add(new() { Value = end });
+
+        var days = new List<DayTotals>();
+        await using (var reader = await daily.ExecuteReaderAsync(cancellationToken))
+        {
+            while (await reader.ReadAsync(cancellationToken))
+            {
+                days.Add(new DayTotals(reader.GetFieldValue<DateOnly>(0), reader.GetInt64(1), reader.GetInt64(2)));
+            }
+        }
+
+        return new PeriodTotals(opening, days, updatedThrough);
+    }
+
+    public async Task ResetAsync(CancellationToken cancellationToken)
+    {
+        await using var command = dataSource.CreateCommand("TRUNCATE daily_balance, processed_event");
+        await command.ExecuteNonQueryAsync(cancellationToken);
+    }
 }

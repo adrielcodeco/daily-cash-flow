@@ -12,33 +12,35 @@ namespace Ledger.Tests;
 
 public sealed class RecordEntryTests
 {
+    private const string Key = "request-0001";
     private static readonly Guid Merchant = Guid.NewGuid();
     private static readonly DateOnly Today = new(2026, 11, 5);
+    private static readonly FixedClock Clock = new(DateTimeOffset.Parse("2026-11-05T15:00:00Z"));
 
-    private readonly SpyStore store = new();
+    private readonly InMemoryEntryStore store = new();
     private readonly RecordEntry useCase;
 
-    public RecordEntryTests() =>
-        useCase = new RecordEntry(store, new FixedClock(DateTimeOffset.Parse("2026-11-05T15:00:00Z")));
+    public RecordEntryTests() => useCase = new RecordEntry(store, Clock);
 
     private static RecordEntryCommand Credit(long amount) => new(Merchant, EntryType.Credit, amount, Today, null);
+
+    private Task<LedgerEntry> Record(long amount) => useCase.ExecuteAsync(Credit(amount), Key, CancellationToken.None);
 
     [Fact(DisplayName = "RCENT-R01 a valid entry reaches the store with its event")]
     public async Task StoresEntryAndEvent()
     {
-        var entry = await useCase.ExecuteAsync(Credit(35000), CancellationToken.None);
+        var entry = await Record(35000);
 
-        var (storedEntry, storedEvent) = Assert.Single(store.Added);
-        Assert.Equal(entry, storedEntry);
-        Assert.Equal(entry.Id, storedEvent.EntryId);
+        Assert.Equal(entry, Assert.Single(store.Entries));
+        Assert.Equal(entry.Id, Assert.Single(store.Events).EntryId);
     }
 
     [Fact(DisplayName = "RCENT-R01 an invalid entry never reaches the store")]
     public async Task DoesNotStoreInvalidEntry()
     {
-        await Assert.ThrowsAsync<DomainRuleException>(() => useCase.ExecuteAsync(Credit(0), CancellationToken.None));
+        await Assert.ThrowsAsync<DomainRuleException>(() => Record(0));
 
-        Assert.Empty(store.Added);
+        Assert.Empty(store.Entries);
     }
 
     [Fact(DisplayName = "RCENT-R02 recording uses only the store")]
@@ -49,30 +51,50 @@ public sealed class RecordEntryTests
         Assert.Equal([typeof(IEntryStore), typeof(TimeProvider)], parameters);
     }
 
-    [Fact(DisplayName = "RCENT-R03 the event repeats the entry data with its own identity")]
+    [Fact(DisplayName = "RCENT-R03 the event uses the entry identity and repeats its data")]
     public async Task EventCarriesEntryData()
     {
-        var entry = await useCase.ExecuteAsync(Credit(35000), CancellationToken.None);
+        var entry = await Record(35000);
 
-        var recorded = Assert.Single(store.Added).Recorded;
-        Assert.NotEqual(entry.Id, recorded.EventId);
+        var recorded = Assert.Single(store.Events);
+        Assert.Equal(entry.Id, recorded.EventId);
         Assert.Equal(EntryRecorded.EventType, recorded.Type);
         Assert.Equal(Merchant, recorded.MerchantId);
         Assert.Equal(35000, recorded.AmountCents);
         Assert.Equal(Today, recorded.AccountingDate);
     }
 
-    private sealed class SpyStore : IEntryStore
+    [Fact(DisplayName = "RCENT-R04 a repeated key returns the original entry")]
+    public async Task ReplaysRepeatedKey()
     {
-        public List<(LedgerEntry Entry, EntryRecorded Recorded)> Added { get; } = [];
+        var first = await Record(35000);
 
-        public Task AddAsync(LedgerEntry entry, EntryRecorded recorded, CancellationToken cancellationToken)
-        {
-            Added.Add((entry, recorded));
-            return Task.CompletedTask;
-        }
+        var second = await Record(35000);
 
-        public Task<LedgerEntry?> FindAsync(Guid merchantId, Guid id, CancellationToken cancellationToken) =>
-            Task.FromResult<LedgerEntry?>(null);
+        Assert.Equal(first.Id, second.Id);
+        Assert.Single(store.Entries);
+    }
+
+    [Fact(DisplayName = "RCENT-R05 a key reused with other content is refused")]
+    public async Task RefusesReusedKey()
+    {
+        await Record(35000);
+
+        var refusal = await Assert.ThrowsAsync<DomainRuleException>(() => Record(1));
+
+        Assert.Equal("idempotency_key_reused", refusal.Code);
+        Assert.Equal(RuleKind.Conflict, refusal.Kind);
+    }
+
+    [Fact(DisplayName = "RCENT-R06 a concurrent call receives the winning entry")]
+    public async Task ReturnsConcurrentWinner()
+    {
+        var winner = LedgerEntry.Record(Merchant, EntryType.Credit, 35000, Today, null, Clock);
+        var hash = IdempotentWriter.HashOf($"record|{EntryType.Credit}|35000|{Today:O}|");
+        store.RacingWinner = (Key, new ClaimedEntry(hash, winner.Id), winner);
+
+        var entry = await Record(35000);
+
+        Assert.Equal(winner.Id, entry.Id);
     }
 }

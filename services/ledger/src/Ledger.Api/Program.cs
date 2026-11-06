@@ -24,6 +24,8 @@ builder.Services.AddNpgsqlDataSource(connectionString);
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddSingleton<IEntryStore, PostgresEntryStore>();
 builder.Services.AddSingleton<RecordEntry>();
+builder.Services.AddSingleton<ReverseEntry>();
+builder.Services.AddSingleton<ListEntries>();
 builder.Services.AddProblemDetails();
 builder.Services.AddHealthChecks()
     .AddCheck("live", () => HealthCheckResult.Healthy())
@@ -39,11 +41,15 @@ var app = builder.Build();
 app.UseExceptionHandler(handler => handler.Run(async context =>
 {
     var failure = context.Features.Get<IExceptionHandlerFeature>()?.Error;
-    var (status, title) = failure is DomainRuleException rule
-        ? (StatusCodes.Status422UnprocessableEntity, rule.Message)
-        : failure is BadHttpRequestException
-            ? (StatusCodes.Status400BadRequest, "The request is invalid.")
-            : (StatusCodes.Status500InternalServerError, "An unexpected error occurred.");
+    var (status, title) = failure switch
+    {
+        DomainRuleException { Kind: RuleKind.NotFound } rule => (StatusCodes.Status404NotFound, rule.Message),
+        DomainRuleException { Kind: RuleKind.Conflict } rule => (StatusCodes.Status409Conflict, rule.Message),
+        DomainRuleException { Kind: RuleKind.BadRequest } rule => (StatusCodes.Status400BadRequest, rule.Message),
+        DomainRuleException rule => (StatusCodes.Status422UnprocessableEntity, rule.Message),
+        BadHttpRequestException => (StatusCodes.Status400BadRequest, "The request is invalid."),
+        _ => (StatusCodes.Status500InternalServerError, "An unexpected error occurred."),
+    };
 
     await Results.Problem(title: title, statusCode: status, type: (failure as DomainRuleException)?.Code).ExecuteAsync(context);
 }));

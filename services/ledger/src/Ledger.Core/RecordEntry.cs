@@ -13,17 +13,23 @@ public sealed record RecordEntryCommand(
 
 public sealed class RecordEntry(IEntryStore store, TimeProvider clock)
 {
-    public async Task<LedgerEntry> ExecuteAsync(RecordEntryCommand command, CancellationToken cancellationToken)
-    {
-        var entry = LedgerEntry.Record(
-            command.MerchantId,
-            command.EntryType,
-            command.AmountCents,
-            command.AccountingDate,
-            command.Description,
-            clock);
+    private readonly IdempotentWriter writer = new(store);
 
-        await store.AddAsync(entry, EntryRecorded.From(entry), cancellationToken);
-        return entry;
+    public Task<LedgerEntry> ExecuteAsync(RecordEntryCommand command, string key, CancellationToken cancellationToken)
+    {
+        var hash = IdempotentWriter.HashOf(
+            $"record|{command.EntryType}|{command.AmountCents}|{command.AccountingDate:O}|{command.Description}");
+
+        return writer.WriteAsync(
+            command.MerchantId,
+            new IdempotencyClaim(key, hash),
+            () => Task.FromResult(LedgerEntry.Record(
+                command.MerchantId,
+                command.EntryType,
+                command.AmountCents,
+                command.AccountingDate,
+                command.Description,
+                clock)),
+            cancellationToken);
     }
 }

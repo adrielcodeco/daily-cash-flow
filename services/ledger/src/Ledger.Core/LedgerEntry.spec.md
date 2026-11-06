@@ -19,6 +19,7 @@ O lançamento é o fato central do sistema: um crédito ou um débito de um come
 | `amountCents` | inteiro maior que zero | zero ou negativo | esta unidade (`LEDEN-R02`) |
 | `accountingDate` | hoje ou uma data passada | data futura | esta unidade (`LEDEN-R03`) |
 | `description` | até 200 caracteres, ou ausente | texto maior | esta unidade (`LEDEN-R04`) |
+| `original` | lançamento existente do comerciante | estorno | esta unidade (`LEDEN-R07`) |
 
 ## Regras
 
@@ -34,6 +35,10 @@ O lançamento é o fato central do sistema: um crédito ou um débito de um come
 
 ### LEDEN-R05 — um lançamento válido nasce com identidade e momento de criação @realizes LDIMM-R01
 
+### LEDEN-R06 — o estorno tem o tipo inverso, o mesmo valor e a mesma data de competência do original @realizes LDIMM-R01
+
+### LEDEN-R07 — um estorno não pode ser estornado
+
 ## Uso das regras
 
 | Regra | Usa |
@@ -43,6 +48,8 @@ O lançamento é o fato central do sistema: um crédito ou um débito de um come
 | `LEDEN-R03` | `accountingDate` |
 | `LEDEN-R04` | `description` |
 | `LEDEN-R05` | `merchantId`, `amountCents`, `accountingDate` |
+| `LEDEN-R06` | `original` |
+| `LEDEN-R07` | `original` |
 
 ## Decisões em aberto
 

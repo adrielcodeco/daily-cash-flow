@@ -34,3 +34,21 @@ Funcionalidade: GetDailyBalance — consultar o saldo do dia
     Dado um comerciante sem eventos
     Quando o comerciante consulta o dia
     Então o saldo é zerado e não há momento de atualização
+
+  @GTBAL-R05 @nivel-unit @P1
+  Cenário: o saldo em cache é devolvido sem consultar o banco
+    Dado um saldo guardado em cache
+    Quando o comerciante consulta o dia
+    Então o banco não é consultado
+
+  @GTBAL-R06 @nivel-unit @P1
+  Cenário: a consulta funciona com o cache fora do ar
+    Dado um cache fora do ar
+    Quando o comerciante consulta o dia
+    Então o saldo vem do banco
+
+  @GTBAL-R07 @nivel-integracao @P1
+  Cenário: o lançamento retroativo muda a abertura seguinte
+    Dado um saldo consultado para hoje
+    Quando chega um crédito de 5000 centavos com data de ontem
+    Então a abertura de hoje aumenta 5000 centavos

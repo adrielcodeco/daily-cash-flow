@@ -33,4 +33,23 @@ Funcionalidade: RecordEntry — registrar o fato e o aviso juntos
   Cenário: o evento repete os dados do lançamento
     Dado um crédito válido de 35000 centavos
     Quando o lançamento é registrado
-    Então o evento tem identidade própria e os dados do lançamento
+    Então o evento usa a identidade do lançamento e repete os dados dele
+
+  @RCENT-R04 @nivel-unit @P1
+  Cenário: a chave repetida devolve o lançamento original
+    Dado um crédito já registrado com uma chave
+    Quando o mesmo crédito é registrado com a mesma chave
+    Então o lançamento original é devolvido
+    E o armazenamento não recebe nada novo
+
+  @RCENT-R05 @nivel-unit @P1
+  Cenário: a chave reutilizada com outro conteúdo é recusada
+    Dado um crédito já registrado com uma chave
+    Quando outro valor é registrado com a mesma chave
+    Então o lançamento é recusado com o código "idempotency_key_reused"
+
+  @RCENT-R06 @nivel-unit @P1
+  Cenário: a chamada simultânea recebe o lançamento vencedor
+    Dado que outra chamada gravou a mesma chave durante o registro
+    Quando o armazenamento informa a chave já usada
+    Então o lançamento vencedor é devolvido

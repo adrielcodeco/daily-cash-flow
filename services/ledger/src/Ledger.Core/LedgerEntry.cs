@@ -50,6 +50,27 @@ public sealed record LedgerEntry(
         return new LedgerEntry(Guid.CreateVersion7(now), merchantId, entryType, amountCents, accountingDate, description, null, now);
     }
 
+    public static LedgerEntry Reverse(LedgerEntry original, TimeProvider clock)
+    {
+        if (original.ReversalOf is not null)
+        {
+            throw new DomainRuleException("reversal_not_allowed", "A reversal cannot be reversed.", RuleKind.Conflict);
+        }
+
+        var now = clock.GetUtcNow();
+        var oppositeType = original.EntryType == EntryType.Credit ? EntryType.Debit : EntryType.Credit;
+
+        return new LedgerEntry(
+            Guid.CreateVersion7(now),
+            original.MerchantId,
+            oppositeType,
+            original.AmountCents,
+            original.AccountingDate,
+            original.Description,
+            original.Id,
+            now);
+    }
+
     private static DateOnly BusinessDate(DateTimeOffset instant) =>
         DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(instant, BusinessTimeZone).DateTime);
 }

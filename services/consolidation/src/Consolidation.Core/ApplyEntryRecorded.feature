@@ -40,3 +40,15 @@ Funcionalidade: ApplyEntryRecorded — aplicar cada evento uma vez
     Dado eventos de dois comerciantes no mesmo dia
     Quando os eventos são aplicados
     Então cada comerciante tem o próprio agregado
+
+  @APENT-R05 @nivel-unit @P1
+  Cenário: o evento aplicado invalida o cache
+    Dado um evento de crédito novo
+    Quando o evento é aplicado
+    Então o cache do comerciante é invalidado
+
+  @APENT-R06 @nivel-unit @P1
+  Cenário: a falha do cache não impede a aplicação
+    Dado um cache fora do ar
+    Quando o evento é aplicado
+    Então os créditos do dia aumentam mesmo assim

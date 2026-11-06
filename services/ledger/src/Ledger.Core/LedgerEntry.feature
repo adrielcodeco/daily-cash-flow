@@ -48,3 +48,16 @@ Funcionalidade: LedgerEntry — o que é um lançamento válido
     Dado um crédito de 35000 centavos com data de hoje
     Quando o lançamento é criado
     Então o lançamento tem identidade e momento de criação
+
+  @LEDEN-R06 @nivel-unit @P1
+  Cenário: o estorno inverte o tipo e mantém valor e data
+    Dado um crédito de 35000 centavos
+    Quando o estorno é criado
+    Então o estorno é um débito de 35000 centavos na mesma data
+    E o estorno aponta para o lançamento original
+
+  @LEDEN-R07 @nivel-unit @P1
+  Cenário: o estorno não pode ser estornado
+    Dado um estorno já registrado
+    Quando o estorno dele é criado
+    Então o lançamento é recusado com o código "reversal_not_allowed"

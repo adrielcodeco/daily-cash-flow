@@ -271,8 +271,7 @@ erDiagram
         uuid merchant_id PK
         text key PK
         text request_hash
-        int response_status
-        jsonb response_body
+        uuid entry_id FK
         timestamptz created_at
     }
     DAILY_BALANCE {
@@ -319,7 +318,7 @@ erDiagram
 | Risco | Mitigação |
 |---|---|
 | Defasagem do saldo gerar decisão errada | Informar `updatedThrough` e monitorar o atraso |
-| Agregado divergir dos lançamentos | Reconstrução e reconciliação periódica |
+| Agregado divergir dos lançamentos | Reconstrução e reconciliação periódica. Como `eventId` é a identidade do lançamento, reenviar eventos não conta valores duas vezes |
 | Outbox crescer sem controle | Alerta de idade do evento mais antigo e limpeza |
 | Mensagens mortas ficarem sem tratamento | Alerta e runbook de reenvio |
 | Evento publicado antes de existir assinatura ser descartado pelo Pub/Sub | Provisionar tópico e assinatura antes do publicador, como etapa própria |

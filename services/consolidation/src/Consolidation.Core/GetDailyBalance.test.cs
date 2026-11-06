@@ -40,7 +40,7 @@ public sealed class GetDailyBalanceTests : IAsyncLifetime
         store.ApplyOnceAsync(new BalanceChange(Guid.NewGuid(), merchant, date, cents, 0, AppliedAt), CancellationToken.None);
 
     private Task<DailyBalance> Query(Guid merchant, DateOnly date) =>
-        new GetDailyBalance(store).ExecuteAsync(merchant, date, CancellationToken.None);
+        new GetDailyBalance(store, new InMemoryBalanceCache()).ExecuteAsync(merchant, date, CancellationToken.None);
 
     [Fact(DisplayName = "GTBAL-R01 the query does not show another merchant")]
     public async Task IsolatesMerchants()
@@ -81,5 +81,42 @@ public sealed class GetDailyBalanceTests : IAsyncLifetime
 
         Assert.Equal(0, balance.ClosingCents);
         Assert.Null(balance.UpdatedThrough);
+    }
+
+    [Fact(DisplayName = "GTBAL-R05 a cached balance skips the database")]
+    public async Task ReadsFromCache()
+    {
+        var merchant = Guid.NewGuid();
+        var fakeStore = new InMemoryBalanceStore();
+        var cache = new InMemoryBalanceCache();
+        await cache.SetAsync(merchant, new DailyBalance(Day, 100, 0, 0, null), CancellationToken.None);
+
+        var balance = await new GetDailyBalance(fakeStore, cache).ExecuteAsync(merchant, Day, CancellationToken.None);
+
+        Assert.Equal(100, balance.OpeningCents);
+        Assert.Equal(0, fakeStore.DailyQueries);
+    }
+
+    [Fact(DisplayName = "GTBAL-R06 the query works with the cache down")]
+    public async Task SurvivesCacheFailure()
+    {
+        var fakeStore = new InMemoryBalanceStore();
+
+        await new GetDailyBalance(fakeStore, new BrokenBalanceCache()).ExecuteAsync(Guid.NewGuid(), Day, CancellationToken.None);
+
+        Assert.Equal(1, fakeStore.DailyQueries);
+    }
+
+    [Fact(DisplayName = "GTBAL-R07 a backdated entry changes the next day's opening")]
+    public async Task BackdatedEntryChangesOpening()
+    {
+        var merchant = Guid.NewGuid();
+        await Credit(merchant, Day, 1000);
+        var before = await Query(merchant, Day);
+
+        await Credit(merchant, Day.AddDays(-1), 5000);
+
+        var after = await Query(merchant, Day);
+        Assert.Equal(before.OpeningCents + 5000, after.OpeningCents);
     }
 }

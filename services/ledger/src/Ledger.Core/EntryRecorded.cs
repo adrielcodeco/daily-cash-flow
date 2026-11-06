@@ -20,7 +20,7 @@ public sealed record EntryRecorded(
     public const string EventType = "entry.recorded";
 
     public static EntryRecorded From(LedgerEntry entry) => new(
-        Guid.CreateVersion7(entry.CreatedAt),
+        entry.Id,
         EventType,
         1,
         entry.CreatedAt,
