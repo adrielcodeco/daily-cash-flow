@@ -59,6 +59,8 @@ flowchart LR
 | Elevação de privilégio | Token de leitura faz escrita | Escopos por operação | M6 |
 | Elevação de privilégio | Serviço acessa o banco de outro | Identidade por serviço e bancos separados | Proposta no GCP |
 
+Os problemas concretos e sua correção estão no [registro de vulnerabilidades](18-vulnerabilidades.md).
+
 ## Critérios de segurança para integração
 
 Qualquer consumidor das APIs ou dos eventos precisa cumprir estas regras:

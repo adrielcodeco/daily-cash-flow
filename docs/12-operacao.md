@@ -1,20 +1,6 @@
 # Operação
 
-## Recuperação de desastres
-
-| Cenário | Estratégia | RTO proposto | RPO proposto |
-|---|---|---:|---:|
-| Falha de uma instância | Cloud Run recria a instância | Segundos | 0 |
-| Falha de uma zona | Cloud SQL regional faz failover, e Cloud Run segue em outras zonas | Minutos | 0 |
-| Erro humano no banco | Recuperação a um ponto no tempo | 1 hora | 5 minutos |
-| Perda do consolidado | Reconstrução a partir dos lançamentos | 1 hora | 0 |
-| Perda da região | Réplica entre regiões promovida, com serviços implantados na região secundária | 1 hora | 5 minutos |
-
-O consolidado é derivado dos lançamentos, então o banco de lançamentos é o ativo crítico. Backups diários e logs de transação têm retenção definida pela conformidade.
-
-Uma réplica fora do Brasil depende de avaliação regulatória, porque o GCP tem uma única região no país. Enquanto isso não estiver resolvido, a recuperação regional fica como proposta.
-
-O plano só vale se for testado. A proposta é um exercício de restauração por trimestre, com o tempo medido.
+O plano para desastres está em [recuperação de desastres](17-recuperacao-de-desastres.md). Este documento trata do dia a dia.
 
 ## Runbooks
 
@@ -43,7 +29,7 @@ O plano só vale se for testado. A proposta é um exercício de restauração po
 1. Leia a mensagem e os logs do consumidor.
 2. Se o problema for do consumidor, corrija e reenvie a mensagem ao tópico principal.
 3. Se a mensagem for inválida, corrija a origem. O lançamento continua no banco de lançamentos.
-4. Rode a reconciliação do comerciante afetado.
+4. Confira o saldo do comerciante afetado. A reconciliação automática ainda é uma proposta.
 
 ### Banco indisponível
 
@@ -51,7 +37,7 @@ O plano só vale se for testado. A proposta é um exercício de restauração po
 
 1. Verifique se há failover em andamento no Cloud SQL.
 2. Se for esgotamento de conexões, revise pools e instâncias.
-3. Se for perda de dados, inicie a recuperação a um ponto no tempo.
+3. Se for perda de dados, siga o [plano de recuperação](17-recuperacao-de-desastres.md#erro-humano-no-banco-de-lançamentos).
 4. O saldo calculado segue consultável durante uma queda do banco de lançamentos.
 
 ### Saldo divergente
@@ -59,9 +45,10 @@ O plano só vale se for testado. A proposta é um exercício de restauração po
 **Sintoma:** diferença entre os lançamentos e o saldo.
 
 1. Confira se há mensagens mortas ou fila acumulada.
-2. Pare o consumidor e limpe o consolidado.
-3. Reenvie os eventos. Localmente, `./scripts/rebuild-consolidation.sh` faz os dois passos.
-4. Confira o saldo. Evento repetido não altera o resultado, porque `eventId` é a identidade do lançamento.
+2. Coloque a leitura de saldo em manutenção, porque a API responde saldo parcial durante a reconstrução.
+3. Pare o consumidor e limpe o consolidado.
+4. Reenvie os eventos. Localmente, `./scripts/rebuild-consolidation.sh` faz os dois passos.
+5. Confira o saldo. Evento repetido não altera o resultado, porque `eventId` é a identidade do lançamento.
 
 ## Implantação
 

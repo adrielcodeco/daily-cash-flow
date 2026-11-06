@@ -58,6 +58,19 @@ Comando: `./scripts/mutation.sh`, com Stryker.NET nos projetos de domínio. Mens
 
 Os dois sobreviventes não indicam lacuna de regra: um é a mensagem de uma exceção interna, e o outro remove um bloco que tem o mesmo efeito do caminho normal. Outros 10 mutantes de `Ledger.Core` não compilaram e ficaram fora da pontuação.
 
+## Reconstrução do consolidado
+
+Medição feita em 2026-11-06 com `./scripts/rebuild-consolidation.sh`, sobre os dados dos testes de carga.
+
+| Medida | Resultado |
+|---|---:|
+| Lançamentos | 8.809 |
+| Tempo até o saldo completo | 126 s |
+| Vazão | Cerca de 74 eventos por segundo |
+| Soma do consolidado depois | Igual à soma dos lançamentos |
+
+Durante a reconstrução, a API respondeu 200 com saldo 0 e depois com saldo parcial. As consequências estão no [plano de recuperação](17-recuperacao-de-desastres.md#o-que-foi-provado).
+
 ## Defeitos encontrados pelos testes
 
 | Teste | Defeito | Correção |
@@ -66,6 +79,10 @@ Os dois sobreviventes não indicam lacuna de regra: um é a mensagem de uma exce
 | Resiliência | Ao voltar de uma queda, o consumidor esgotava as conexões do banco e derrubava a API de saldo | Limite de 16 eventos em processamento e pool de conexões por processo |
 | Carga | Com o Redis fora, cada leitura esperava o tempo limite, e o p95 subia para 2,2 s | O cache é ignorado enquanto estiver desconectado |
 | Mutação | Faltavam testes de limites exatos, estorno de débito e gravação no cache | Testes acrescentados, com pontuação de 73% e 82% para 98% e 97% |
+
+## Defeitos que os testes não encontraram
+
+A revisão de segurança achou entradas inválidas aceitas pela API, apesar de 69 testes e da mutação acima de 97%. A mutação avalia os testes que existem e não mostra os cenários que faltam. Os detalhes estão no [registro de vulnerabilidades](18-vulnerabilidades.md).
 
 ## Limites destas medições
 

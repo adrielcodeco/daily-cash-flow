@@ -4,6 +4,8 @@ Estimativa mensal em dólares, para `southamerica-east1`. Os preços foram lidos
 
 O cálculo usa 730 horas por mês, preços de lista e nenhum desconto por compromisso. Impostos, suporte do GCP e custo da equipe ficam de fora.
 
+Equipe, retorno e ponto de equilíbrio estão em [ROI e custo operacional](19-roi-e-custo-operacional.md).
+
 ## Cenários
 
 | Premissa | Início | Crescimento |

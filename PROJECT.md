@@ -41,6 +41,7 @@ load-tests/               cenários k6
 scripts/                  testes, carga, resiliência, mutação e reconstrução
 tools/radar/              gerador dos gráficos de radar
 tools/decisions/          gerador do resumo das decisões
+tools/roi/                gerador do modelo de ROI
 ```
 
 ## Arquitetura

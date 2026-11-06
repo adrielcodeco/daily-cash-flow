@@ -1,6 +1,6 @@
 # Resumo das decisões
 
-Lista de tudo o que ficou decidido, com 240 itens, sem os trade-offs. Os motivos estão nos [ADRs](adr/README.md) e no [registro de decisões](15-registro-de-decisoes.md).
+Lista de tudo o que ficou decidido, com 262 itens, sem os trade-offs. Os motivos estão nos [ADRs](adr/README.md) e no [registro de decisões](15-registro-de-decisoes.md).
 
 Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decisions/generate.mjs`.
 
@@ -42,7 +42,7 @@ Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decis
 | RNF-01 | Independência | Lançamentos segue operando com o consolidado fora do ar | PDF |
 | RNF-02 | Vazão | 50 req/s no consolidado | PDF |
 | RNF-03 | Perda de consultas | No máximo 5%, ou seja, pelo menos 47,5 req/s com sucesso | PDF |
-| RNF-04 | Durabilidade | Nenhum lançamento confirmado é perdido | Proposta |
+| RNF-04 | Durabilidade | Nenhum lançamento confirmado é perdido, exceto na janela de RPO de um desastre | Proposta |
 | RNF-05 | Disponibilidade | 99,9% ao mês em Lançamentos, cerca de 43 minutos de parada | Proposta |
 | RNF-06 | Latência de escrita | p95 de até 300 ms | Proposta |
 | RNF-07 | Latência de leitura | p95 de até 200 ms | Proposta |
@@ -255,6 +255,41 @@ Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decis
 | D-94 | Migrar por grupos de comerciantes |
 | D-95 | Cada comerciante escreve em um único sistema por vez |
 
+## Recuperação de desastres
+
+| ID | Decisão |
+|---|---|
+| D-96 | Perda zero não vale na janela de RPO de um desastre |
+| D-97 | Erro humano é tratado em uma cópia, com correção pontual |
+| D-98 | Depois de restaurar lançamentos, sempre reconstruir o consolidado |
+| D-99 | Failover regional exige decisão de uma pessoa nomeada |
+| D-100 | A escrita volta primeiro, e o saldo depois |
+| D-101 | Cópia isolada dos lançamentos em outro projeto |
+
+## Observabilidade
+
+| ID | Decisão |
+|---|---|
+| D-102 | Telemetria pode ser descartada, e nunca bloqueia a escrita |
+| D-103 | Guardar o contexto do traço na `outbox` |
+| D-104 | `merchantId` fica fora dos atributos de métrica |
+| D-105 | Amostragem de 10% dos traços na nuvem |
+| D-106 | Requisição bem-sucedida não gera log |
+| D-107 | `/health/ready` verifica só o próprio banco |
+| D-108 | Alertas de orçamento com janela dupla |
+| D-109 | Métricas por 6 semanas, e traços e logs por 30 dias |
+
+## Vulnerabilidades e finanças
+
+| ID | Decisão |
+|---|---|
+| D-110 | Vulnerabilidade Crítica ou Alta bloqueia produção |
+| D-111 | Prazos de 7, 30 e 90 dias por severidade |
+| D-112 | IDs de vulnerabilidade não são reutilizados, e itens corrigidos ficam no registro |
+| D-113 | Senha local e tempo no UUID v7 são riscos aceitos |
+| D-114 | ROI como modelo gerado por script, com premissas explícitas |
+| D-115 | Horizonte de 36 meses, sem impostos e sem cancelamento de clientes |
+
 ## Regras de negócio
 
 | ID | Regra |
@@ -350,4 +385,6 @@ Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decis
 | 2026-11-05 | Pool padrão e consumo sem limite | Limite de 16 eventos e pool definido |
 | 2026-11-05 | Portas locais 8081 e 8082 | Portas 18081 e 18082 |
 | 2026-11-05 | Esperar o tempo limite do Redis | Ignorar o cache desconectado |
+| 2026-11-06 | Recuperação de desastres dentro de Operação | Documento próprio |
+| 2026-11-06 | RTO de 1 hora para a perda do consolidado | RTO condicionado ao volume |
 | 2026-11-05 | Cache como ganho de latência | Cache como proteção do banco |

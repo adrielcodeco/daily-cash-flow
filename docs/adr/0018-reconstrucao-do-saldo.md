@@ -42,7 +42,7 @@ Ler o banco de lançamentos é o caminho mais rápido, mas quebra o P3 e cria um
 **Negativas**
 
 - A reconstrução é completa, não por comerciante
-- O consolidado fica desatualizado até a fila terminar
+- O consolidado fica incompleto até a fila terminar, e a API responde saldo parcial com status 200. Ver a V-08 em [vulnerabilidades](../18-vulnerabilidades.md)
 - O reenvio grava em toda a outbox e concorre com as escritas normais pelo publicador
 
 ## Gatilho de revisão

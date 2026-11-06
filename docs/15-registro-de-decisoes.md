@@ -172,6 +172,41 @@ A coluna **Base** diz de onde veio cada escolha:
 | D-94 | Migrar por grupos de comerciantes | Todos juntos | Convivência mais longa | Julgamento | Não previsto |
 | D-95 | Cada comerciante escreve em um único sistema por vez | Escrever nos dois | Exige um corte controlado por grupo | Julgamento | Não previsto |
 
+## Recuperação de desastres
+
+| ID | Decisão | Alternativas | Do que abrimos mão | Base | Rever quando |
+|---|---|---|---|---|---|
+| D-96 | Perda zero não vale na janela de RPO de um desastre | Replicação síncrona entre regiões | Até 5 minutos de lançamentos confirmados, em eventos raros | Julgamento | O negócio não aceitar essa janela |
+| D-97 | Erro humano é tratado em uma cópia, com correção pontual | Substituir o banco inteiro | Recuperação mais trabalhosa, em troca de preservar lançamentos novos | Julgamento | Não previsto |
+| D-98 | Depois de restaurar lançamentos, sempre reconstruir o consolidado | Ajustar só a diferença | Mais tempo com saldo indisponível | Julgamento | Houver reenvio parcial |
+| D-99 | Failover regional exige decisão de uma pessoa nomeada | Failover automático | Mais tempo até reagir, em troca de evitar dois históricos | Julgamento | Não previsto |
+| D-100 | A escrita volta primeiro, e o saldo depois | Recuperar tudo junto | O saldo demora mais a voltar | Requisito | Não previsto: princípio P1 |
+| D-101 | Cópia isolada dos lançamentos em outro projeto | Só o backup do projeto | Custo adicional, ainda não estimado | Julgamento | Definição de segurança do cliente |
+
+## Observabilidade
+
+| ID | Decisão | Alternativas | Do que abrimos mão | Base | Rever quando |
+|---|---|---|---|---|---|
+| D-102 | Telemetria pode ser descartada, e nunca bloqueia a escrita | Garantir toda a telemetria | Dados podem faltar durante um incidente | Requisito | Não previsto: princípio P1 |
+| D-103 | Guardar o contexto do traço na `outbox` | Traços separados | Uma coluna a mais e uma migração | Julgamento | Não previsto |
+| D-104 | `merchantId` fica fora dos atributos de métrica | Métrica por comerciante | Problema de um comerciante só aparece em logs e traços | Julgamento | Houver grupos de comerciantes de baixa cardinalidade |
+| D-105 | Amostragem de 10% dos traços na nuvem | Todos os traços | Traços de casos raros podem faltar | Valor inicial | Houver dados de uso |
+| D-106 | Requisição bem-sucedida não gera log | Log de toda requisição | Menos detalhe, em troca de custo menor | Julgamento | A auditoria exigir, na trilha própria |
+| D-107 | `/health/ready` verifica só o próprio banco | Verificar todas as dependências | A verificação não mostra falha em dependências | Requisito | Não previsto: princípio P1 |
+| D-108 | Alertas de orçamento com janela dupla | Limite simples | Regras mais complexas | Julgamento | Não previsto |
+| D-109 | Métricas por 6 semanas, e traços e logs por 30 dias | Retenção maior | Menos histórico para comparar | Valor inicial | Definição de conformidade |
+
+## Vulnerabilidades e finanças
+
+| ID | Decisão | Alternativas | Do que abrimos mão | Base | Rever quando |
+|---|---|---|---|---|---|
+| D-110 | Vulnerabilidade Crítica ou Alta bloqueia produção | Decidir caso a caso | Lançamentos podem atrasar | Julgamento | Não previsto |
+| D-111 | Prazos de 7, 30 e 90 dias por severidade | Sem prazo | Prazos ainda não validados pela segurança do cliente | Valor inicial | Política do cliente |
+| D-112 | IDs de vulnerabilidade não são reutilizados, e itens corrigidos ficam no registro | Apagar ao corrigir | Registro mais longo | Julgamento | Não previsto |
+| D-113 | Senha local e tempo no UUID v7 são riscos aceitos | Corrigir | Dois achados baixos ficam abertos | Julgamento | Mudança de uso |
+| D-114 | ROI como modelo gerado por script, com premissas explícitas | Número fechado em documento | Sem dados do cliente, o resultado é só um exemplo | Julgamento | Houver dados reais |
+| D-115 | Horizonte de 36 meses, sem impostos e sem cancelamento de clientes | Modelo completo | O resultado tende a ser otimista | Julgamento | Houver dados reais |
+
 ## Decisões revistas
 
 | Data | Decisão original | O que mudou | Motivo |
@@ -179,4 +214,6 @@ A coluna **Base** diz de onde veio cada escolha:
 | 2026-11-05 | RabbitMQ como plano B no ambiente local | Descartado | O emulador validou entrega e mensagens mortas |
 | 2026-11-05 | Pool padrão e consumo sem limite | Limite de 16 eventos e pool definido | O teste de resiliência esgotou as conexões: ver ADR-0017 |
 | 2026-11-05 | Esperar o tempo limite do Redis | Ignorar o cache desconectado | A carga mostrou p95 de 2,2 s |
+| 2026-11-06 | Recuperação de desastres dentro de Operação | Documento próprio | O plano precisa de escopo, papéis e procedimentos próprios |
+| 2026-11-06 | RTO de 1 hora para a perda do consolidado | RTO condicionado ao volume | A medição mostrou cerca de 266 mil lançamentos por hora |
 | 2026-11-05 | Cache como ganho de latência | Cache como proteção do banco | A carga não mostrou ganho de latência: ver ADR-0005 |

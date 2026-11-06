@@ -37,7 +37,7 @@
 | RNF-01 | Independência | Lançamentos segue operando com o consolidado fora do ar | Teste de resiliência | PDF |
 | RNF-02 | Vazão | 50 req/s no consolidado | k6, por 5 minutos | PDF |
 | RNF-03 | Perda de consultas | No máximo 5%, ou seja, pelo menos 47,5 req/s com sucesso | k6 | PDF |
-| RNF-04 | Durabilidade | Nenhum lançamento confirmado é perdido | Teste de resiliência e reconciliação | Proposta |
+| RNF-04 | Durabilidade | Nenhum lançamento confirmado é perdido, exceto na janela de RPO de um desastre | Teste de resiliência e reconciliação | Proposta |
 | RNF-05 | Disponibilidade | 99,9% ao mês em Lançamentos, cerca de 43 minutos de parada | SLO | Proposta |
 | RNF-06 | Latência de escrita | p95 de até 300 ms | Métricas de produção | Proposta |
 | RNF-07 | Latência de leitura | p95 de até 200 ms | k6 | Proposta |
