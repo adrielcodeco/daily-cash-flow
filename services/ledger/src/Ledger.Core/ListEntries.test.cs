@@ -50,6 +50,18 @@ public sealed class ListEntriesTests
         Assert.Equal("invalid_limit", refusal.Code);
     }
 
+    [Theory(DisplayName = "LSTEN-R02 the limits of the range are accepted")]
+    [InlineData(1)]
+    [InlineData(200)]
+    public async Task AcceptsLimitsOfTheRange(int limit)
+    {
+        Seed(1);
+
+        var page = await List(limit);
+
+        Assert.Single(page.Items);
+    }
+
     [Fact(DisplayName = "LSTEN-R03 the next position appears when more entries exist")]
     public async Task ReportsNextPosition()
     {

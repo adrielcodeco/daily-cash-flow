@@ -48,6 +48,19 @@ public sealed class ReverseEntryTests
         Assert.Equal("already_reversed", refusal.Code);
     }
 
+    [Fact(DisplayName = "RVENT-R04 a key used for another entry is refused")]
+    public async Task RefusesKeyOfAnotherEntry()
+    {
+        var other = LedgerEntry.Record(Merchant, EntryType.Credit, 100, Today, null, Clock);
+        store.Entries.Add(other);
+        await Reverse(Merchant, "request-0001");
+
+        var refusal = await Assert.ThrowsAsync<DomainRuleException>(() =>
+            useCase.ExecuteAsync(Merchant, other.Id, "request-0001", CancellationToken.None));
+
+        Assert.Equal("idempotency_key_reused", refusal.Code);
+    }
+
     [Fact(DisplayName = "RVENT-R03 the reversal is stored with its event")]
     public async Task StoresReversalAndEvent()
     {

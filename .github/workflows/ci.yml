@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Run unit and integration tests
+        run: dotnet test DailyCashFlow.slnx
+      - name: Start the stack
+        run: docker compose up -d --build --wait --wait-timeout 300
+      - name: Wait for the APIs
+        run: |
+          for port in 18081 18082; do
+            for _ in $(seq 1 60); do curl -sf "localhost:$port/health/ready" >/dev/null && break; sleep 1; done
+          done
+      - name: Run the end-to-end test
+        run: ./scripts/smoke.sh
+      - name: Show logs on failure
+        if: failure()
+        run: docker compose logs --tail=100

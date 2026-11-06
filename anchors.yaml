@@ -67,6 +67,21 @@ layers:
         kind: test
         tags:
             - test
+mutation:
+    - workspace: ledger
+      paths:
+        - services/ledger/**
+      layer: unit
+      scope: full
+      run: ./scripts/mutation.sh
+      report: reports/mutation/ledger/reports/mutation-report.json
+    - workspace: consolidation
+      paths:
+        - services/consolidation/**
+      layer: unit
+      scope: full
+      run: ./scripts/mutation.sh
+      report: reports/mutation/consolidation/reports/mutation-report.json
 derived:
     anchor: spec
     files:

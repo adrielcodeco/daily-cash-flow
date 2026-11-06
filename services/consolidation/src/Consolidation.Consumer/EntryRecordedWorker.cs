@@ -16,6 +16,9 @@ public sealed class EntryRecordedWorker(
     ApplyEntryRecorded applyEntryRecorded,
     ILogger<EntryRecordedWorker> logger) : BackgroundService
 {
+    // Bounds the backlog drain after an outage, so the consumer cannot exhaust the database connections.
+    private const int MaxEventsInFlight = 16;
+
     private static readonly JsonSerializerOptions EventJson = new(JsonSerializerDefaults.Web);
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -24,6 +27,11 @@ public sealed class EntryRecordedWorker(
         {
             SubscriptionName = SubscriptionName.FromProjectSubscription(subscription.ProjectId, subscription.SubscriptionId),
             EmulatorDetection = EmulatorDetection.EmulatorOrProduction,
+            ClientCount = 1,
+            Settings = new SubscriberClient.Settings
+            {
+                FlowControlSettings = new FlowControlSettings(maxOutstandingElementCount: MaxEventsInFlight, maxOutstandingByteCount: null),
+            },
         }.BuildAsync(stoppingToken);
 
         stoppingToken.Register(() => subscriber.StopAsync(TimeSpan.FromSeconds(10)));

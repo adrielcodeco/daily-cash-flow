@@ -2,7 +2,7 @@
 # Material e versionado. Fonte de verdade do grafo; índices em memória são cache.
 version: 8
 generated_by: v0.1.381
-config_rev: a97bc1d1eb6b
+config_rev: bee02f372e49
 nodes:
     - id: AGENTS.md
       kind: doc
@@ -109,7 +109,7 @@ nodes:
       line_rev: 1c6944a66b42
     - id: services/consolidation/src/Consolidation.Consumer/EntryRecordedWorker.cs
       kind: code
-      rev: e71f66f0735d
+      rev: eb67d47eb93e
       updated_at: "2026-11-05"
       code: CNWRK
       file_code: CNWRK
@@ -119,8 +119,8 @@ nodes:
         - code
         - host
       regime: declarativo
-      evidence_rev: e1ad0bc79447
-      line_rev: 57650cd1b64f
+      evidence_rev: 372cc66b397e
+      line_rev: 3b0d951d2ba7
     - id: services/consolidation/src/Consolidation.Consumer/Program.cs
       kind: code
       rev: b3f0def24610
@@ -145,6 +145,21 @@ nodes:
       tags:
         - code
         - core
+      signal:
+        mutants_killed: 10
+        mutation_score: 100
+        mutants_ignored: 4
+        mutation_by_scope:
+            full:
+                killed: 10
+                ignored: 4
+                score: 100
+                at_rev: 7600255da3e9
+        mutation_low: 80
+        mutation_high: 90
+        at_rev: 7600255da3e9
+        mutation_at_rev: 7600255da3e9
+        ingested_at: "2026-11-05T23:53:52-03:00"
       evidence_rev: f28d880465c5
       line_rev: 72934b2dee75
     - id: services/consolidation/src/Consolidation.Core/ApplyEntryRecorded.feature
@@ -185,6 +200,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Core/BalanceFakes.test.cs
       kind: test
       rev: 0201b90d616e
+      updated_at: "2026-11-05"
       code: CNFKS
       file_code: CNFKS
       layer: test
@@ -203,6 +219,19 @@ nodes:
       tags:
         - code
         - core
+      signal:
+        mutants_killed: 2
+        mutation_score: 100
+        mutation_by_scope:
+            full:
+                killed: 2
+                score: 100
+                at_rev: 72961d6056e0
+        mutation_low: 80
+        mutation_high: 90
+        at_rev: 72961d6056e0
+        mutation_at_rev: 72961d6056e0
+        ingested_at: "2026-11-05T23:53:52-03:00"
       evidence_rev: 5bce5afd6e66
       line_rev: cf72ece631ce
     - id: services/consolidation/src/Consolidation.Core/DailyBalance.feature
@@ -250,6 +279,15 @@ nodes:
       tags:
         - code
         - core
+      signal:
+        mutation_by_scope:
+            full:
+                at_rev: b9905c19b322
+        mutation_low: 80
+        mutation_high: 90
+        at_rev: b9905c19b322
+        mutation_at_rev: b9905c19b322
+        ingested_at: "2026-11-05T23:53:52-03:00"
       evidence_rev: b0937b4db406
       line_rev: af6f575b2fe6
     - id: services/consolidation/src/Consolidation.Core/GetDailyBalance.cs
@@ -262,6 +300,23 @@ nodes:
       tags:
         - code
         - core
+      signal:
+        mutants_killed: 7
+        mutants_survived: 1
+        mutation_score: 87.5
+        mutants_ignored: 4
+        mutation_by_scope:
+            full:
+                killed: 7
+                survived: 1
+                ignored: 4
+                score: 87.5
+                at_rev: 34a77aba9b91
+        mutation_low: 80
+        mutation_high: 90
+        at_rev: 34a77aba9b91
+        mutation_at_rev: 34a77aba9b91
+        ingested_at: "2026-11-05T23:53:52-03:00"
       evidence_rev: 612268ea2eae
       line_rev: d5577abccef6
     - id: services/consolidation/src/Consolidation.Core/GetDailyBalance.feature
@@ -290,29 +345,46 @@ nodes:
       rest_rev: 6fba3403eb51
     - id: services/consolidation/src/Consolidation.Core/GetDailyBalance.test.cs
       kind: test
-      rev: 279cda3b6457
+      rev: a94acbc28a81
       updated_at: "2026-11-05"
       code: GTBAL
       file_code: GTBTS
       layer: test
       tags:
         - test
-      evidence_rev: ac55bf339f49
-      line_rev: b7a1ee56857a
+      evidence_rev: 246fbef0e2bc
+      line_rev: 23f5bc19f6d1
     - id: services/consolidation/src/Consolidation.Core/GetPeriodBalance.cs
       kind: code
       rev: 686fe7286d98
+      updated_at: "2026-11-05"
       code: GTPRD
       file_code: GTPCD
       layer: core
       tags:
         - code
         - core
+      signal:
+        mutants_killed: 15
+        mutation_score: 100
+        mutants_ignored: 8
+        mutation_by_scope:
+            full:
+                killed: 15
+                ignored: 8
+                score: 100
+                at_rev: 686fe7286d98
+        mutation_low: 80
+        mutation_high: 90
+        at_rev: 686fe7286d98
+        mutation_at_rev: 686fe7286d98
+        ingested_at: "2026-11-05T23:53:52-03:00"
       evidence_rev: 9709f9bdfdde
       line_rev: ee46d371bb14
     - id: services/consolidation/src/Consolidation.Core/GetPeriodBalance.feature
       kind: feature
       rev: d46a4a688837
+      updated_at: "2026-11-05"
       code: GTPRD
       file_code: GTPFT
       layer: feature
@@ -323,6 +395,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Core/GetPeriodBalance.spec.md
       kind: spec
       rev: e47d28078ffc
+      updated_at: "2026-11-05"
       code: GTPRD
       file_code: GTPRD
       layer: spec
@@ -334,14 +407,15 @@ nodes:
       rest_rev: 08746f53420f
     - id: services/consolidation/src/Consolidation.Core/GetPeriodBalance.test.cs
       kind: test
-      rev: 6e9e492ecf95
+      rev: 71f57ae813c0
+      updated_at: "2026-11-05"
       code: GTPRD
       file_code: GTPTS
       layer: test
       tags:
         - test
-      evidence_rev: c069723f1fe9
-      line_rev: b284f6b72119
+      evidence_rev: 547eff192bd1
+      line_rev: 064a1a0f44b3
     - id: services/consolidation/src/Consolidation.Core/IBalanceStore.cs
       kind: code
       rev: 22fe55be07ba
@@ -352,22 +426,42 @@ nodes:
       tags:
         - code
         - core
+      signal:
+        mutation_by_scope:
+            full:
+                at_rev: 22fe55be07ba
+        mutation_low: 80
+        mutation_high: 90
+        at_rev: 22fe55be07ba
+        mutation_at_rev: 22fe55be07ba
+        ingested_at: "2026-11-05T23:53:52-03:00"
       evidence_rev: a05dd3f3315a
       line_rev: fd6bfec206c4
     - id: services/consolidation/src/Consolidation.Core/ResetBalances.cs
       kind: code
       rev: d216799484a9
+      updated_at: "2026-11-05"
       code: RSBAL
       file_code: RSBCD
       layer: core
       tags:
         - code
         - core
+      signal:
+        mutation_by_scope:
+            full:
+                at_rev: d216799484a9
+        mutation_low: 80
+        mutation_high: 90
+        at_rev: d216799484a9
+        mutation_at_rev: d216799484a9
+        ingested_at: "2026-11-05T23:53:52-03:00"
       evidence_rev: e91bc5c53686
       line_rev: 6c2423ddb949
     - id: services/consolidation/src/Consolidation.Core/ResetBalances.feature
       kind: feature
       rev: bb2489f068c4
+      updated_at: "2026-11-05"
       code: RSBAL
       file_code: RSBFT
       layer: feature
@@ -378,6 +472,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Core/ResetBalances.spec.md
       kind: spec
       rev: 214f72cf0992
+      updated_at: "2026-11-05"
       code: RSBAL
       file_code: RSBAL
       layer: spec
@@ -389,14 +484,15 @@ nodes:
       rest_rev: b7df9f3fbdb6
     - id: services/consolidation/src/Consolidation.Core/ResetBalances.test.cs
       kind: test
-      rev: 76b4ab74e50c
+      rev: eb7049aff251
+      updated_at: "2026-11-05"
       code: RSBAL
       file_code: RSBTS
       layer: test
       tags:
         - test
-      evidence_rev: 5e1db11d6718
-      line_rev: 36655869ed48
+      evidence_rev: 09c5be2e6706
+      line_rev: d54a70582e38
     - id: services/consolidation/src/Consolidation.Infrastructure/DatabaseMigrator.cs
       kind: code
       rev: a2cdf2d93c4d
@@ -440,7 +536,8 @@ nodes:
       line_rev: "422143459e10"
     - id: services/consolidation/src/Consolidation.Infrastructure/RedisBalanceCache.cs
       kind: code
-      rev: 14093bd18359
+      rev: a324de6081c7
+      updated_at: "2026-11-05"
       code: GTBAL
       file_code: RDBCH
       layer: infrastructure
@@ -448,8 +545,8 @@ nodes:
         - code
         - infrastructure
       regime: declarativo
-      evidence_rev: 77df8f708a6a
-      line_rev: de94122666eb
+      evidence_rev: cda90b81a58b
+      line_rev: 5a20e121fe0c
     - id: services/ledger/src/Ledger.Api/EntryEndpoints.cs
       kind: code
       rev: b153141b6477
@@ -502,6 +599,15 @@ nodes:
       tags:
         - code
         - core
+      signal:
+        mutation_by_scope:
+            full:
+                at_rev: 4ec4fc6c83a8
+        mutation_low: 80
+        mutation_high: 90
+        at_rev: 4ec4fc6c83a8
+        mutation_at_rev: 4ec4fc6c83a8
+        ingested_at: "2026-11-05T23:53:52-03:00"
       evidence_rev: 1467fca394fd
       line_rev: 3cf466a1f603
     - id: services/ledger/src/Ledger.Core/EntryRecorded.cs
@@ -514,8 +620,28 @@ nodes:
       tags:
         - code
         - core
+      signal:
+        mutation_by_scope:
+            full:
+                at_rev: 5c4f9d5a34a0
+        mutation_low: 80
+        mutation_high: 90
+        at_rev: 5c4f9d5a34a0
+        mutation_at_rev: 5c4f9d5a34a0
+        ingested_at: "2026-11-05T23:53:52-03:00"
       evidence_rev: 790f31c447d8
       line_rev: 1c5f3497ce4d
+    - id: services/ledger/src/Ledger.Core/EntryStoreIntegration.test.cs
+      kind: test
+      rev: 73016fcc32e6
+      code: ESITS
+      file_code: ESITS
+      layer: test
+      code_declared: true
+      tags:
+        - test
+      evidence_rev: 7165e9c5e3c1
+      line_rev: 2feadaa46ef3
     - id: services/ledger/src/Ledger.Core/EntryType.cs
       kind: code
       rev: d93b5639debd
@@ -526,6 +652,15 @@ nodes:
       tags:
         - code
         - core
+      signal:
+        mutation_by_scope:
+            full:
+                at_rev: d93b5639debd
+        mutation_low: 80
+        mutation_high: 90
+        at_rev: d93b5639debd
+        mutation_at_rev: d93b5639debd
+        ingested_at: "2026-11-05T23:53:52-03:00"
       evidence_rev: 56a43f286838
       line_rev: 93a2cddb556d
     - id: services/ledger/src/Ledger.Core/IEntryStore.cs
@@ -538,17 +673,42 @@ nodes:
       tags:
         - code
         - core
+      signal:
+        mutation_by_scope:
+            full:
+                at_rev: 10a4a4dd8e9a
+        mutation_low: 80
+        mutation_high: 90
+        at_rev: 10a4a4dd8e9a
+        mutation_at_rev: 10a4a4dd8e9a
+        ingested_at: "2026-11-05T23:53:52-03:00"
       evidence_rev: 05693ff28a8b
       line_rev: 3aa952bfe89d
     - id: services/ledger/src/Ledger.Core/IdempotentWriter.cs
       kind: code
       rev: d30d09885063
+      updated_at: "2026-11-05"
       code: RCENT
       file_code: IDWRT
       layer: core
       tags:
         - code
         - core
+      signal:
+        mutants_killed: 6
+        mutation_score: 100
+        mutants_ignored: 9
+        mutation_by_scope:
+            full:
+                killed: 6
+                ignored: 9
+                score: 100
+                at_rev: d30d09885063
+        mutation_low: 80
+        mutation_high: 90
+        at_rev: d30d09885063
+        mutation_at_rev: d30d09885063
+        ingested_at: "2026-11-05T23:53:52-03:00"
       evidence_rev: dbb06cb1cdd6
       line_rev: 2daa20b052af
     - id: services/ledger/src/Ledger.Core/LedgerEntry.cs
@@ -561,6 +721,21 @@ nodes:
       tags:
         - code
         - core
+      signal:
+        mutants_killed: 20
+        mutation_score: 100
+        mutants_ignored: 17
+        mutation_by_scope:
+            full:
+                killed: 20
+                ignored: 17
+                score: 100
+                at_rev: 26fee5b60c15
+        mutation_low: 80
+        mutation_high: 90
+        at_rev: 26fee5b60c15
+        mutation_at_rev: 26fee5b60c15
+        ingested_at: "2026-11-05T23:53:52-03:00"
       evidence_rev: b4aeaf7afde0
       line_rev: 23653356a10c
     - id: services/ledger/src/Ledger.Core/LedgerEntry.feature
@@ -589,18 +764,19 @@ nodes:
       rest_rev: 9d867b0120cc
     - id: services/ledger/src/Ledger.Core/LedgerEntry.test.cs
       kind: test
-      rev: ca377ae35fdb
+      rev: b49d4f049f1c
       updated_at: "2026-11-05"
       code: LEDEN
       file_code: LEDTS
       layer: test
       tags:
         - test
-      evidence_rev: d611fdb4513f
-      line_rev: 1f6152abdf65
+      evidence_rev: 00ed5003ce57
+      line_rev: dcd3045867f8
     - id: services/ledger/src/Ledger.Core/LedgerFakes.test.cs
       kind: test
       rev: bcacd6aabb0a
+      updated_at: "2026-11-05"
       code: LDFKS
       file_code: LDFKS
       layer: test
@@ -612,17 +788,34 @@ nodes:
     - id: services/ledger/src/Ledger.Core/ListEntries.cs
       kind: code
       rev: 4361ba78aa9c
+      updated_at: "2026-11-05"
       code: LSTEN
       file_code: LSTCD
       layer: core
       tags:
         - code
         - core
+      signal:
+        mutants_killed: 6
+        mutation_score: 100
+        mutants_ignored: 4
+        mutation_by_scope:
+            full:
+                killed: 6
+                ignored: 4
+                score: 100
+                at_rev: 4361ba78aa9c
+        mutation_low: 80
+        mutation_high: 90
+        at_rev: 4361ba78aa9c
+        mutation_at_rev: 4361ba78aa9c
+        ingested_at: "2026-11-05T23:53:52-03:00"
       evidence_rev: 15c87fb3a713
       line_rev: 4840d314a763
     - id: services/ledger/src/Ledger.Core/ListEntries.feature
       kind: feature
       rev: 77af8a9c68be
+      updated_at: "2026-11-05"
       code: LSTEN
       file_code: LSTFT
       layer: feature
@@ -633,6 +826,7 @@ nodes:
     - id: services/ledger/src/Ledger.Core/ListEntries.spec.md
       kind: spec
       rev: cd25066d7315
+      updated_at: "2026-11-05"
       code: LSTEN
       file_code: LSTEN
       layer: spec
@@ -644,14 +838,15 @@ nodes:
       rest_rev: b979431f88d5
     - id: services/ledger/src/Ledger.Core/ListEntries.test.cs
       kind: test
-      rev: 10d85ddd95b6
+      rev: 8ce6de8d4a56
+      updated_at: "2026-11-05"
       code: LSTEN
       file_code: LSTTS
       layer: test
       tags:
         - test
-      evidence_rev: 2d704336d8e3
-      line_rev: 256273dad265
+      evidence_rev: 95a3c04f358d
+      line_rev: c8264c58a1f9
     - id: services/ledger/src/Ledger.Core/OutboxRelay.cs
       kind: code
       rev: b0977b4809a4
@@ -662,6 +857,23 @@ nodes:
       tags:
         - code
         - core
+      signal:
+        mutants_killed: 9
+        mutants_survived: 1
+        mutation_score: 90
+        mutants_ignored: 5
+        mutation_by_scope:
+            full:
+                killed: 9
+                survived: 1
+                ignored: 5
+                score: 90
+                at_rev: b0977b4809a4
+        mutation_low: 80
+        mutation_high: 90
+        at_rev: b0977b4809a4
+        mutation_at_rev: b0977b4809a4
+        ingested_at: "2026-11-05T23:53:52-03:00"
       evidence_rev: 6b03170cd9a1
       line_rev: 175bbdb968b4
     - id: services/ledger/src/Ledger.Core/OutboxRelay.feature
@@ -709,6 +921,21 @@ nodes:
       tags:
         - code
         - core
+      signal:
+        mutants_killed: 1
+        mutation_score: 100
+        mutants_ignored: 1
+        mutation_by_scope:
+            full:
+                killed: 1
+                ignored: 1
+                score: 100
+                at_rev: c7f3311e3714
+        mutation_low: 80
+        mutation_high: 90
+        at_rev: c7f3311e3714
+        mutation_at_rev: c7f3311e3714
+        ingested_at: "2026-11-05T23:53:52-03:00"
       evidence_rev: fbdcd44980b3
       line_rev: 403aefc1e618
     - id: services/ledger/src/Ledger.Core/RecordEntry.feature
@@ -748,18 +975,36 @@ nodes:
       line_rev: ce12df47280f
     - id: services/ledger/src/Ledger.Core/RepublishEntries.cs
       kind: code
-      rev: 063ae9aaa093
+      rev: 2afc0b5eb87c
+      updated_at: "2026-11-05"
       code: RPENT
       file_code: RPECD
       layer: core
       tags:
         - code
         - core
-      evidence_rev: 1c4d667edced
-      line_rev: 582805332c9c
+      signal:
+        mutants_killed: 4
+        mutation_score: 100
+        mutants_ignored: 1
+        mutants_timed_out: 1
+        mutation_by_scope:
+            full:
+                killed: 4
+                ignored: 1
+                score: 100
+                at_rev: 2afc0b5eb87c
+        mutation_low: 80
+        mutation_high: 90
+        at_rev: 2afc0b5eb87c
+        mutation_at_rev: 2afc0b5eb87c
+        ingested_at: "2026-11-05T23:53:52-03:00"
+      evidence_rev: 25ae55f5bccb
+      line_rev: ea26a7bab8bd
     - id: services/ledger/src/Ledger.Core/RepublishEntries.feature
       kind: feature
       rev: 582811f9a0ec
+      updated_at: "2026-11-05"
       code: RPENT
       file_code: RPEFT
       layer: feature
@@ -770,6 +1015,7 @@ nodes:
     - id: services/ledger/src/Ledger.Core/RepublishEntries.spec.md
       kind: spec
       rev: 2e79c76c60f1
+      updated_at: "2026-11-05"
       code: RPENT
       file_code: RPENT
       layer: spec
@@ -781,28 +1027,46 @@ nodes:
       rest_rev: 08212b6d6c4a
     - id: services/ledger/src/Ledger.Core/RepublishEntries.test.cs
       kind: test
-      rev: 7f6fb29515c9
+      rev: 3fe54556b04e
+      updated_at: "2026-11-05"
       code: RPENT
       file_code: RPETS
       layer: test
       tags:
         - test
-      evidence_rev: d4f2f678557d
-      line_rev: 794210a20d6e
+      evidence_rev: e460247e6cc9
+      line_rev: 2918e68c5eed
     - id: services/ledger/src/Ledger.Core/ReverseEntry.cs
       kind: code
       rev: edcad3e22bf2
+      updated_at: "2026-11-05"
       code: RVENT
       file_code: RVECD
       layer: core
       tags:
         - code
         - core
+      signal:
+        mutants_killed: 2
+        mutation_score: 100
+        mutants_ignored: 2
+        mutation_by_scope:
+            full:
+                killed: 2
+                ignored: 2
+                score: 100
+                at_rev: edcad3e22bf2
+        mutation_low: 80
+        mutation_high: 90
+        at_rev: edcad3e22bf2
+        mutation_at_rev: edcad3e22bf2
+        ingested_at: "2026-11-05T23:53:52-03:00"
       evidence_rev: 0072071d3237
       line_rev: 1248da9f7bca
     - id: services/ledger/src/Ledger.Core/ReverseEntry.feature
       kind: feature
       rev: b218af57a07d
+      updated_at: "2026-11-05"
       code: RVENT
       file_code: RVEFT
       layer: feature
@@ -813,6 +1077,7 @@ nodes:
     - id: services/ledger/src/Ledger.Core/ReverseEntry.spec.md
       kind: spec
       rev: d79fb341c4d6
+      updated_at: "2026-11-05"
       code: RVENT
       file_code: RVENT
       layer: spec
@@ -824,14 +1089,15 @@ nodes:
       rest_rev: 6a163ce490bd
     - id: services/ledger/src/Ledger.Core/ReverseEntry.test.cs
       kind: test
-      rev: d9197fc3319c
+      rev: 761a2d0c98c4
+      updated_at: "2026-11-05"
       code: RVENT
       file_code: RVETS
       layer: test
       tags:
         - test
-      evidence_rev: d5bf5f5ececc
-      line_rev: 3799bba4377d
+      evidence_rev: fa21ae48ca32
+      line_rev: aeee9cce1b13
     - id: services/ledger/src/Ledger.Infrastructure/DatabaseMigrator.cs
       kind: code
       rev: fe473d028ad1
@@ -1001,7 +1267,7 @@ edges:
       origin: declared
       stamp:
         validated_from_rev: e527119ddc42
-        validated_to_rev: 279cda3b6457
+        validated_to_rev: a94acbc28a81
         changed_at: "2026-11-05"
         verdict: ok
     - from: guides/HEADER_GUIDE.md
@@ -1028,7 +1294,7 @@ edges:
       origin: declared
       stamp:
         validated_from_rev: e527119ddc42
-        validated_to_rev: 6e9e492ecf95
+        validated_to_rev: 71f57ae813c0
         changed_at: "2026-11-05"
         verdict: ok
     - from: guides/HEADER_GUIDE.md
@@ -1055,7 +1321,16 @@ edges:
       origin: declared
       stamp:
         validated_from_rev: e527119ddc42
-        validated_to_rev: 76b4ab74e50c
+        validated_to_rev: eb7049aff251
+        changed_at: "2026-11-05"
+        verdict: ok
+    - from: guides/HEADER_GUIDE.md
+      to: services/ledger/src/Ledger.Core/EntryStoreIntegration.test.cs
+      type: governs
+      origin: declared
+      stamp:
+        validated_from_rev: e527119ddc42
+        validated_to_rev: 73016fcc32e6
         changed_at: "2026-11-05"
         verdict: ok
     - from: guides/HEADER_GUIDE.md
@@ -1082,7 +1357,7 @@ edges:
       origin: declared
       stamp:
         validated_from_rev: e527119ddc42
-        validated_to_rev: ca377ae35fdb
+        validated_to_rev: b49d4f049f1c
         changed_at: "2026-11-05"
         verdict: ok
     - from: guides/HEADER_GUIDE.md
@@ -1118,7 +1393,7 @@ edges:
       origin: declared
       stamp:
         validated_from_rev: e527119ddc42
-        validated_to_rev: 10d85ddd95b6
+        validated_to_rev: 8ce6de8d4a56
         changed_at: "2026-11-05"
         verdict: ok
     - from: guides/HEADER_GUIDE.md
@@ -1199,7 +1474,7 @@ edges:
       origin: declared
       stamp:
         validated_from_rev: e527119ddc42
-        validated_to_rev: 7f6fb29515c9
+        validated_to_rev: 3fe54556b04e
         changed_at: "2026-11-05"
         verdict: ok
     - from: guides/HEADER_GUIDE.md
@@ -1226,7 +1501,7 @@ edges:
       origin: declared
       stamp:
         validated_from_rev: e527119ddc42
-        validated_to_rev: d9197fc3319c
+        validated_to_rev: 761a2d0c98c4
         changed_at: "2026-11-05"
         verdict: ok
     - from: plans/01-fluxo-ponta-a-ponta.md
@@ -1392,7 +1667,7 @@ edges:
       origin: convention
       stamp:
         validated_from_rev: 199b404f770d
-        validated_to_rev: 279cda3b6457
+        validated_to_rev: a94acbc28a81
         changed_at: "2026-11-05"
         verdict: ok
     - from: services/consolidation/src/Consolidation.Core/GetDailyBalance.spec.md
@@ -1430,7 +1705,7 @@ edges:
       origin: convention
       stamp:
         validated_from_rev: d46a4a688837
-        validated_to_rev: 6e9e492ecf95
+        validated_to_rev: 71f57ae813c0
         changed_at: "2026-11-05"
         verdict: ok
     - from: services/consolidation/src/Consolidation.Core/GetPeriodBalance.spec.md
@@ -1468,7 +1743,7 @@ edges:
       origin: convention
       stamp:
         validated_from_rev: bb2489f068c4
-        validated_to_rev: 76b4ab74e50c
+        validated_to_rev: eb7049aff251
         changed_at: "2026-11-05"
         verdict: ok
     - from: services/consolidation/src/Consolidation.Core/ResetBalances.spec.md
@@ -1495,7 +1770,7 @@ edges:
       origin: convention
       stamp:
         validated_from_rev: 6cdecb720833
-        validated_to_rev: ca377ae35fdb
+        validated_to_rev: b49d4f049f1c
         changed_at: "2026-11-05"
         verdict: ok
     - from: services/ledger/src/Ledger.Core/LedgerEntry.spec.md
@@ -1566,7 +1841,7 @@ edges:
       origin: convention
       stamp:
         validated_from_rev: 77af8a9c68be
-        validated_to_rev: 10d85ddd95b6
+        validated_to_rev: 8ce6de8d4a56
         changed_at: "2026-11-05"
         verdict: ok
     - from: services/ledger/src/Ledger.Core/ListEntries.spec.md
@@ -1680,7 +1955,7 @@ edges:
       origin: convention
       stamp:
         validated_from_rev: 582811f9a0ec
-        validated_to_rev: 7f6fb29515c9
+        validated_to_rev: 3fe54556b04e
         changed_at: "2026-11-05"
         verdict: ok
     - from: services/ledger/src/Ledger.Core/RepublishEntries.spec.md
@@ -1689,7 +1964,7 @@ edges:
       origin: convention
       stamp:
         validated_from_rev: 2e79c76c60f1
-        validated_to_rev: 063ae9aaa093
+        validated_to_rev: 2afc0b5eb87c
         changed_at: "2026-11-05"
         verdict: ok
     - from: services/ledger/src/Ledger.Core/RepublishEntries.spec.md
@@ -1707,7 +1982,7 @@ edges:
       origin: convention
       stamp:
         validated_from_rev: b218af57a07d
-        validated_to_rev: d9197fc3319c
+        validated_to_rev: 761a2d0c98c4
         changed_at: "2026-11-05"
         verdict: ok
     - from: services/ledger/src/Ledger.Core/ReverseEntry.spec.md

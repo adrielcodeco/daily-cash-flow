@@ -37,6 +37,17 @@ public sealed class RepublishEntriesTests
         Assert.Equal(3, store.Requeued.Select(e => e.EventId).Distinct().Count());
     }
 
+    [Fact(DisplayName = "RPENT-R01 an exact multiple of the batch size finishes")]
+    public async Task HandlesExactBatchMultiple()
+    {
+        Seed();
+        Seed();
+
+        var total = await new RepublishEntries(store).ExecuteAsync(2, CancellationToken.None);
+
+        Assert.Equal(2, total);
+    }
+
     [Fact(DisplayName = "RPENT-R02 a republished event keeps its identity")]
     public async Task KeepsEventIdentity()
     {

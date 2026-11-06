@@ -25,7 +25,7 @@ Controle de fluxo de caixa para comerciantes: registra débitos e créditos e of
 | cache | Redis |
 | identidade local | Keycloak, por OIDC |
 | telemetria | OpenTelemetry, Prometheus e Grafana |
-| testes | xUnit, Testcontainers e k6 |
+| testes | xUnit, Testcontainers, k6 e Stryker.NET |
 | execução local | Docker Compose, com build em contêiner |
 | nuvem-alvo | GCP, região `southamerica-east1` |
 
@@ -38,6 +38,7 @@ docs/                     documentação de arquitetura
 docs/adr/                 decisões, com radares gerados
 docs/contratos/           OpenAPI, AsyncAPI e esquema do evento
 load-tests/               cenários k6
+scripts/                  testes, carga, resiliência, mutação e reconstrução
 tools/radar/              gerador dos gráficos de radar
 ```
 

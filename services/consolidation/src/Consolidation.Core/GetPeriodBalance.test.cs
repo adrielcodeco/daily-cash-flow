@@ -39,6 +39,14 @@ public sealed class GetPeriodBalanceTests
         Assert.Equal("period_too_long", refusal.Code);
     }
 
+    [Fact(DisplayName = "GTPRD-R02 a period of exactly 366 days is accepted")]
+    public async Task AcceptsLongestPeriod()
+    {
+        var period = await Query(Start, Start.AddDays(365));
+
+        Assert.Equal(366, period.Items.Count);
+    }
+
     [Fact(DisplayName = "GTPRD-R03 a day without movement appears")]
     public async Task IncludesEmptyDays()
     {
@@ -57,6 +65,16 @@ public sealed class GetPeriodBalanceTests
         var period = await Query(Start, Start.AddDays(1));
 
         Assert.Equal(100, period.Items[1].OpeningCents);
+    }
+
+    [Fact(DisplayName = "GTPRD-R04 a debit reduces the next opening")]
+    public async Task CarriesDebitForward()
+    {
+        await store.ApplyOnceAsync(new BalanceChange(Guid.NewGuid(), Merchant, Start, 0, 40, DateTimeOffset.UnixEpoch), CancellationToken.None);
+
+        var period = await Query(Start, Start.AddDays(1));
+
+        Assert.Equal(-40, period.Items[1].OpeningCents);
     }
 
     [Fact(DisplayName = "GTPRD-R05 the query uses the requesting merchant")]

@@ -1,0 +1,26 @@
+{
+  "stryker-config": {
+    "project": "Consolidation.Core.csproj",
+    "test-projects": [
+      "Consolidation.Tests.csproj"
+    ],
+    "test-case-filter": "Category!=Integration",
+    "mutate": [
+      "**/*.cs",
+      "!**/*.test.cs"
+    ],
+    "reporters": [
+      "json",
+      "html",
+      "cleartext"
+    ],
+    "thresholds": {
+      "high": 90,
+      "low": 80,
+      "break": 70
+    },
+    "ignore-methods": [
+      "*Exception.ctor"
+    ]
+  }
+}

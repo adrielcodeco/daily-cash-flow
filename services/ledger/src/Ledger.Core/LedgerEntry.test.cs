@@ -46,6 +46,14 @@ public sealed class LedgerEntryTests
         Assert.Equal("description_too_long", RefusalCode(() =>
             LedgerEntry.Record(Merchant, EntryType.Credit, 100, Today, new string('x', 201), At("2026-11-05T15:00:00Z"))));
 
+    [Fact(DisplayName = "LEDEN-R04 a description with exactly 200 characters is accepted")]
+    public void AcceptsDescriptionAtLimit()
+    {
+        var entry = LedgerEntry.Record(Merchant, EntryType.Credit, 100, Today, new string('x', 200), At("2026-11-05T15:00:00Z"));
+
+        Assert.Equal(200, entry.Description?.Length);
+    }
+
     [Fact(DisplayName = "LEDEN-R05 a valid entry is born with identity and creation time")]
     public void CreatesValidEntry()
     {
@@ -67,6 +75,15 @@ public sealed class LedgerEntryTests
         Assert.Equal(35000, reversal.AmountCents);
         Assert.Equal(Today, reversal.AccountingDate);
         Assert.Equal(original.Id, reversal.ReversalOf);
+    }
+
+    [Fact(DisplayName = "LEDEN-R06 reversing a debit produces a credit")]
+    public void ReversesDebit()
+    {
+        var clock = At("2026-11-05T15:00:00Z");
+        var original = LedgerEntry.Record(Merchant, EntryType.Debit, 12000, Today, null, clock);
+
+        Assert.Equal(EntryType.Credit, LedgerEntry.Reverse(original, clock).EntryType);
     }
 
     [Fact(DisplayName = "LEDEN-R07 a reversal cannot be reversed")]

@@ -7,6 +7,7 @@
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
     <PackageReference Include="Testcontainers.PostgreSql" />
+    <ProjectReference Include="../../src/Consolidation.Core/Consolidation.Core.csproj" />
     <ProjectReference Include="../../src/Consolidation.Infrastructure/Consolidation.Infrastructure.csproj" />
     <Compile Include="../../src/**/*.test.cs" LinkBase="Linked" />
     <Using Include="Xunit" />

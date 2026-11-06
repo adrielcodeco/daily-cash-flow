@@ -43,6 +43,10 @@ Consultar os lançamentos diretamente é simples, mas cria dependência entre os
 - O saldo pode ficar alguns segundos atrás, então a resposta informa `updatedThrough`
 - A abertura soma o histórico do comerciante, o que pode pedir fotografias mensais no futuro
 
+## Resultado medido
+
+No teste de carga, a latência foi equivalente com e sem cache, com p95 perto de 7 ms. O agregado diário sozinho atende às 50 req/s, e o cache fica como proteção do banco para volumes maiores.
+
 ## Gatilho de revisão
 
 Rever se o histórico por comerciante deixar a soma lenta. O próximo passo são fotografias mensais do saldo.

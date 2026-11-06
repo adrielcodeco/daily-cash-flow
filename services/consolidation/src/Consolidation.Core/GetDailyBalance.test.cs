@@ -13,6 +13,7 @@ using Testcontainers.PostgreSql;
 
 namespace Consolidation.Tests;
 
+[Trait("Category", "Integration")]
 public sealed class GetDailyBalanceTests : IAsyncLifetime
 {
     private static readonly DateOnly Day = new(2026, 11, 5);
@@ -83,6 +84,24 @@ public sealed class GetDailyBalanceTests : IAsyncLifetime
         Assert.Null(balance.UpdatedThrough);
     }
 
+    [Fact(DisplayName = "GTBAL-R07 a backdated entry changes the next day's opening")]
+    public async Task BackdatedEntryChangesOpening()
+    {
+        var merchant = Guid.NewGuid();
+        await Credit(merchant, Day, 1000);
+        var before = await Query(merchant, Day);
+
+        await Credit(merchant, Day.AddDays(-1), 5000);
+
+        var after = await Query(merchant, Day);
+        Assert.Equal(before.OpeningCents + 5000, after.OpeningCents);
+    }
+}
+
+public sealed class GetDailyBalanceCacheTests
+{
+    private static readonly DateOnly Day = new(2026, 11, 5);
+
     [Fact(DisplayName = "GTBAL-R05 a cached balance skips the database")]
     public async Task ReadsFromCache()
     {
@@ -97,6 +116,19 @@ public sealed class GetDailyBalanceTests : IAsyncLifetime
         Assert.Equal(0, fakeStore.DailyQueries);
     }
 
+    [Fact(DisplayName = "GTBAL-R05 a balance read from the database is cached")]
+    public async Task StoresBalanceInCache()
+    {
+        var merchant = Guid.NewGuid();
+        var fakeStore = new InMemoryBalanceStore();
+        var useCase = new GetDailyBalance(fakeStore, new InMemoryBalanceCache());
+
+        await useCase.ExecuteAsync(merchant, Day, CancellationToken.None);
+        await useCase.ExecuteAsync(merchant, Day, CancellationToken.None);
+
+        Assert.Equal(1, fakeStore.DailyQueries);
+    }
+
     [Fact(DisplayName = "GTBAL-R06 the query works with the cache down")]
     public async Task SurvivesCacheFailure()
     {
@@ -105,18 +137,5 @@ public sealed class GetDailyBalanceTests : IAsyncLifetime
         await new GetDailyBalance(fakeStore, new BrokenBalanceCache()).ExecuteAsync(Guid.NewGuid(), Day, CancellationToken.None);
 
         Assert.Equal(1, fakeStore.DailyQueries);
-    }
-
-    [Fact(DisplayName = "GTBAL-R07 a backdated entry changes the next day's opening")]
-    public async Task BackdatedEntryChangesOpening()
-    {
-        var merchant = Guid.NewGuid();
-        await Credit(merchant, Day, 1000);
-        var before = await Query(merchant, Day);
-
-        await Credit(merchant, Day.AddDays(-1), 5000);
-
-        var after = await Query(merchant, Day);
-        Assert.Equal(before.OpeningCents + 5000, after.OpeningCents);
     }
 }

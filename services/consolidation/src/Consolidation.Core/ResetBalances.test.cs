@@ -13,6 +13,7 @@ using Testcontainers.PostgreSql;
 
 namespace Consolidation.Tests;
 
+[Trait("Category", "Integration")]
 public sealed class ResetBalancesTests : IAsyncLifetime
 {
     private static readonly DateOnly Day = new(2026, 11, 5);

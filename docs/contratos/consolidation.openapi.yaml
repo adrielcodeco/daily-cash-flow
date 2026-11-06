@@ -7,7 +7,7 @@ info:
     name: MIT
     identifier: MIT
 servers:
-  - url: http://localhost:8082
+  - url: http://localhost:18082
     description: Ambiente local
 security:
   - oidc: []

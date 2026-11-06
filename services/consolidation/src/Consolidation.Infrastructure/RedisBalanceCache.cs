@@ -11,6 +11,7 @@ namespace Consolidation.Infrastructure;
 /// <summary>
 /// Keys carry a version per merchant, so one increment invalidates every cached day.
 /// A backdated entry changes the opening of all later days, which rules out per-day invalidation.
+/// While disconnected, every call is skipped: waiting for Redis timeouts would make a cache outage slower than no cache.
 /// </summary>
 public sealed class RedisBalanceCache(IConnectionMultiplexer redis) : IBalanceCache
 {
@@ -22,6 +23,11 @@ public sealed class RedisBalanceCache(IConnectionMultiplexer redis) : IBalanceCa
 
     public async Task<DailyBalance?> GetAsync(Guid merchantId, DateOnly date, CancellationToken cancellationToken)
     {
+        if (!redis.IsConnected)
+        {
+            return null;
+        }
+
         var database = redis.GetDatabase();
         var cached = await database.StringGetAsync(await BalanceKeyAsync(database, merchantId, date));
         return cached.HasValue ? JsonSerializer.Deserialize<DailyBalance>(cached.ToString(), Json) : null;
@@ -29,13 +35,18 @@ public sealed class RedisBalanceCache(IConnectionMultiplexer redis) : IBalanceCa
 
     public async Task SetAsync(Guid merchantId, DailyBalance balance, CancellationToken cancellationToken)
     {
+        if (!redis.IsConnected)
+        {
+            return;
+        }
+
         var database = redis.GetDatabase();
         var key = await BalanceKeyAsync(database, merchantId, balance.Date);
         await database.StringSetAsync(key, JsonSerializer.Serialize(balance, Json), TimeToLive);
     }
 
     public Task InvalidateAsync(Guid merchantId, CancellationToken cancellationToken) =>
-        redis.GetDatabase().StringIncrementAsync(VersionKey(merchantId));
+        redis.IsConnected ? redis.GetDatabase().StringIncrementAsync(VersionKey(merchantId)) : Task.CompletedTask;
 
     private static async Task<RedisKey> BalanceKeyAsync(IDatabase database, Guid merchantId, DateOnly date)
     {

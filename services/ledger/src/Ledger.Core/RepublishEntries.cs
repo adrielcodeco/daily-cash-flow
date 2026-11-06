@@ -10,22 +10,21 @@ public sealed class RepublishEntries(IEntryStore store)
     {
         var total = 0;
         Guid? after = null;
+        IReadOnlyList<LedgerEntry> batch;
 
-        while (true)
+        do
         {
-            var batch = await store.ReadBatchAsync(after, batchSize, cancellationToken);
+            batch = await store.ReadBatchAsync(after, batchSize, cancellationToken);
             foreach (var entry in batch)
             {
                 await store.RequeueAsync(EntryRecorded.From(entry), cancellationToken);
             }
 
             total += batch.Count;
-            if (batch.Count < batchSize)
-            {
-                return total;
-            }
-
-            after = batch[^1].Id;
+            after = batch.Count > 0 ? batch[^1].Id : after;
         }
+        while (batch.Count == batchSize);
+
+        return total;
     }
 }

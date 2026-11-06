@@ -321,4 +321,5 @@ erDiagram
 | Agregado divergir dos lançamentos | Reconstrução e reconciliação periódica. Como `eventId` é a identidade do lançamento, reenviar eventos não conta valores duas vezes |
 | Outbox crescer sem controle | Alerta de idade do evento mais antigo e limpeza |
 | Mensagens mortas ficarem sem tratamento | Alerta e runbook de reenvio |
+| Fila acumulada esgotar as conexões do banco ao voltar de uma queda | Limite de 16 eventos em processamento e pool de conexões por processo. Encontrado no teste de resiliência |
 | Evento publicado antes de existir assinatura ser descartado pelo Pub/Sub | Provisionar tópico e assinatura antes do publicador, como etapa própria |

@@ -15,3 +15,6 @@ node_modules/
 .anchors/
 .env
 issues/
+load-tests/results/*.txt
+reports/
+StrykerOutput/

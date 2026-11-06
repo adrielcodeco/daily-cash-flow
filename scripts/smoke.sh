@@ -2,8 +2,8 @@
 # End-to-end checks against the running stack. Requires `docker compose up -d --build --wait`.
 set -euo pipefail
 
-LEDGER=http://localhost:8081
-BALANCES=http://localhost:8082
+LEDGER=http://localhost:18081
+BALANCES=http://localhost:18082
 MERCHANT=$(uuidgen | tr '[:upper:]' '[:lower:]')
 TODAY=$(TZ=America/Sao_Paulo date +%F)
 YESTERDAY=$(TZ=America/Sao_Paulo date -v-1d +%F 2>/dev/null || TZ=America/Sao_Paulo date -d yesterday +%F)
