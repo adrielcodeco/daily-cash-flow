@@ -1,12 +1,15 @@
 // @anchors
 //   code: LSTTS
 //   ref: LSTEN
-//   updated_at: 2026-11-05
+//   updated_at: 2026-11-06
 //   layer: test
 // Refs:
 //   feature : services/ledger/src/Ledger.Core/ListEntries.feature
 //   spec    : services/ledger/src/Ledger.Core/ListEntries.spec.md
 using Ledger.Core;
+using Ledger.Infrastructure;
+using Npgsql;
+using Testcontainers.PostgreSql;
 
 namespace Ledger.Tests;
 
@@ -81,5 +84,55 @@ public sealed class ListEntriesTests
         var page = await List(2);
 
         Assert.Null(page.NextCursor);
+    }
+}
+
+[Trait("Category", "Integration")]
+public sealed class ListEntriesIsolationTests : IAsyncLifetime
+{
+    private static readonly DateOnly Today = new(2026, 11, 5);
+    private static readonly FixedClock Clock = new(DateTimeOffset.Parse("2026-11-05T15:00:00Z"));
+
+    private readonly PostgreSqlContainer database = new PostgreSqlBuilder("postgres:17-alpine").Build();
+    private readonly Guid merchant = Guid.NewGuid();
+    private NpgsqlDataSource dataSource = null!;
+    private PostgresEntryStore store = null!;
+
+    public async Task InitializeAsync()
+    {
+        await database.StartAsync();
+        DatabaseMigrator.Run(database.GetConnectionString());
+        dataSource = NpgsqlDataSource.Create(database.GetConnectionString());
+        store = new PostgresEntryStore(dataSource);
+    }
+
+    public async Task DisposeAsync()
+    {
+        await dataSource.DisposeAsync();
+        await database.DisposeAsync();
+    }
+
+    private Task Add(Guid owner, string key)
+    {
+        var entry = LedgerEntry.Record(owner, EntryType.Credit, 100, Today, null, Clock);
+        return store.AddAsync(entry, EntryRecorded.From(entry), new IdempotencyClaim(key, "hash"), CancellationToken.None);
+    }
+
+    [Fact(DisplayName = "LSTEN-R04 the database shows only the merchant set in the transaction")]
+    public async Task DatabaseIsolatesMerchants()
+    {
+        await Add(merchant, "request-0001");
+        await Add(Guid.NewGuid(), "request-0002");
+
+        await using var api = NpgsqlDataSource.Create($"{database.GetConnectionString()};Options=-c role=ledger_api");
+        await using var connection = await api.OpenConnectionAsync();
+        await using var transaction = await connection.BeginTransactionAsync();
+        await using var withoutMerchant = new NpgsqlCommand("SELECT count(*) FROM ledger_entry", connection, transaction);
+        Assert.Equal(0L, await withoutMerchant.ExecuteScalarAsync());
+
+        await using var setMerchant = new NpgsqlCommand($"SELECT set_config('app.merchant_id', '{merchant}', true)", connection, transaction);
+        await setMerchant.ExecuteNonQueryAsync();
+        await using var withMerchant = new NpgsqlCommand("SELECT count(*) FROM ledger_entry", connection, transaction);
+        Assert.Equal(1L, await withMerchant.ExecuteScalarAsync());
     }
 }

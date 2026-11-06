@@ -10,7 +10,9 @@ O sistema atende vários comerciantes. O dado de um nunca pode alcançar outro, 
 
 ## Decisão
 
-Usar tabelas compartilhadas, com `merchant_id` em toda linha e em toda consulta. Registro de outro comerciante responde 404, para não revelar que ele existe.
+Usar tabelas compartilhadas, com `merchant_id` em toda linha e em toda consulta, e row-level security do PostgreSQL como segunda barreira. Cada transação da API define o comerciante, e sem isso o banco não devolve nenhuma linha. Registro de outro comerciante responde 404, para não revelar que ele existe.
+
+As aplicações usam papéis próprios, sem superusuário. A API não tem permissão de alterar nem excluir lançamentos. Publicador e consumidor trabalham com todos os comerciantes, então usam um papel que ignora o RLS.
 
 ## Opções
 
@@ -30,7 +32,7 @@ Usar tabelas compartilhadas, com `merchant_id` em toda linha e em toda consulta.
 
 ## Leitura do radar
 
-Banco por comerciante dá o isolamento mais forte, mas o custo e a operação crescem com cada cliente. Esquema por comerciante melhora pouco e multiplica migrações. Tabelas compartilhadas têm a pior nota em segurança, porque o isolamento depende do código. Aceitamos esse risco com testes de isolamento e com a doutrina `product/merchant-isolation.doctrine.md`.
+Banco por comerciante dá o isolamento mais forte, mas o custo e a operação crescem com cada cliente. Esquema por comerciante melhora pouco e multiplica migrações. Tabelas compartilhadas têm a pior nota em segurança, porque o isolamento depende do código. Por isso, o RLS foi acrescentado depois, conforme a revisão abaixo.
 
 ## Consequências
 
@@ -41,9 +43,16 @@ Banco por comerciante dá o isolamento mais forte, mas o custo e a operação cr
 
 **Negativas**
 
-- Uma consulta sem filtro exporia dados de outros comerciantes
+- Cada leitura precisa de uma transação para definir o comerciante, com idas a mais ao banco
+- Publicador e consumidor ignoram o RLS, então dependem do código e do controle de acesso ao papel
 - Um comerciante muito grande afeta os demais no mesmo banco
+
+## Revisão de 2026-11-06
+
+A decisão original deixava o isolamento só no código. A reavaliação às cegas favoreceu o RLS, porque esse modelo é fraco para uma instituição financeira, e o RLS foi adotado.
+
+O radar acima mostra a avaliação original. A nova avaliação ainda não foi oficializada.
 
 ## Gatilho de revisão
 
-Rever se um cliente exigir isolamento físico por contrato ou regulação. Row-level security do PostgreSQL é o reforço mais barato antes de separar bancos.
+Rever se um cliente exigir isolamento físico por contrato ou regulação.

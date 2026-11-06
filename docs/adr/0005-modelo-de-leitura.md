@@ -9,7 +9,9 @@ O relatório precisa atender 50 req/s sem depender de Lançamentos. Um lançamen
 
 ## Decisão
 
-Manter uma tabela de créditos e débitos por comerciante e dia, atualizada por eventos, com o acumulado calculado na consulta e cache em Redis. A chave do cache leva uma versão por comerciante, que muda a cada atualização.
+Manter uma tabela de créditos e débitos por comerciante e dia, atualizada por eventos, com o acumulado calculado na consulta.
+
+O cache em Redis é opcional e fica desligado por padrão. Ele pode ser ligado por rota ou por tabela, com a variável `Cache:Targets`, nos dois serviços. Sem alvos, o sistema nem conecta ao Redis. A chave leva uma versão por comerciante, que muda a cada escrita, então a invalidação afeta só aquele comerciante.
 
 ## Opções
 
@@ -46,6 +48,14 @@ Consultar os lançamentos diretamente é simples, mas cria dependência entre os
 ## Resultado medido
 
 No teste de carga, a latência foi equivalente com e sem cache, com p95 perto de 7 ms. O agregado diário sozinho atende às 50 req/s, e o cache fica como proteção do banco para volumes maiores.
+
+## Revisão de 2026-11-06
+
+A reavaliação às cegas favoreceu o agregado sem cache, com a maior diferença entre as decisões, e a carga já mostrava que o cache não trazia ganho. Como a necessidade muda de caso a caso, o cache virou um recurso configurável, e não uma parte fixa da arquitetura.
+
+ORMs como NHibernate, e EF Core com bibliotecas de terceiros, oferecem cache por tabela. Aqui, uma camada própria na frente do repositório invalida só o comerciante afetado, em vez da tabela inteira, e funciona com escritas feitas em outro processo.
+
+O radar acima mostra a avaliação original. A nova avaliação ainda não foi oficializada.
 
 ## Gatilho de revisão
 

@@ -18,6 +18,4 @@ public static class ConsolidationTelemetry
     public static readonly Counter<long> ProcessedEvents = Meter.CreateCounter<long>("consumer.processed.events");
 
     public static readonly Histogram<double> BalanceLag = Meter.CreateHistogram<double>("balance.lag", unit: "s");
-
-    public static readonly Counter<long> CacheRequests = Meter.CreateCounter<long>("cache.requests");
 }

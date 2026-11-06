@@ -2,7 +2,7 @@
 
 Medições feitas em 05/11/2026, na versão final do M4. Todo o ambiente e o gerador de carga rodaram na mesma máquina, um Apple M1 Pro com 10 CPUs e 7,7 GiB para contêineres. Os números servem de referência local e não representam o ambiente do GCP.
 
-As tabelas de carga e resiliência mostram duas medições: o M4, sem segurança nem telemetria, e o M6, em 06/11/2026, com autenticação, rate limiting e telemetria ativos.
+As tabelas de carga e resiliência mostram três medições: o M4, sem segurança nem telemetria; o M6, com autenticação, rate limiting e telemetria; e a versão atual, em 06/11/2026, que acrescenta Dapper, row-level security e cache desligado por padrão.
 
 ## Resumo dos requisitos do desafio
 
@@ -22,8 +22,13 @@ Comando: `./scripts/load-test.sh`. Cada cenário envia 50 leituras por segundo e
 | M4, com o cache fora | 2 min | 6.001 | 0 | 6,91 ms | 55,47 ms | 11,38 ms |
 | M6, com cache | 5 min | 15.001 | 0 | 7,55 ms | 97,78 ms | 11,16 ms |
 | M6, com o cache fora | 2 min | 6.001 | 0 | 6,54 ms | 22,95 ms | 11,26 ms |
+| Atual, cache desligado | 5 min | 15.001 | 0 | 7,24 ms | 374,08 ms | 11,89 ms |
+| Atual, cache ligado | 5 min | 15.001 | 0 | 7,69 ms | 408,55 ms | 13,22 ms |
+| Atual, cache ligado e Redis fora | 2 min | 6.001 | 0 | 7,26 ms | 20,72 ms | 11,83 ms |
 
 Autenticação e telemetria não mudaram o p95 de forma perceptível, e a diferença entre as medições está dentro da variação esperada. O maior tempo isolado subiu para 97,78 ms no cenário com cache, sem efeito na meta. A carga usa 50 comerciantes, então cada um fica muito abaixo do limite de 100 requisições por segundo.
+
+O row-level security não mudou o p95 de forma perceptível, apesar das idas a mais ao banco em cada leitura. Os maiores tempos isolados subiram para cerca de 400 ms nos cenários de 5 minutos, ainda sem efeito na meta de p95. A causa não foi investigada. O cache continua sem ganho nesta carga, e a escrita ficou um pouco mais lenta com ele, porque invalida o cache a cada lançamento.
 
 Nesta carga, o cache não trouxe ganho de latência, porque o saldo pré-calculado já responde em poucos milissegundos. O ganho esperado é reduzir a carga no banco com mais volume e histórico, e isso ainda não foi medido.
 
@@ -31,16 +36,16 @@ Nesta carga, o cache não trouxe ganho de latência, porque o saldo pré-calcula
 
 Comando: `./scripts/resilience.sh`. O teste envia 50 lançamentos por segundo por 90 segundos e, durante a carga, para o consolidado por 60 segundos e congela a mensageria por 20 segundos.
 
-| Medida | M4 | M6 |
-|---|---:|---:|
-| Lançamentos enviados | 4.501 | 4.501 |
-| Lançamentos recusados | 0 | 0 |
-| Latência de escrita p95 | 8,03 ms | 7,90 ms |
-| Eventos retidos na outbox com a mensageria congelada | 1.042 | Não registrado |
-| Saldo final, igual à soma dos lançamentos | 450.100 centavos | 450.100 centavos |
-| Tempo para fechar o saldo depois do fim da carga | 3 s | 4 s |
-| Leituras com falha durante a recuperação | 0 | 0 |
-| Eventos pendentes no final | 0 | 0 |
+| Medida | M4 | M6 | Atual |
+|---|---:|---:|---:|
+| Lançamentos enviados | 4.501 | 4.501 | 4.501 |
+| Lançamentos recusados | 0 | 0 | 0 |
+| Latência de escrita p95 | 8,03 ms | 7,90 ms | 7,47 ms |
+| Eventos retidos na outbox com a mensageria congelada | 1.042 | Não registrado | Não registrado |
+| Saldo final, igual à soma dos lançamentos | 450.100 centavos | 450.100 centavos | 450.100 centavos |
+| Tempo para fechar o saldo depois do fim da carga | 3 s | 4 s | 2 s |
+| Leituras com falha durante a recuperação | 0 | 0 | 0 |
+| Eventos pendentes no final | 0 | 0 | 0 |
 
 ## Segurança e telemetria
 
@@ -52,6 +57,10 @@ Comando: `./scripts/resilience.sh`. O teste envia 50 lançamentos por segundo po
 | Sem o escopo da operação | 403 |
 | Lançamento de outro comerciante | 404 |
 | `X-Merchant-Id` enviado junto de um token válido | Ignorado |
+| Papel da API, sem comerciante definido | Nenhuma linha devolvida |
+| Papel da API tentando alterar ou excluir lançamento | Recusado pelo banco |
+| Cache desligado | Nenhuma conexão com o Redis |
+| `smoke.sh` com o cache ligado | Passou, com acertos medidos nos dois serviços |
 | 400 requisições simultâneas de um comerciante | Parte recebe 429, e outro cliente segue com 200 |
 | Coletor de telemetria fora do ar | Escrita aceita |
 | Um lançamento rastreado | Um traço com API, publicador e consumidor |
@@ -62,8 +71,8 @@ Comando: `./scripts/test.sh`.
 
 | Serviço | Testes | Resultado |
 |---|---:|---|
-| Ledger | 54 | Todos passaram |
-| Consolidation | 31 | Todos passaram |
+| Ledger | 80 | Todos passaram |
+| Consolidation | 49 | Todos passaram |
 
 Os testes de integração usam PostgreSQL real em contêiner, inclusive para chamadas concorrentes. O teste de ponta a ponta, em `./scripts/smoke.sh`, cobre 9 cenários no ambiente completo.
 
@@ -73,8 +82,8 @@ Comando: `./scripts/mutation.sh`, com Stryker.NET nos projetos de domínio. Mens
 
 | Projeto | Pontuação | Mortos | Sobreviventes |
 |---|---:|---:|---:|
-| `Ledger.Core` | 98,21% | 55 | 1 |
-| `Consolidation.Core` | 97,44% | 38 | 1 |
+| `Ledger.Core` | 97,56% | 80 | 2 |
+| `Consolidation.Core` | 97,92% | 47 | 1 |
 
 Os dois sobreviventes não indicam lacuna de regra: um é a mensagem de uma exceção interna, e o outro remove um bloco que tem o mesmo efeito do caminho normal. Outros 10 mutantes de `Ledger.Core` não compilaram e ficaram fora da pontuação.
 

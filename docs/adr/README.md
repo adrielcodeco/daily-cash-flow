@@ -8,14 +8,14 @@ Cada ADR registra o contexto, as opções, a decisão, as consequências e o gat
 | [0002](0002-integracao-entre-servicos.md) | Integração entre serviços | Outbox e mensageria |
 | [0003](0003-mensageria.md) | Mensageria | Pub/Sub |
 | [0004](0004-banco-de-dados.md) | Banco de dados | Cloud SQL para PostgreSQL |
-| [0005](0005-modelo-de-leitura.md) | Modelo de leitura do saldo | Agregado diário e cache |
+| [0005](0005-modelo-de-leitura.md) | Modelo de leitura do saldo | Agregado diário, com cache opcional por rota ou tabela |
 | [0006](0006-computacao.md) | Plataforma de computação | Cloud Run |
 | [0007](0007-linguagem.md) | Linguagem e plataforma | C# com .NET 10 |
 | [0008](0008-autenticacao-e-autorizacao.md) | Autenticação e autorização | Gateway, OIDC e JWT |
 | [0009](0009-observabilidade.md) | Observabilidade | OpenTelemetry |
 | [0010](0010-estrategia-de-migracao.md) | Estratégia de migração | Strangler fig |
-| [0011](0011-isolamento-de-comerciantes.md) | Isolamento entre comerciantes | Tabelas compartilhadas com `merchant_id` |
-| [0012](0012-acesso-a-dados.md) | Acesso a dados | Npgsql com SQL explícito |
+| [0011](0011-isolamento-de-comerciantes.md) | Isolamento entre comerciantes | Tabelas compartilhadas com row-level security |
+| [0012](0012-acesso-a-dados.md) | Acesso a dados | Dapper com SQL explícito |
 | [0013](0013-migracoes-de-esquema.md) | Migrações de esquema | DbUp, em execução separada |
 | [0014](0014-separacao-de-processos.md) | Separação de processos | Quatro processos, dois por serviço |
 | [0015](0015-envio-da-outbox.md) | Envio da outbox | Consulta periódica com `SKIP LOCKED` |

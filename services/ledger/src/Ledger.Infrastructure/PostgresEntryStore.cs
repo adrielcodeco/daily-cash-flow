@@ -4,13 +4,13 @@
 //   updated_at: 2026-11-06
 using System.Diagnostics;
 using System.Text.Json;
+using Dapper;
 using Ledger.Core;
 using Npgsql;
-using NpgsqlTypes;
 
 namespace Ledger.Infrastructure;
 
-public sealed class PostgresEntryStore(NpgsqlDataSource dataSource) : IEntryStore
+public sealed class PostgresEntryStore : IEntryStore
 {
     private const string UniqueViolation = "23505";
     private const string ReversalIndex = "ux_ledger_entry_reversal_of";
@@ -18,46 +18,65 @@ public sealed class PostgresEntryStore(NpgsqlDataSource dataSource) : IEntryStor
 
     private static readonly JsonSerializerOptions EventJson = new(JsonSerializerDefaults.Web);
 
+    private readonly NpgsqlDataSource dataSource;
+
+    public PostgresEntryStore(NpgsqlDataSource dataSource)
+    {
+        DapperSetup.Configure();
+        this.dataSource = dataSource;
+    }
+
     public async Task<AddOutcome> AddAsync(LedgerEntry entry, EntryRecorded recorded, IdempotencyClaim claim, CancellationToken cancellationToken)
     {
         await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
         await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
+        await SetMerchantAsync(connection, transaction, entry.MerchantId, cancellationToken);
 
         try
         {
-            await using (var insertEntry = new NpgsqlCommand(
-                $"INSERT INTO ledger_entry ({EntryColumns}) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)", connection, transaction))
-            {
-                insertEntry.Parameters.Add(new() { Value = entry.Id });
-                insertEntry.Parameters.Add(new() { Value = entry.MerchantId });
-                insertEntry.Parameters.Add(new() { Value = ToColumn(entry.EntryType) });
-                insertEntry.Parameters.Add(new() { Value = entry.AmountCents });
-                insertEntry.Parameters.Add(new() { Value = entry.AccountingDate });
-                insertEntry.Parameters.Add(new() { Value = (object?)entry.Description ?? DBNull.Value, NpgsqlDbType = NpgsqlDbType.Text });
-                insertEntry.Parameters.Add(new() { Value = (object?)entry.ReversalOf ?? DBNull.Value, NpgsqlDbType = NpgsqlDbType.Uuid });
-                insertEntry.Parameters.Add(new() { Value = entry.CreatedAt.ToUniversalTime() });
-                await insertEntry.ExecuteNonQueryAsync(cancellationToken);
-            }
+            await connection.ExecuteAsync(Command(
+                $"""
+                INSERT INTO ledger_entry ({EntryColumns})
+                VALUES (@Id, @MerchantId, @EntryType, @AmountCents, @AccountingDate, @Description, @ReversalOf, @CreatedAt)
+                """,
+                new
+                {
+                    entry.Id,
+                    entry.MerchantId,
+                    EntryType = ToColumn(entry.EntryType),
+                    entry.AmountCents,
+                    entry.AccountingDate,
+                    entry.Description,
+                    entry.ReversalOf,
+                    CreatedAt = entry.CreatedAt.ToUniversalTime(),
+                },
+                transaction,
+                cancellationToken));
 
-            await using (var insertClaim = new NpgsqlCommand(
-                "INSERT INTO idempotency_key (merchant_id, key, request_hash, entry_id, created_at) VALUES ($1, $2, $3, $4, $5)",
-                connection, transaction))
-            {
-                insertClaim.Parameters.Add(new() { Value = entry.MerchantId });
-                insertClaim.Parameters.Add(new() { Value = claim.Key });
-                insertClaim.Parameters.Add(new() { Value = claim.RequestHash });
-                insertClaim.Parameters.Add(new() { Value = entry.Id });
-                insertClaim.Parameters.Add(new() { Value = entry.CreatedAt.ToUniversalTime() });
-                await insertClaim.ExecuteNonQueryAsync(cancellationToken);
-            }
+            await connection.ExecuteAsync(Command(
+                """
+                INSERT INTO idempotency_key (merchant_id, key, request_hash, entry_id, created_at)
+                VALUES (@MerchantId, @Key, @RequestHash, @EntryId, @CreatedAt)
+                """,
+                new { entry.MerchantId, claim.Key, claim.RequestHash, EntryId = entry.Id, CreatedAt = entry.CreatedAt.ToUniversalTime() },
+                transaction,
+                cancellationToken));
 
-            await using (var insertEvent = new NpgsqlCommand(
-                "INSERT INTO outbox (id, type, payload, created_at, trace_context) VALUES ($1, $2, $3, $4, $5)", connection, transaction))
-            {
-                AddEventParameters(insertEvent, recorded);
-                insertEvent.Parameters.Add(new() { Value = (object?)Activity.Current?.Id ?? DBNull.Value, NpgsqlDbType = NpgsqlDbType.Text });
-                await insertEvent.ExecuteNonQueryAsync(cancellationToken);
-            }
+            await connection.ExecuteAsync(Command(
+                """
+                INSERT INTO outbox (id, type, payload, created_at, trace_context)
+                VALUES (@EventId, @Type, @Payload::jsonb, @OccurredAt, @TraceContext)
+                """,
+                new
+                {
+                    recorded.EventId,
+                    recorded.Type,
+                    Payload = JsonSerializer.Serialize(recorded, EventJson),
+                    OccurredAt = recorded.OccurredAt.ToUniversalTime(),
+                    TraceContext = Activity.Current?.Id,
+                },
+                transaction,
+                cancellationToken));
 
             await transaction.CommitAsync(cancellationToken);
             return AddOutcome.Added;
@@ -69,95 +88,104 @@ public sealed class PostgresEntryStore(NpgsqlDataSource dataSource) : IEntryStor
         }
     }
 
-    public async Task<LedgerEntry?> FindAsync(Guid merchantId, Guid id, CancellationToken cancellationToken)
-    {
-        await using var command = dataSource.CreateCommand($"SELECT {EntryColumns} FROM ledger_entry WHERE id = $1 AND merchant_id = $2");
-        command.Parameters.Add(new() { Value = id });
-        command.Parameters.Add(new() { Value = merchantId });
+    public Task<LedgerEntry?> FindAsync(Guid merchantId, Guid id, CancellationToken cancellationToken) =>
+        AsMerchantAsync(merchantId, async (connection, transaction) =>
+        {
+            var row = await connection.QuerySingleOrDefaultAsync<EntryRow>(Command(
+                $"SELECT {EntryColumns} FROM ledger_entry WHERE id = @Id AND merchant_id = @MerchantId",
+                new { Id = id, MerchantId = merchantId },
+                transaction,
+                cancellationToken));
+            return row?.ToEntry();
+        }, cancellationToken);
 
-        var entries = await ReadEntriesAsync(command, cancellationToken);
-        return entries.Count == 0 ? null : entries[0];
-    }
+    public Task<ClaimedEntry?> FindClaimAsync(Guid merchantId, string key, CancellationToken cancellationToken) =>
+        AsMerchantAsync(merchantId, async (connection, transaction) =>
+        {
+            var row = await connection.QuerySingleOrDefaultAsync<ClaimRow>(Command(
+                "SELECT request_hash, entry_id FROM idempotency_key WHERE merchant_id = @MerchantId AND key = @Key",
+                new { MerchantId = merchantId, Key = key },
+                transaction,
+                cancellationToken));
+            return row is null ? null : new ClaimedEntry(row.RequestHash, row.EntryId);
+        }, cancellationToken);
 
-    public async Task<ClaimedEntry?> FindClaimAsync(Guid merchantId, string key, CancellationToken cancellationToken)
-    {
-        await using var command = dataSource.CreateCommand("SELECT request_hash, entry_id FROM idempotency_key WHERE merchant_id = $1 AND key = $2");
-        command.Parameters.Add(new() { Value = merchantId });
-        command.Parameters.Add(new() { Value = key });
+    public Task<EntryPage> ListAsync(Guid merchantId, DateOnly date, Guid? cursor, int limit, CancellationToken cancellationToken) =>
+        AsMerchantAsync(merchantId, async (connection, transaction) =>
+        {
+            var rows = await connection.QueryAsync<EntryRow>(Command(
+                $"""
+                SELECT {EntryColumns}
+                FROM ledger_entry
+                WHERE merchant_id = @MerchantId AND accounting_date = @Date AND (@Cursor::uuid IS NULL OR id > @Cursor)
+                ORDER BY id
+                LIMIT @Limit
+                """,
+                new { MerchantId = merchantId, Date = date, Cursor = cursor, Limit = limit + 1 },
+                transaction,
+                cancellationToken));
 
-        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-        return await reader.ReadAsync(cancellationToken) ? new ClaimedEntry(reader.GetString(0), reader.GetGuid(1)) : null;
-    }
-
-    public async Task<EntryPage> ListAsync(Guid merchantId, DateOnly date, Guid? cursor, int limit, CancellationToken cancellationToken)
-    {
-        await using var command = dataSource.CreateCommand(
-            $"""
-            SELECT {EntryColumns}
-            FROM ledger_entry
-            WHERE merchant_id = $1 AND accounting_date = $2 AND ($3::uuid IS NULL OR id > $3)
-            ORDER BY id
-            LIMIT $4
-            """);
-        command.Parameters.Add(new() { Value = merchantId });
-        command.Parameters.Add(new() { Value = date });
-        command.Parameters.Add(new() { Value = (object?)cursor ?? DBNull.Value, NpgsqlDbType = NpgsqlDbType.Uuid });
-        command.Parameters.Add(new() { Value = limit + 1 });
-
-        var entries = await ReadEntriesAsync(command, cancellationToken);
-        var hasMore = entries.Count > limit;
-        var items = hasMore ? entries.GetRange(0, limit) : entries;
-        return new EntryPage(items, hasMore ? items[^1].Id : null);
-    }
+            var entries = rows.Select(row => row.ToEntry()).ToList();
+            var hasMore = entries.Count > limit;
+            var items = hasMore ? entries.GetRange(0, limit) : entries;
+            return new EntryPage(items, hasMore ? items[^1].Id : null);
+        }, cancellationToken);
 
     public async Task<IReadOnlyList<LedgerEntry>> ReadBatchAsync(Guid? after, int batchSize, CancellationToken cancellationToken)
     {
-        await using var command = dataSource.CreateCommand(
-            $"SELECT {EntryColumns} FROM ledger_entry WHERE ($1::uuid IS NULL OR id > $1) ORDER BY id LIMIT $2");
-        command.Parameters.Add(new() { Value = (object?)after ?? DBNull.Value, NpgsqlDbType = NpgsqlDbType.Uuid });
-        command.Parameters.Add(new() { Value = batchSize });
+        await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
+        var rows = await connection.QueryAsync<EntryRow>(Command(
+            $"SELECT {EntryColumns} FROM ledger_entry WHERE (@After::uuid IS NULL OR id > @After) ORDER BY id LIMIT @BatchSize",
+            new { After = after, BatchSize = batchSize },
+            null,
+            cancellationToken));
 
-        return await ReadEntriesAsync(command, cancellationToken);
+        return rows.Select(row => row.ToEntry()).ToList();
     }
 
     public async Task RequeueAsync(EntryRecorded recorded, CancellationToken cancellationToken)
     {
-        await using var command = dataSource.CreateCommand(
+        await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
+        await connection.ExecuteAsync(Command(
             """
-            INSERT INTO outbox (id, type, payload, created_at) VALUES ($1, $2, $3, $4)
+            INSERT INTO outbox (id, type, payload, created_at) VALUES (@EventId, @Type, @Payload::jsonb, @OccurredAt)
             ON CONFLICT (id) DO UPDATE SET published_at = NULL
-            """);
-        AddEventParameters(command, recorded);
-        await command.ExecuteNonQueryAsync(cancellationToken);
+            """,
+            new
+            {
+                recorded.EventId,
+                recorded.Type,
+                Payload = JsonSerializer.Serialize(recorded, EventJson),
+                OccurredAt = recorded.OccurredAt.ToUniversalTime(),
+            },
+            null,
+            cancellationToken));
     }
 
-    private static void AddEventParameters(NpgsqlCommand command, EntryRecorded recorded)
+    private static CommandDefinition Command(string sql, object parameters, NpgsqlTransaction? transaction, CancellationToken cancellationToken) =>
+        new(sql, parameters, transaction, cancellationToken: cancellationToken);
+
+    /// <summary>Row-level security reads the merchant from the transaction, so reads also need one.</summary>
+    private async Task<T> AsMerchantAsync<T>(
+        Guid merchantId,
+        Func<NpgsqlConnection, NpgsqlTransaction, Task<T>> query,
+        CancellationToken cancellationToken)
     {
-        command.Parameters.Add(new() { Value = recorded.EventId });
-        command.Parameters.Add(new() { Value = recorded.Type });
-        command.Parameters.Add(new() { Value = JsonSerializer.Serialize(recorded, EventJson), NpgsqlDbType = NpgsqlDbType.Jsonb });
-        command.Parameters.Add(new() { Value = recorded.OccurredAt.ToUniversalTime() });
+        await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
+        await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
+        await SetMerchantAsync(connection, transaction, merchantId, cancellationToken);
+
+        var result = await query(connection, transaction);
+        await transaction.CommitAsync(cancellationToken);
+        return result;
     }
 
-    private static async Task<List<LedgerEntry>> ReadEntriesAsync(NpgsqlCommand command, CancellationToken cancellationToken)
-    {
-        var entries = new List<LedgerEntry>();
-        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-        while (await reader.ReadAsync(cancellationToken))
-        {
-            entries.Add(new LedgerEntry(
-                reader.GetGuid(0),
-                reader.GetGuid(1),
-                FromColumn(reader.GetString(2)),
-                reader.GetInt64(3),
-                reader.GetFieldValue<DateOnly>(4),
-                reader.IsDBNull(5) ? null : reader.GetString(5),
-                reader.IsDBNull(6) ? null : reader.GetGuid(6),
-                reader.GetFieldValue<DateTimeOffset>(7)));
-        }
-
-        return entries;
-    }
+    private static Task SetMerchantAsync(NpgsqlConnection connection, NpgsqlTransaction transaction, Guid merchantId, CancellationToken cancellationToken) =>
+        connection.ExecuteAsync(Command(
+            "SELECT set_config('app.merchant_id', @MerchantId, true)",
+            new { MerchantId = merchantId.ToString() },
+            transaction,
+            cancellationToken));
 
     private static string ToColumn(EntryType type) => type switch
     {
@@ -172,4 +200,33 @@ public sealed class PostgresEntryStore(NpgsqlDataSource dataSource) : IEntryStor
         "DEBIT" => EntryType.Debit,
         _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown entry type."),
     };
+
+    private sealed class EntryRow
+    {
+        public Guid Id { get; init; }
+
+        public Guid MerchantId { get; init; }
+
+        public string EntryType { get; init; } = string.Empty;
+
+        public long AmountCents { get; init; }
+
+        public DateOnly AccountingDate { get; init; }
+
+        public string? Description { get; init; }
+
+        public Guid? ReversalOf { get; init; }
+
+        public DateTime CreatedAt { get; init; }
+
+        public LedgerEntry ToEntry() => new(
+            Id, MerchantId, FromColumn(EntryType), AmountCents, AccountingDate, Description, ReversalOf, new DateTimeOffset(CreatedAt));
+    }
+
+    private sealed class ClaimRow
+    {
+        public string RequestHash { get; init; } = string.Empty;
+
+        public Guid EntryId { get; init; }
+    }
 }

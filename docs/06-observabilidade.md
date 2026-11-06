@@ -83,7 +83,7 @@ As métricas HTTP seguem as convenções do OpenTelemetry. As demais são própr
 | `outbox.published.events` | Contador | Resultado | Publicador | Mostra a vazão do envio |
 | `consumer.processed.events` | Contador | Resultado: aplicado, repetido ou erro | Consumidor | Mostra repetição e falha |
 | `balance.lag` | Histograma, em segundos | Nenhum | Consumidor | Tempo entre `occurredAt` e a aplicação ao saldo |
-| `cache.requests` | Contador | Resultado: acerto, erro ou desconectado | API de saldo | Mostra degradação silenciosa |
+| `cache.requests` | Contador | Resultado: `hit`, `miss` ou `disconnected` | APIs, com o cache ligado | Mostra a taxa de acerto e a degradação silenciosa |
 | `reconciliation.difference.cents` | Medidor | Nenhum | Reconciliação, proposta | Detecta divergência |
 
 | Sinal externo | Origem | Por quê |
@@ -185,7 +185,7 @@ Cada alerta precisa exigir uma ação. Se não houver ação, ele vira informaç
 | Saldo divergente | Diferença na reconciliação, quando existir | Crítica | [Saldo divergente](12-operacao.md#saldo-divergente) |
 | Acessos negados em alta | 401 e 403 acima do normal por 10 minutos | Média | Avaliar com segurança |
 | Conexões do banco | Uso acima de 80% por 5 minutos | Média | Revisar pools e instâncias |
-| Cache fora | Sem conexão por 5 minutos | Baixa | Verificar o Redis. A API segue pelo banco |
+| Cache fora | Sem conexão por 5 minutos, com o cache ligado | Baixa | Verificar o Redis. A API segue pelo banco |
 | Telemetria ausente | Sem dados de um processo por 5 minutos | Alta | Verificar o coletor. Sem dados não significa sem problema |
 
 | Severidade | Quem recebe | Resposta esperada |

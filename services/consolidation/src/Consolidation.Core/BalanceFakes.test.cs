@@ -17,6 +17,11 @@ internal sealed class InMemoryBalanceStore : IBalanceStore
 
     public Guid? PeriodMerchant { get; private set; }
 
+    public int PeriodQueries { get; private set; }
+
+    /// <summary>Simulates an invalidation that happens while the query runs.</summary>
+    public Action? DuringQuery { get; set; }
+
     public (long Credits, long Debits) Totals(Guid merchantId, DateOnly date) =>
         totals.GetValueOrDefault((merchantId, date));
 
@@ -35,6 +40,7 @@ internal sealed class InMemoryBalanceStore : IBalanceStore
     public Task<DailyBalance> GetDailyAsync(Guid merchantId, DateOnly date, CancellationToken cancellationToken)
     {
         DailyQueries++;
+        DuringQuery?.Invoke();
         var (credits, debits) = Totals(merchantId, date);
         return Task.FromResult(new DailyBalance(date, 0, credits, debits, null));
     }
@@ -42,6 +48,7 @@ internal sealed class InMemoryBalanceStore : IBalanceStore
     public Task<PeriodTotals> GetPeriodAsync(Guid merchantId, DateOnly start, DateOnly end, CancellationToken cancellationToken)
     {
         PeriodMerchant = merchantId;
+        PeriodQueries++;
         var days = totals
             .Where(t => t.Key.Item1 == merchantId && t.Key.Item2 >= start && t.Key.Item2 <= end)
             .Select(t => new DayTotals(t.Key.Item2, t.Value.Credits, t.Value.Debits))
@@ -52,36 +59,86 @@ internal sealed class InMemoryBalanceStore : IBalanceStore
     public Task ResetAsync(CancellationToken cancellationToken) => throw new NotSupportedException();
 }
 
-internal sealed class InMemoryBalanceCache : IBalanceCache
+internal sealed class InMemoryQueryCache : IQueryCache
 {
-    private readonly Dictionary<(Guid, DateOnly), DailyBalance> entries = [];
+    private readonly Dictionary<(Guid, string, string), object> entries = [];
+    private readonly Dictionary<Guid, int> versions = [];
 
     public List<Guid> Invalidated { get; } = [];
 
-    public Task<DailyBalance?> GetAsync(Guid merchantId, DateOnly date, CancellationToken cancellationToken) =>
-        Task.FromResult(entries.GetValueOrDefault((merchantId, date)));
+    public int Reads { get; private set; }
 
-    public Task SetAsync(Guid merchantId, DailyBalance balance, CancellationToken cancellationToken)
+    public Task<CacheLookup<T>> GetAsync<T>(Guid merchantId, string key, CancellationToken cancellationToken)
+        where T : class
     {
-        entries[(merchantId, balance.Date)] = balance;
+        Reads++;
+        var version = versions.GetValueOrDefault(merchantId).ToString();
+        return Task.FromResult(new CacheLookup<T>(entries.GetValueOrDefault((merchantId, version, key)) as T, version));
+    }
+
+    public Task SetAsync<T>(Guid merchantId, string key, string version, T value, CancellationToken cancellationToken)
+        where T : class
+    {
+        entries[(merchantId, version, key)] = value;
         return Task.CompletedTask;
     }
 
     public Task InvalidateAsync(Guid merchantId, CancellationToken cancellationToken)
     {
         Invalidated.Add(merchantId);
+        versions[merchantId] = versions.GetValueOrDefault(merchantId) + 1;
         return Task.CompletedTask;
     }
 }
 
-internal sealed class BrokenBalanceCache : IBalanceCache
+internal sealed class BrokenQueryCache : IQueryCache
 {
-    public Task<DailyBalance?> GetAsync(Guid merchantId, DateOnly date, CancellationToken cancellationToken) =>
-        throw new InvalidOperationException("Cache unavailable");
+    public Task<CacheLookup<T>> GetAsync<T>(Guid merchantId, string key, CancellationToken cancellationToken)
+        where T : class => throw new InvalidOperationException("Cache unavailable");
 
-    public Task SetAsync(Guid merchantId, DailyBalance balance, CancellationToken cancellationToken) =>
-        throw new InvalidOperationException("Cache unavailable");
+    public Task SetAsync<T>(Guid merchantId, string key, string version, T value, CancellationToken cancellationToken)
+        where T : class => throw new InvalidOperationException("Cache unavailable");
 
     public Task InvalidateAsync(Guid merchantId, CancellationToken cancellationToken) =>
         throw new InvalidOperationException("Cache unavailable");
+}
+
+internal sealed class WriteFailingQueryCache : IQueryCache
+{
+    public Task<CacheLookup<T>> GetAsync<T>(Guid merchantId, string key, CancellationToken cancellationToken)
+        where T : class => Task.FromResult(new CacheLookup<T>(null, "0"));
+
+    public Task SetAsync<T>(Guid merchantId, string key, string version, T value, CancellationToken cancellationToken)
+        where T : class => throw new InvalidOperationException("Cache unavailable");
+
+    public Task InvalidateAsync(Guid merchantId, CancellationToken cancellationToken) => Task.CompletedTask;
+}
+
+internal sealed class CancelledQueryCache : IQueryCache
+{
+    public Task<CacheLookup<T>> GetAsync<T>(Guid merchantId, string key, CancellationToken cancellationToken)
+        where T : class => throw new OperationCanceledException();
+
+    public Task SetAsync<T>(Guid merchantId, string key, string version, T value, CancellationToken cancellationToken)
+        where T : class => throw new OperationCanceledException();
+
+    public Task InvalidateAsync(Guid merchantId, CancellationToken cancellationToken) =>
+        throw new OperationCanceledException();
+}
+
+internal sealed class RecordingQueryCache : IQueryCache
+{
+    public List<string> Keys { get; } = [];
+
+    public Task<CacheLookup<T>> GetAsync<T>(Guid merchantId, string key, CancellationToken cancellationToken)
+        where T : class
+    {
+        Keys.Add(key);
+        return Task.FromResult(new CacheLookup<T>(null, "0"));
+    }
+
+    public Task SetAsync<T>(Guid merchantId, string key, string version, T value, CancellationToken cancellationToken)
+        where T : class => Task.CompletedTask;
+
+    public Task InvalidateAsync(Guid merchantId, CancellationToken cancellationToken) => Task.CompletedTask;
 }

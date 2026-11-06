@@ -15,8 +15,8 @@ flowchart LR
     P --> M[["Pub/Sub"]]
     M --> K[consolidation-consumer]
     K --> DC[(Saldo diário)]
-    A --> R[(Redis)]
     A --> DC
+    A -. "cache opcional" .-> R[(Redis)]
 ```
 
 1. A `ledger-api` grava o lançamento e o evento na mesma transação, em uma outbox.
@@ -24,7 +24,7 @@ flowchart LR
 3. O `consolidation-consumer` aplica cada evento ao saldo do dia, uma única vez.
 4. A `consolidation-api` responde o saldo sem chamar Lançamentos.
 
-Os serviços não se chamam e não compartilham banco. Por isso, a queda do consolidado não afeta os lançamentos. O preço é o saldo ficar alguns segundos atrás, e a resposta informa até quando está atualizado, em `updatedThrough`.
+Os dados são isolados por comerciante também no banco, com row-level security. Os serviços não se chamam e não compartilham banco. Por isso, a queda do consolidado não afeta os lançamentos. O preço é o saldo ficar alguns segundos atrás, e a resposta informa até quando está atualizado, em `updatedThrough`.
 
 ## Resultados
 
@@ -107,6 +107,25 @@ Rode `smoke.sh` em uma base recente. Depois de um teste de carga, a reconstruç�
 docker compose down -v
 docker compose up -d --build --wait
 ```
+
+## Cache
+
+O cache vem desligado, e sem ele o sistema nem conecta ao Redis. Para ligar, informe rotas ou tabelas:
+
+```bash
+CACHE_TARGETS=daily_balance,entries.get docker compose up -d --wait
+```
+
+| Alvo | Efeito |
+|---|---|
+| `balances.daily` | Saldo de um dia |
+| `balances.period` | Saldo por período |
+| `daily_balance` | Todas as rotas de saldo |
+| `entries.get` | Consulta de um lançamento |
+| `entries.list` | Lista de lançamentos |
+| `ledger_entry` | Todas as rotas de lançamentos |
+
+Cada escrita invalida só o cache do comerciante afetado. Se o Redis cair, as consultas seguem pelo banco.
 
 ## Observar
 

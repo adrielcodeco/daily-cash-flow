@@ -33,7 +33,7 @@ flowchart TB
             CC["Consumidor<br/>Worker .NET"]
             CA["API do Consolidado<br/>ASP.NET Core"]
             CD[("Banco do consolidado<br/>PostgreSQL")]
-            CR[("Cache<br/>Redis")]
+            CR[("Cache opcional<br/>Redis")]
         end
     end
     COM -- "HTTPS" --> GW
@@ -122,7 +122,7 @@ flowchart TB
         subgraph DADOS[Dados gerenciados]
             S1[("Cloud SQL lançamentos: alta disponibilidade regional")]
             S2[("Cloud SQL consolidado: alta disponibilidade regional")]
-            RD[("Memorystore for Redis")]
+            RD[("Memorystore for Redis<br/>opcional")]
         end
         PS[["Pub/Sub e tópico de mensagens mortas"]]
         OBS["Cloud Logging, Monitoring e Trace"]

@@ -1,7 +1,7 @@
 // @anchors
 //   code: IBSTR
 //   ref: APENT
-//   updated_at: 2026-11-05
+//   updated_at: 2026-11-06
 namespace Consolidation.Core;
 
 public sealed record BalanceChange(
@@ -28,12 +28,18 @@ public interface IBalanceStore
     Task ResetAsync(CancellationToken cancellationToken);
 }
 
-public interface IBalanceCache
+public sealed record CacheLookup<T>(T? Value, string Version)
+    where T : class;
+
+public interface IQueryCache
 {
-    Task<DailyBalance?> GetAsync(Guid merchantId, DateOnly date, CancellationToken cancellationToken);
+    /// <summary>Reads a value and the merchant's cache version, which a later write must reuse.</summary>
+    Task<CacheLookup<T>> GetAsync<T>(Guid merchantId, string key, CancellationToken cancellationToken)
+        where T : class;
 
-    Task SetAsync(Guid merchantId, DailyBalance balance, CancellationToken cancellationToken);
+    Task SetAsync<T>(Guid merchantId, string key, string version, T value, CancellationToken cancellationToken)
+        where T : class;
 
-    /// <summary>Makes every cached balance of the merchant unreachable.</summary>
+    /// <summary>Makes every cached value of the merchant unreachable.</summary>
     Task InvalidateAsync(Guid merchantId, CancellationToken cancellationToken);
 }

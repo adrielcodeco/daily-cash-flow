@@ -12,7 +12,7 @@ Este plano diz o que proteger, quando acioná-lo, em que ordem recuperar e como 
 | Outbox | Crítica | Evento pendente some, e o saldo fica incompleto | Mesmo banco e mesma proteção dos lançamentos |
 | Banco do consolidado | Alta | Saldo indisponível, mas recuperável | HA regional, backup e reconstrução |
 | Mensageria | Média | Atraso no saldo, sem perda: a outbox retém os eventos | Serviço gerenciado e reenvio |
-| Cache | Baixa | Latência maior | Nenhuma: o dado é descartável |
+| Cache, quando ligado | Baixa | Latência maior | Nenhuma: o dado é descartável |
 | Segredos e configuração | Alta | Serviços não sobem | Secret Manager e controle de versão |
 | Imagens dos serviços | Alta | Não é possível implantar | Artifact Registry e novo build a partir do Git |
 

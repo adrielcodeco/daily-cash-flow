@@ -48,10 +48,10 @@ flowchart LR
 |---|---|---|---|
 | Falsificação | Cliente se passa por outro comerciante | Token assinado, com `merchantId` vindo do token | Implementado e testado |
 | Falsificação | Sistema publica evento falso | Permissão de publicação apenas para `outbox-publisher` | Proposta no GCP |
-| Adulteração | Alteração de um lançamento | Lançamento imutável, sem rota de edição | Implementado |
+| Adulteração | Alteração de um lançamento | Lançamento imutável, sem rota de edição e sem permissão no banco para a API | Implementado e testado |
 | Adulteração | Manipulação do valor em trânsito | TLS em todas as conexões | Proposta no GCP |
 | Repúdio | Comerciante nega um lançamento | Registro imutável e auditoria com identidade | Parcial: há auditoria, sem armazenamento separado |
-| Divulgação | Acesso a dados de outro comerciante | Toda consulta filtra pelo comerciante, com resposta 404 | Implementado |
+| Divulgação | Acesso a dados de outro comerciante | Filtro no código, row-level security no banco e resposta 404 | Implementado e testado |
 | Divulgação | Vazamento por logs | Logs sem descrição nem token | Implementado e verificado |
 | Divulgação | Banco exposto | Sem IP público e com criptografia em repouso | Proposta no GCP |
 | Negação de serviço | Excesso de requisições | Rate limiting e Cloud Armor | Rate limiting implementado e testado. Cloud Armor é proposta |

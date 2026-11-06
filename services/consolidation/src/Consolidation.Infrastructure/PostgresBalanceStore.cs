@@ -1,124 +1,150 @@
 // @anchors
 //   code: PGBST
 //   ref: APENT
-//   updated_at: 2026-11-05
+//   updated_at: 2026-11-06
 using Consolidation.Core;
+using Dapper;
 using Npgsql;
 
 namespace Consolidation.Infrastructure;
 
-public sealed class PostgresBalanceStore(NpgsqlDataSource dataSource, TimeProvider clock) : IBalanceStore
+public sealed class PostgresBalanceStore : IBalanceStore
 {
+    private readonly NpgsqlDataSource dataSource;
+    private readonly TimeProvider clock;
+
+    public PostgresBalanceStore(NpgsqlDataSource dataSource, TimeProvider clock)
+    {
+        DapperSetup.Configure();
+        this.dataSource = dataSource;
+        this.clock = clock;
+    }
+
     public async Task<bool> ApplyOnceAsync(BalanceChange change, CancellationToken cancellationToken)
     {
         await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
         await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
 
-        await using (var registerEvent = new NpgsqlCommand(
-            "INSERT INTO processed_event (event_id, processed_at) VALUES ($1, $2) ON CONFLICT DO NOTHING", connection, transaction))
+        var registered = await connection.ExecuteAsync(new CommandDefinition(
+            "INSERT INTO processed_event (event_id, processed_at) VALUES (@EventId, @ProcessedAt) ON CONFLICT DO NOTHING",
+            new { change.EventId, ProcessedAt = clock.GetUtcNow() },
+            transaction,
+            cancellationToken: cancellationToken));
+        if (registered == 0)
         {
-            registerEvent.Parameters.Add(new() { Value = change.EventId });
-            registerEvent.Parameters.Add(new() { Value = clock.GetUtcNow() });
-            if (await registerEvent.ExecuteNonQueryAsync(cancellationToken) == 0)
-            {
-                return false;
-            }
+            return false;
         }
 
-        await using (var upsert = new NpgsqlCommand(
+        await connection.ExecuteAsync(new CommandDefinition(
             """
             INSERT INTO daily_balance (merchant_id, date, credits_cents, debits_cents, updated_at)
-            VALUES ($1, $2, $3, $4, $5)
+            VALUES (@MerchantId, @Date, @CreditsCents, @DebitsCents, @UpdatedAt)
             ON CONFLICT (merchant_id, date) DO UPDATE SET
                 credits_cents = daily_balance.credits_cents + EXCLUDED.credits_cents,
                 debits_cents = daily_balance.debits_cents + EXCLUDED.debits_cents,
                 updated_at = GREATEST(daily_balance.updated_at, EXCLUDED.updated_at)
-            """, connection, transaction))
-        {
-            upsert.Parameters.Add(new() { Value = change.MerchantId });
-            upsert.Parameters.Add(new() { Value = change.Date });
-            upsert.Parameters.Add(new() { Value = change.CreditsCents });
-            upsert.Parameters.Add(new() { Value = change.DebitsCents });
-            upsert.Parameters.Add(new() { Value = change.OccurredAt.ToUniversalTime() });
-            await upsert.ExecuteNonQueryAsync(cancellationToken);
-        }
+            """,
+            new { change.MerchantId, change.Date, change.CreditsCents, change.DebitsCents, UpdatedAt = change.OccurredAt.ToUniversalTime() },
+            transaction,
+            cancellationToken: cancellationToken));
 
         await transaction.CommitAsync(cancellationToken);
         return true;
     }
 
-    public async Task<DailyBalance> GetDailyAsync(Guid merchantId, DateOnly date, CancellationToken cancellationToken)
-    {
-        await using var command = dataSource.CreateCommand(
-            """
-            SELECT
-                COALESCE(SUM(credits_cents - debits_cents) FILTER (WHERE date < $2), 0)::bigint,
-                COALESCE(SUM(credits_cents) FILTER (WHERE date = $2), 0)::bigint,
-                COALESCE(SUM(debits_cents) FILTER (WHERE date = $2), 0)::bigint,
-                MAX(updated_at)
-            FROM daily_balance
-            WHERE merchant_id = $1
-            """);
-        command.Parameters.Add(new() { Value = merchantId });
-        command.Parameters.Add(new() { Value = date });
-
-        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-        await reader.ReadAsync(cancellationToken);
-
-        return new DailyBalance(
-            date,
-            reader.GetInt64(0),
-            reader.GetInt64(1),
-            reader.GetInt64(2),
-            reader.IsDBNull(3) ? null : reader.GetFieldValue<DateTimeOffset>(3));
-    }
-
-    public async Task<PeriodTotals> GetPeriodAsync(Guid merchantId, DateOnly start, DateOnly end, CancellationToken cancellationToken)
-    {
-        await using var summary = dataSource.CreateCommand(
-            """
-            SELECT COALESCE(SUM(credits_cents - debits_cents) FILTER (WHERE date < $2), 0)::bigint, MAX(updated_at)
-            FROM daily_balance
-            WHERE merchant_id = $1
-            """);
-        summary.Parameters.Add(new() { Value = merchantId });
-        summary.Parameters.Add(new() { Value = start });
-
-        long opening;
-        DateTimeOffset? updatedThrough;
-        await using (var reader = await summary.ExecuteReaderAsync(cancellationToken))
+    public Task<DailyBalance> GetDailyAsync(Guid merchantId, DateOnly date, CancellationToken cancellationToken) =>
+        AsMerchantAsync(merchantId, async (connection, transaction) =>
         {
-            await reader.ReadAsync(cancellationToken);
-            opening = reader.GetInt64(0);
-            updatedThrough = reader.IsDBNull(1) ? null : reader.GetFieldValue<DateTimeOffset>(1);
-        }
+            var row = await connection.QuerySingleAsync<DailyRow>(new CommandDefinition(
+                """
+                SELECT
+                    COALESCE(SUM(credits_cents - debits_cents) FILTER (WHERE date < @Date), 0)::bigint AS opening_cents,
+                    COALESCE(SUM(credits_cents) FILTER (WHERE date = @Date), 0)::bigint AS credits_cents,
+                    COALESCE(SUM(debits_cents) FILTER (WHERE date = @Date), 0)::bigint AS debits_cents,
+                    MAX(updated_at) AS updated_at
+                FROM daily_balance
+                WHERE merchant_id = @MerchantId
+                """,
+                new { MerchantId = merchantId, Date = date },
+                transaction,
+                cancellationToken: cancellationToken));
 
-        await using var daily = dataSource.CreateCommand(
-            """
-            SELECT date, credits_cents, debits_cents
-            FROM daily_balance
-            WHERE merchant_id = $1 AND date BETWEEN $2 AND $3
-            ORDER BY date
-            """);
-        daily.Parameters.Add(new() { Value = merchantId });
-        daily.Parameters.Add(new() { Value = start });
-        daily.Parameters.Add(new() { Value = end });
+            return new DailyBalance(date, row.OpeningCents, row.CreditsCents, row.DebitsCents, ToOffset(row.UpdatedAt));
+        }, cancellationToken);
 
-        var days = new List<DayTotals>();
-        await using (var reader = await daily.ExecuteReaderAsync(cancellationToken))
+    public Task<PeriodTotals> GetPeriodAsync(Guid merchantId, DateOnly start, DateOnly end, CancellationToken cancellationToken) =>
+        AsMerchantAsync(merchantId, async (connection, transaction) =>
         {
-            while (await reader.ReadAsync(cancellationToken))
-            {
-                days.Add(new DayTotals(reader.GetFieldValue<DateOnly>(0), reader.GetInt64(1), reader.GetInt64(2)));
-            }
-        }
+            var summary = await connection.QuerySingleAsync<DailyRow>(new CommandDefinition(
+                """
+                SELECT COALESCE(SUM(credits_cents - debits_cents) FILTER (WHERE date < @Start), 0)::bigint AS opening_cents,
+                       MAX(updated_at) AS updated_at
+                FROM daily_balance
+                WHERE merchant_id = @MerchantId
+                """,
+                new { MerchantId = merchantId, Start = start },
+                transaction,
+                cancellationToken: cancellationToken));
 
-        return new PeriodTotals(opening, days, updatedThrough);
-    }
+            var days = await connection.QueryAsync<DayRow>(new CommandDefinition(
+                """
+                SELECT date, credits_cents, debits_cents
+                FROM daily_balance
+                WHERE merchant_id = @MerchantId AND date BETWEEN @Start AND @End
+                ORDER BY date
+                """,
+                new { MerchantId = merchantId, Start = start, End = end },
+                transaction,
+                cancellationToken: cancellationToken));
+
+            var totals = days.Select(day => new DayTotals(day.Date, day.CreditsCents, day.DebitsCents)).ToList();
+            return new PeriodTotals(summary.OpeningCents, totals, ToOffset(summary.UpdatedAt));
+        }, cancellationToken);
 
     public async Task ResetAsync(CancellationToken cancellationToken)
     {
-        await using var command = dataSource.CreateCommand("TRUNCATE daily_balance, processed_event");
-        await command.ExecuteNonQueryAsync(cancellationToken);
+        await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
+        await connection.ExecuteAsync(new CommandDefinition("TRUNCATE daily_balance, processed_event", cancellationToken: cancellationToken));
+    }
+
+    /// <summary>Row-level security reads the merchant from the transaction, so reads also need one.</summary>
+    private async Task<T> AsMerchantAsync<T>(
+        Guid merchantId,
+        Func<NpgsqlConnection, NpgsqlTransaction, Task<T>> query,
+        CancellationToken cancellationToken)
+    {
+        await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
+        await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
+        await connection.ExecuteAsync(new CommandDefinition(
+            "SELECT set_config('app.merchant_id', @MerchantId, true)",
+            new { MerchantId = merchantId.ToString() },
+            transaction,
+            cancellationToken: cancellationToken));
+
+        var result = await query(connection, transaction);
+        await transaction.CommitAsync(cancellationToken);
+        return result;
+    }
+
+    private static DateTimeOffset? ToOffset(DateTime? value) => value is null ? null : new DateTimeOffset(value.Value);
+
+    private sealed class DailyRow
+    {
+        public long OpeningCents { get; init; }
+
+        public long CreditsCents { get; init; }
+
+        public long DebitsCents { get; init; }
+
+        public DateTime? UpdatedAt { get; init; }
+    }
+
+    private sealed class DayRow
+    {
+        public DateOnly Date { get; init; }
+
+        public long CreditsCents { get; init; }
+
+        public long DebitsCents { get; init; }
     }
 }

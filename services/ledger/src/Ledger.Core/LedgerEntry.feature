@@ -91,3 +91,9 @@ Funcionalidade: LedgerEntry — o que é um lançamento válido
     Dado o tipo enviado como o número 1
     Quando o tipo é lido
     Então a leitura falha
+
+  @LEDEN-R10 @nivel-integracao @P1
+  Cenário: a API não altera nem exclui lançamentos
+    Dado um lançamento registrado
+    Quando o papel da API tenta alterar ou excluir o lançamento
+    Então o banco recusa a operação

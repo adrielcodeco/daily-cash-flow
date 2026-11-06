@@ -48,6 +48,8 @@ O limite impede que poucos lançamentos estourem a soma do saldo. O banco repete
 
 Tratar um tipo ausente como crédito lançaria uma saída como entrada. O tipo chega por nome, e número não é aceito. O armazenamento recusa um tipo desconhecido, em vez de adivinhar.
 
+### LEDEN-R10 — a API não consegue alterar nem excluir um lançamento @realizes LDIMM-R03
+
 ## Uso das regras
 
 | Regra | Usa |
@@ -61,6 +63,7 @@ Tratar um tipo ausente como crédito lançaria uma saída como entrada. O tipo c
 | `LEDEN-R07` | `original` |
 | `LEDEN-R08` | `amountCents` |
 | `LEDEN-R09` | `entryType` |
+| `LEDEN-R10` | `original` |
 
 ## Decisões em aberto
 

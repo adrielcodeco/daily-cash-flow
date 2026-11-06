@@ -6,6 +6,8 @@ O cálculo usa 730 horas por mês, preços de lista e nenhum desconto por compro
 
 Equipe, retorno e ponto de equilíbrio estão em [ROI e custo operacional](19-roi-e-custo-operacional.md).
 
+O Memorystore só é necessário se o cache for ligado, e ele vem desligado por padrão. Os totais abaixo incluem esse serviço, então são um teto nesse item.
+
 ## Cenários
 
 | Premissa | Início | Crescimento |

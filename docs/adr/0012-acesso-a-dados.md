@@ -10,7 +10,7 @@ Cada serviço tem poucas consultas, e as mais importantes usam recursos próprio
 
 ## Decisão
 
-Usar Npgsql com comandos SQL escritos à mão, dentro dos adaptadores de infraestrutura. O domínio só conhece as portas.
+Usar Dapper sobre Npgsql, com SQL escrito à mão dentro dos adaptadores de infraestrutura. O domínio só conhece as portas.
 
 ## Opções
 
@@ -30,7 +30,7 @@ Usar Npgsql com comandos SQL escritos à mão, dentro dos adaptadores de infraes
 
 ## Leitura do radar
 
-As notas ficaram próximas, e nenhuma opção compromete um requisito. Dapper reduziria o código de leitura e seria uma escolha igualmente boa. Ficamos com Npgsql por remover uma dependência e deixar visível o SQL que sustenta as garantias. EF Core ajudaria num modelo grande, mas aqui seus benefícios são pequenos, e as consultas críticas precisariam de SQL de qualquer forma.
+As notas ficaram próximas, e nenhuma opção compromete um requisito. Dapper reduz o código de leitura e mantém visível o SQL que sustenta as garantias, ao custo de uma dependência a mais. EF Core ajudaria num modelo grande, mas aqui seus benefícios são pequenos, e as consultas críticas precisariam de SQL de qualquer forma.
 
 ## Consequências
 
@@ -41,9 +41,15 @@ As notas ficaram próximas, e nenhuma opção compromete um requisito. Dapper re
 
 **Negativas**
 
-- O mapeamento de colunas é manual e só falha em execução, por isso há testes de integração com PostgreSQL real
-- Mais código repetitivo que um ORM ou o Dapper
+- O mapeamento de colunas só falha em execução, por isso há testes de integração com PostgreSQL real
+- Mais uma dependência, e tipos como `DateOnly` precisam de um conversor
+
+## Revisão de 2026-11-06
+
+A primeira versão usava Npgsql direto. A reavaliação às cegas favoreceu o Dapper, que elimina o mapeamento manual e mantém o SQL explícito, e a troca foi feita.
+
+O radar acima mostra a avaliação original. A nova avaliação ainda não foi oficializada.
 
 ## Gatilho de revisão
 
-Rever se o número de consultas crescer muito ou se o mapeamento manual passar a gerar defeitos. O primeiro passo é Dapper, sem mudar as portas.
+Rever se o número de consultas crescer muito ou se o mapeamento manual passar a gerar defeitos. O próximo passo é um ORM, sem mudar as portas.

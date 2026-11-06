@@ -1,5 +1,5 @@
 <!-- anchors:progress v1 — written by `anchors progress`; never edit by hand -->
-# Progress — 100% (39/39 points)
+# Progress — 100% (52/52 points)
 
 ## D01 — Registro de decisões — 100% (26/26)
 - [x] D01.T1 — Registrar decisões e trade-offs que estavam só no código · 5 (unplanned) · done 2026-11-06 by adrielcodeco
@@ -12,4 +12,7 @@
 ## D02 — M6 — telemetria, dashboards, autenticação e rate limiting — 100% (13/13)
 - [x] D02.T1 — Telemetria, dashboards, autenticação, rate limiting e medições · 13 · done 2026-11-06 by adrielcodeco
 
-<!-- anchors:progress sum=83ea2adcc87a -->
+## D03 — Dapper, row-level security e cache configurável — 100% (13/13)
+- [x] D03.T1 — Dapper, row-level security e cache configurável · 13 · done 2026-11-06 by adrielcodeco
+
+<!-- anchors:progress sum=4d23ceea20bb -->

@@ -8,6 +8,9 @@
 //   spec    : services/ledger/src/Ledger.Core/LedgerEntry.spec.md
 using System.Text.Json;
 using Ledger.Core;
+using Ledger.Infrastructure;
+using Npgsql;
+using Testcontainers.PostgreSql;
 
 namespace Ledger.Tests;
 
@@ -128,4 +131,50 @@ public sealed class LedgerEntryTests
     [InlineData("\"DEBIT\"", EntryType.Debit)]
     public void ReadsTypeByName(string json, EntryType expected) =>
         Assert.Equal(expected, JsonSerializer.Deserialize<EntryType>(json));
+}
+
+[Trait("Category", "Integration")]
+public sealed class LedgerEntryPermissionTests : IAsyncLifetime
+{
+    private static readonly DateOnly Today = new(2026, 11, 5);
+    private static readonly FixedClock Clock = new(DateTimeOffset.Parse("2026-11-05T15:00:00Z"));
+
+    private readonly PostgreSqlContainer database = new PostgreSqlBuilder("postgres:17-alpine").Build();
+    private readonly Guid merchant = Guid.NewGuid();
+    private NpgsqlDataSource dataSource = null!;
+    private PostgresEntryStore store = null!;
+
+    public async Task InitializeAsync()
+    {
+        await database.StartAsync();
+        DatabaseMigrator.Run(database.GetConnectionString());
+        dataSource = NpgsqlDataSource.Create(database.GetConnectionString());
+        store = new PostgresEntryStore(dataSource);
+    }
+
+    public async Task DisposeAsync()
+    {
+        await dataSource.DisposeAsync();
+        await database.DisposeAsync();
+    }
+
+    private Task Add(Guid owner, string key)
+    {
+        var entry = LedgerEntry.Record(owner, EntryType.Credit, 100, Today, null, Clock);
+        return store.AddAsync(entry, EntryRecorded.From(entry), new IdempotencyClaim(key, "hash"), CancellationToken.None);
+    }
+
+    [Theory(DisplayName = "LEDEN-R10 the API role cannot change or delete an entry")]
+    [InlineData("UPDATE ledger_entry SET amount_cents = 1")]
+    [InlineData("DELETE FROM ledger_entry")]
+    public async Task ApiRoleCannotChangeEntries(string sql)
+    {
+        await Add(merchant, "request-0001");
+
+        await using var api = NpgsqlDataSource.Create($"{database.GetConnectionString()};Options=-c role=ledger_api");
+        await using var command = api.CreateCommand(sql);
+
+        var failure = await Assert.ThrowsAsync<PostgresException>(() => command.ExecuteNonQueryAsync());
+        Assert.Equal("42501", failure.SqlState);
+    }
 }

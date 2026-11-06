@@ -16,8 +16,6 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("Consolidation")
     ?? throw new InvalidOperationException("ConnectionStrings:Consolidation is required.");
 
-var redisConnection = builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379,abortConnect=false";
-
 if (args.Contains("--migrate"))
 {
     DatabaseMigrator.Run(connectionString);
@@ -26,8 +24,7 @@ if (args.Contains("--migrate"))
 
 builder.Services.AddNpgsqlDataSource(connectionString);
 builder.Services.AddSingleton(TimeProvider.System);
-builder.Services.AddSingleton<IBalanceStore, PostgresBalanceStore>();
-builder.Services.AddSingleton<IBalanceCache>(RedisBalanceCache.Connect(redisConnection));
+builder.AddBalanceStore();
 builder.Services.AddSingleton<GetDailyBalance>();
 builder.Services.AddSingleton<GetPeriodBalance>();
 builder.Services.AddProblemDetails();

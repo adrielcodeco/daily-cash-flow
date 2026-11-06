@@ -79,6 +79,19 @@ public sealed class EntryStoreIntegrationTests : IAsyncLifetime
         Assert.Equal(0, await CountAsync("ledger_entry"));
     }
 
+    [Fact(DisplayName = "RCENT-R01 the API role can store an entry for its merchant")]
+    public async Task ApiRoleStoresEntries()
+    {
+        await using var api = NpgsqlDataSource.Create($"{database.GetConnectionString()};Options=-c role=ledger_api");
+        var apiStore = new PostgresEntryStore(api);
+        var entry = await new RecordEntry(apiStore, Clock).ExecuteAsync(
+            new RecordEntryCommand(merchant, EntryType.Credit, 100, Today, "Sale"), "request-0001", CancellationToken.None);
+
+        Assert.NotNull(await apiStore.FindAsync(merchant, entry.Id, CancellationToken.None));
+        Assert.Null(await apiStore.FindAsync(Guid.NewGuid(), entry.Id, CancellationToken.None));
+        Assert.Single((await apiStore.ListAsync(merchant, Today, null, 10, CancellationToken.None)).Items);
+    }
+
     [Fact(DisplayName = "RCENT-R01 a failed write leaves no event behind")]
     public async Task RollsBackOnConflict()
     {

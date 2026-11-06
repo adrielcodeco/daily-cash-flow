@@ -1,6 +1,6 @@
 # Resumo das decisões
 
-Lista de tudo o que ficou decidido, com 291 itens, sem os trade-offs. Os motivos estão nos [ADRs](adr/README.md) e no [registro de decisões](15-registro-de-decisoes.md).
+Lista de tudo o que ficou decidido, com 317 itens, sem os trade-offs. Os motivos estão nos [ADRs](adr/README.md) e no [registro de decisões](15-registro-de-decisoes.md).
 
 Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decisions/generate.mjs`.
 
@@ -89,14 +89,14 @@ Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decis
 | [ADR-0002](adr/0002-integracao-entre-servicos.md) | Integração entre serviços | Outbox e mensageria |
 | [ADR-0003](adr/0003-mensageria.md) | Mensageria | Pub/Sub |
 | [ADR-0004](adr/0004-banco-de-dados.md) | Banco de dados | Cloud SQL para PostgreSQL |
-| [ADR-0005](adr/0005-modelo-de-leitura.md) | Modelo de leitura do saldo | Agregado diário e cache |
+| [ADR-0005](adr/0005-modelo-de-leitura.md) | Modelo de leitura do saldo | Agregado diário, com cache opcional por rota ou tabela |
 | [ADR-0006](adr/0006-computacao.md) | Plataforma de computação | Cloud Run |
 | [ADR-0007](adr/0007-linguagem.md) | Linguagem e plataforma | C# com .NET 10 |
 | [ADR-0008](adr/0008-autenticacao-e-autorizacao.md) | Autenticação e autorização | Gateway, OIDC e JWT |
 | [ADR-0009](adr/0009-observabilidade.md) | Observabilidade | OpenTelemetry |
 | [ADR-0010](adr/0010-estrategia-de-migracao.md) | Estratégia de migração | Strangler fig |
-| [ADR-0011](adr/0011-isolamento-de-comerciantes.md) | Isolamento entre comerciantes | Tabelas compartilhadas com `merchant_id` |
-| [ADR-0012](adr/0012-acesso-a-dados.md) | Acesso a dados | Npgsql com SQL explícito |
+| [ADR-0011](adr/0011-isolamento-de-comerciantes.md) | Isolamento entre comerciantes | Tabelas compartilhadas com row-level security |
+| [ADR-0012](adr/0012-acesso-a-dados.md) | Acesso a dados | Dapper com SQL explícito |
 | [ADR-0013](adr/0013-migracoes-de-esquema.md) | Migrações de esquema | DbUp, em execução separada |
 | [ADR-0014](adr/0014-separacao-de-processos.md) | Separação de processos | Quatro processos, dois por serviço |
 | [ADR-0015](adr/0015-envio-da-outbox.md) | Envio da outbox | Consulta periódica com `SKIP LOCKED` |
@@ -145,7 +145,7 @@ Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decis
 | D-22 | Versão por comerciante na chave do cache |
 | D-23 | TTL de 60 s |
 | D-24 | Ignorar o cache enquanto estiver desconectado |
-| D-25 | Manter o cache mesmo sem ganho medido de latência |
+| D-25 | Cache desligado por padrão, habilitável por rota ou por tabela |
 | D-26 | Redis local sem persistência, com 64 MB e `allkeys-lru` |
 
 ## API e contratos
@@ -308,6 +308,12 @@ Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decis
 | D-133 | `sbom.json` é gerado e não entra no Git |
 | D-134 | Resultados de carga ficam no Git, sem `setup_data` |
 | D-135 | README em pt-BR, com limites explícitos para produção |
+| D-140 | Cache como camada na frente do repositório |
+| D-141 | Sem alvos de cache, o sistema não conecta ao Redis |
+| D-142 | Valor gravado na versão lida antes da consulta |
+| D-143 | Papéis separados por processo: migração, API e worker |
+| D-144 | Worker ignora o RLS, porque atende todos os comerciantes |
+| D-145 | Leitura da API em transação, para definir o comerciante |
 | D-115 | Horizonte de 36 meses, sem impostos e sem cancelamento de clientes |
 
 ## Regras de negócio
@@ -328,9 +334,11 @@ Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decis
 | ID | Regra |
 |---|---|
 | LDIMM-R01 | um lançamento registrado nunca é alterado nem excluído |
+| LDIMM-R03 | a API não tem permissão de alterar nem excluir lançamentos |
 | LDIMM-R02 | todo valor em dinheiro é um número inteiro de centavos |
 | MRISO-R01 | todo registro carrega o comerciante dono |
 | MRISO-R02 | toda consulta é limitada ao comerciante da requisição |
+| MRISO-R03 | o banco também aplica o isolamento |
 | WRIND-R01 | registrar um lançamento depende apenas do banco de lançamentos |
 | WRIND-R02 | todo lançamento confirmado tem seu evento gravado na mesma transação |
 | WRIND-R03 | a assinatura do consolidado existe antes de qualquer publicação |
@@ -343,9 +351,15 @@ Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decis
 | APENT-R02 | um evento repetido não altera o saldo |
 | APENT-R03 | a ordem de chegada não altera o resultado |
 | APENT-R04 | o agregado pertence ao comerciante do evento |
-| APENT-R05 | um evento aplicado invalida o cache do comerciante |
-| APENT-R06 | uma falha do cache não impede a aplicação do evento |
 | APENT-R07 | um evento de tipo desconhecido é recusado, e não marcado como aplicado |
+| CBSTR-R01 | sem alvo ligado, a consulta vai ao armazenamento e não toca no cache |
+| CBSTR-R02 | um alvo de rota liga o cache só naquela rota |
+| CBSTR-R03 | um alvo de tabela liga o cache em todas as rotas dela |
+| CBSTR-R04 | um valor em cache é devolvido sem consultar o armazenamento |
+| CBSTR-R05 | uma falha do cache não derruba a consulta |
+| CBSTR-R06 | um evento aplicado invalida o cache do comerciante |
+| CBSTR-R07 | uma falha do cache não impede a aplicação do evento |
+| CBSTR-R08 | um valor é gravado na versão lida antes da consulta |
 | DYBAL-R01 | o fechamento é a abertura mais os créditos menos os débitos |
 | DYBAL-R02 | um dia sem movimento mantém a abertura como fechamento |
 | DYBAL-R03 | um estouro no fechamento gera erro, e nunca um saldo errado |
@@ -353,9 +367,8 @@ Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decis
 | GTBAL-R02 | a abertura é o acumulado de todos os dias anteriores |
 | GTBAL-R03 | a resposta informa o momento do último evento aplicado |
 | GTBAL-R04 | um comerciante sem movimento recebe saldo zerado e sem momento de atualização |
-| GTBAL-R05 | um saldo em cache é devolvido sem consultar o banco |
-| GTBAL-R06 | sem cache disponível, a consulta vai ao banco |
 | GTBAL-R07 | um lançamento retroativo muda a abertura dos dias seguintes |
+| GTBAL-R08 | o banco só devolve linhas do comerciante definido na transação |
 | GTPRD-R01 | o início não pode ser depois do fim |
 | GTPRD-R02 | o período tem no máximo 366 dias |
 | GTPRD-R03 | todo dia do período aparece, mesmo sem movimento |
@@ -363,6 +376,14 @@ Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decis
 | GTPRD-R05 | a consulta devolve apenas dados do comerciante da requisição |
 | RSBAL-R01 | depois da limpeza, nenhum saldo nem evento processado permanece |
 | RSBAL-R02 | os eventos reenviados recompõem o mesmo saldo |
+| CESTR-R01 | sem alvo ligado, a consulta vai ao armazenamento e não toca no cache |
+| CESTR-R02 | um alvo de rota liga o cache só naquela rota |
+| CESTR-R03 | um alvo de tabela liga o cache em todas as rotas dela |
+| CESTR-R04 | um valor em cache é devolvido sem consultar o armazenamento |
+| CESTR-R05 | uma falha do cache não derruba a consulta |
+| CESTR-R06 | um lançamento registrado invalida o cache do comerciante |
+| CESTR-R07 | uma falha do cache não impede o registro do lançamento |
+| CESTR-R08 | um valor é gravado na versão lida antes da consulta |
 | LEDEN-R01 | o lançamento pertence a um comerciante |
 | LEDEN-R02 | o valor é um inteiro de centavos maior que zero |
 | LEDEN-R03 | a data de competência não pode estar no futuro, no fuso de São Paulo |
@@ -372,9 +393,11 @@ Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decis
 | LEDEN-R07 | um estorno não pode ser estornado |
 | LEDEN-R08 | o valor de um lançamento não passa de R$ 1 bilhão |
 | LEDEN-R09 | o tipo é crédito ou débito, sem valor padrão |
+| LEDEN-R10 | a API não consegue alterar nem excluir um lançamento |
 | LSTEN-R01 | a lista traz apenas lançamentos do comerciante, na data pedida |
 | LSTEN-R02 | o limite vai de 1 a 200 |
 | LSTEN-R03 | a página informa a próxima posição só quando há mais lançamentos |
+| LSTEN-R04 | o banco só devolve linhas do comerciante definido na transação |
 | OBRLY-R01 | um evento só é marcado como publicado depois da confirmação da mensageria |
 | OBRLY-R02 | ao falhar, o lote para e o restante continua pendente |
 | OBRLY-R03 | o que foi confirmado antes da falha continua marcado |
@@ -409,6 +432,9 @@ Este arquivo é gerado. Para atualizar, edite as fontes e rode `node tools/decis
 | 2026-11-05 | Pool padrão e consumo sem limite | Limite de 16 eventos e pool definido |
 | 2026-11-05 | Portas locais 8081 e 8082 | Portas 18081 e 18082 |
 | 2026-11-05 | Esperar o tempo limite do Redis | Ignorar o cache desconectado |
+| 2026-11-06 | Cache sempre ligado | Cache opcional, por rota ou tabela |
+| 2026-11-06 | Isolamento só no código | Row-level security como segunda barreira |
+| 2026-11-06 | Npgsql direto | Dapper, com SQL explícito |
 | 2026-11-06 | `X-Merchant-Id` provisório | JWT, com o comerciante vindo do token |
 | 2026-11-06 | Recuperação de desastres dentro de Operação | Documento próprio |
 | 2026-11-06 | RTO de 1 hora para a perda do consolidado | RTO condicionado ao volume |

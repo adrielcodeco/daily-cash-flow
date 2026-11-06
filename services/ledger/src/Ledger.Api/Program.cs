@@ -24,7 +24,7 @@ if (args.Contains("--migrate"))
 
 builder.Services.AddNpgsqlDataSource(connectionString);
 builder.Services.AddSingleton(TimeProvider.System);
-builder.Services.AddSingleton<IEntryStore, PostgresEntryStore>();
+builder.AddEntryStore();
 builder.Services.AddSingleton<RecordEntry>();
 builder.Services.AddSingleton<ReverseEntry>();
 builder.Services.AddSingleton<ListEntries>();

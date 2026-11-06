@@ -1,7 +1,7 @@
 // @anchors
 //   code: GTBTS
 //   ref: GTBAL
-//   updated_at: 2026-11-05
+//   updated_at: 2026-11-06
 //   layer: test
 // Refs:
 //   feature : services/consolidation/src/Consolidation.Core/GetDailyBalance.feature
@@ -41,7 +41,7 @@ public sealed class GetDailyBalanceTests : IAsyncLifetime
         store.ApplyOnceAsync(new BalanceChange(Guid.NewGuid(), merchant, date, cents, 0, AppliedAt), CancellationToken.None);
 
     private Task<DailyBalance> Query(Guid merchant, DateOnly date) =>
-        new GetDailyBalance(store, new InMemoryBalanceCache()).ExecuteAsync(merchant, date, CancellationToken.None);
+        new GetDailyBalance(store).ExecuteAsync(merchant, date, CancellationToken.None);
 
     [Fact(DisplayName = "GTBAL-R01 the query does not show another merchant")]
     public async Task IsolatesMerchants()
@@ -84,6 +84,25 @@ public sealed class GetDailyBalanceTests : IAsyncLifetime
         Assert.Null(balance.UpdatedThrough);
     }
 
+    [Fact(DisplayName = "GTBAL-R08 the database shows only the merchant set in the transaction")]
+    public async Task DatabaseIsolatesMerchants()
+    {
+        var merchant = Guid.NewGuid();
+        await Credit(merchant, Day, 100);
+        await Credit(Guid.NewGuid(), Day, 200);
+
+        await using var api = NpgsqlDataSource.Create($"{database.GetConnectionString()};Options=-c role=consolidation_api");
+        await using var connection = await api.OpenConnectionAsync();
+        await using var transaction = await connection.BeginTransactionAsync();
+        await using var withoutMerchant = new NpgsqlCommand("SELECT count(*) FROM daily_balance", connection, transaction);
+        Assert.Equal(0L, await withoutMerchant.ExecuteScalarAsync());
+
+        await using var setMerchant = new NpgsqlCommand($"SELECT set_config('app.merchant_id', '{merchant}', true)", connection, transaction);
+        await setMerchant.ExecuteNonQueryAsync();
+        await using var withMerchant = new NpgsqlCommand("SELECT count(*) FROM daily_balance", connection, transaction);
+        Assert.Equal(1L, await withMerchant.ExecuteScalarAsync());
+    }
+
     [Fact(DisplayName = "GTBAL-R07 a backdated entry changes the next day's opening")]
     public async Task BackdatedEntryChangesOpening()
     {
@@ -95,47 +114,5 @@ public sealed class GetDailyBalanceTests : IAsyncLifetime
 
         var after = await Query(merchant, Day);
         Assert.Equal(before.OpeningCents + 5000, after.OpeningCents);
-    }
-}
-
-public sealed class GetDailyBalanceCacheTests
-{
-    private static readonly DateOnly Day = new(2026, 11, 5);
-
-    [Fact(DisplayName = "GTBAL-R05 a cached balance skips the database")]
-    public async Task ReadsFromCache()
-    {
-        var merchant = Guid.NewGuid();
-        var fakeStore = new InMemoryBalanceStore();
-        var cache = new InMemoryBalanceCache();
-        await cache.SetAsync(merchant, new DailyBalance(Day, 100, 0, 0, null), CancellationToken.None);
-
-        var balance = await new GetDailyBalance(fakeStore, cache).ExecuteAsync(merchant, Day, CancellationToken.None);
-
-        Assert.Equal(100, balance.OpeningCents);
-        Assert.Equal(0, fakeStore.DailyQueries);
-    }
-
-    [Fact(DisplayName = "GTBAL-R05 a balance read from the database is cached")]
-    public async Task StoresBalanceInCache()
-    {
-        var merchant = Guid.NewGuid();
-        var fakeStore = new InMemoryBalanceStore();
-        var useCase = new GetDailyBalance(fakeStore, new InMemoryBalanceCache());
-
-        await useCase.ExecuteAsync(merchant, Day, CancellationToken.None);
-        await useCase.ExecuteAsync(merchant, Day, CancellationToken.None);
-
-        Assert.Equal(1, fakeStore.DailyQueries);
-    }
-
-    [Fact(DisplayName = "GTBAL-R06 the query works with the cache down")]
-    public async Task SurvivesCacheFailure()
-    {
-        var fakeStore = new InMemoryBalanceStore();
-
-        await new GetDailyBalance(fakeStore, new BrokenBalanceCache()).ExecuteAsync(Guid.NewGuid(), Day, CancellationToken.None);
-
-        Assert.Equal(1, fakeStore.DailyQueries);
     }
 }

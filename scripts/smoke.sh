@@ -109,7 +109,6 @@ wait_for_closing 5600
 
 echo '9. Rebuilding from the ledger restores the same balance'
 ./scripts/rebuild-consolidation.sh >/dev/null 2>&1
-# The period query skips the cache, so it proves the rebuilt data.
 for _ in $(seq 1 60); do
   REBUILT=$(period_closing)
   [ "$REBUILT" = 5600 ] && break

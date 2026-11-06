@@ -56,7 +56,7 @@ flowchart TB
 | Balanceador | Cloud Run | Gerenciada | Só pelo balanceador, com entrada `internal-and-cloud-load-balancing` |
 | Identidade de `ledger-api` e `outbox-publisher` | Cloud SQL lançamentos | 5432 | Dados de lançamentos |
 | Identidade de `consolidation-api` e `consolidation-consumer` | Cloud SQL consolidado | 5432 | Dados de saldo |
-| `consolidation-api` e `consolidation-consumer` | Memorystore | 6378 | Cache, com TLS |
+| APIs e `consolidation-consumer` | Memorystore | 6378 | Cache opcional, com TLS |
 | Serviços | Private Service Connect | 443 | Pub/Sub, Secret Manager, KMS e telemetria |
 | Serviços | Provedor de identidade, via Cloud NAT | 443 | Chaves públicas dos tokens |
 | Qualquer outro fluxo | Qualquer destino | Todas | Negado por padrão |

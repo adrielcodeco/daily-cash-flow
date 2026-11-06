@@ -22,12 +22,28 @@ x-auth-env: &auth-env
   Auth__RequireHttps: 'false'
   RateLimit__PermitsPerSecond: '100'
 
-x-ledger-db-env: &ledger-db-env
-  ConnectionStrings__Ledger: Host=ledger-db;Database=ledger;Username=ledger;Password=local-only;Maximum Pool Size=30
-
-x-consolidation-db-env: &consolidation-db-env
-  ConnectionStrings__Consolidation: Host=consolidation-db;Database=consolidation;Username=consolidation;Password=local-only;Maximum Pool Size=30
+x-cache-env: &cache-env
+  # Off by default. Example: CACHE_TARGETS=daily_balance,entries.get
+  Cache__Targets: ${CACHE_TARGETS:-}
   ConnectionStrings__Redis: redis:6379,abortConnect=false,connectTimeout=250,syncTimeout=250
+
+x-ledger-migrate-env: &ledger-migrate-env
+  ConnectionStrings__Ledger: Host=ledger-db;Database=ledger;Username=ledger;Password=local-only
+
+x-ledger-api-env: &ledger-api-env
+  ConnectionStrings__Ledger: Host=ledger-db;Database=ledger;Username=ledger_api;Password=local-only;Maximum Pool Size=30
+
+x-ledger-worker-env: &ledger-worker-env
+  ConnectionStrings__Ledger: Host=ledger-db;Database=ledger;Username=ledger_worker;Password=local-only;Maximum Pool Size=30
+
+x-consolidation-migrate-env: &consolidation-migrate-env
+  ConnectionStrings__Consolidation: Host=consolidation-db;Database=consolidation;Username=consolidation;Password=local-only
+
+x-consolidation-api-env: &consolidation-api-env
+  ConnectionStrings__Consolidation: Host=consolidation-db;Database=consolidation;Username=consolidation_api;Password=local-only;Maximum Pool Size=30
+
+x-consolidation-worker-env: &consolidation-worker-env
+  ConnectionStrings__Consolidation: Host=consolidation-db;Database=consolidation;Username=consolidation_worker;Password=local-only;Maximum Pool Size=30
 
 x-ledger-api-build: &ledger-api-build
   context: .
@@ -59,6 +75,7 @@ services:
       POSTGRES_PASSWORD: local-only
     volumes:
       - ledger-data:/var/lib/postgresql/data
+      - ./infra/postgres/ledger-roles.sql:/docker-entrypoint-initdb.d/roles.sql:ro
     healthcheck:
       test: [CMD-SHELL, pg_isready -U ledger]
       interval: 3s
@@ -74,6 +91,7 @@ services:
       POSTGRES_PASSWORD: local-only
     volumes:
       - consolidation-data:/var/lib/postgresql/data
+      - ./infra/postgres/consolidation-roles.sql:/docker-entrypoint-initdb.d/roles.sql:ro
     healthcheck:
       test: [CMD-SHELL, pg_isready -U consolidation]
       interval: 3s
@@ -114,7 +132,7 @@ services:
     build: *ledger-api-build
     image: daily-cash-flow/ledger-api
     command: [--migrate]
-    environment: *ledger-db-env
+    environment: *ledger-migrate-env
     depends_on:
       ledger-db:
         condition: service_healthy
@@ -123,7 +141,7 @@ services:
     build: *consolidation-api-build
     image: daily-cash-flow/consolidation-api
     command: [--migrate]
-    environment: *consolidation-db-env
+    environment: *consolidation-migrate-env
     depends_on:
       consolidation-db:
         condition: service_healthy
@@ -131,7 +149,7 @@ services:
   ledger-api:
     image: daily-cash-flow/ledger-api
     environment:
-      <<: [*ledger-db-env, *telemetry-env, *auth-env]
+      <<: [*ledger-api-env, *cache-env, *telemetry-env, *auth-env]
       ASPNETCORE_URLS: http://+:8080
       Logging__LogLevel__Default: Information
       Logging__LogLevel__Npgsql: Warning
@@ -153,7 +171,7 @@ services:
         ENTRYPOINT_DLL: Ledger.Publisher.dll
     image: daily-cash-flow/outbox-publisher
     environment:
-      <<: [*ledger-db-env, *pubsub-env, *telemetry-env]
+      <<: [*ledger-worker-env, *pubsub-env, *telemetry-env]
     depends_on:
       ledger-migrate:
         condition: service_completed_successfully
@@ -164,7 +182,7 @@ services:
   consolidation-api:
     image: daily-cash-flow/consolidation-api
     environment:
-      <<: [*consolidation-db-env, *telemetry-env, *auth-env]
+      <<: [*consolidation-api-env, *cache-env, *telemetry-env, *auth-env]
       ASPNETCORE_URLS: http://+:8080
       Logging__LogLevel__Default: Information
       Logging__LogLevel__Npgsql: Warning
@@ -180,7 +198,7 @@ services:
   consolidation-consumer:
     image: daily-cash-flow/consolidation-consumer
     environment:
-      <<: [*consolidation-db-env, *pubsub-env, *telemetry-env]
+      <<: [*consolidation-worker-env, *cache-env, *pubsub-env, *telemetry-env]
     depends_on:
       consolidation-migrate:
         condition: service_completed_successfully

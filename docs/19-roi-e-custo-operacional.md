@@ -120,4 +120,4 @@ O custo acumulado inclui o investimento inicial. O período é de 36 meses depoi
 | Automatizar a operação | Maior alavanca, porque ataca a equipe | Exige investimento em plataforma |
 | Reduzir o Cloud SQL do consolidado | Menor custo de infraestrutura | Recuperação mais lenta |
 | Descontos por compromisso | Menor custo de infraestrutura | Compromisso de uso |
-| Remover o Redis | Cerca de US$ 64 por mês no Início | Menos proteção do banco em volumes maiores |
+| Deixar o Redis desligado | Cerca de US$ 64 por mês no Início | Menos proteção do banco em volumes maiores |

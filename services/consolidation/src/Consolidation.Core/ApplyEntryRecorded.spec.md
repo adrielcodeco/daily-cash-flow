@@ -32,12 +32,6 @@ Somas não dependem da ordem, por isso o consumidor não precisa ordenar eventos
 
 ### APENT-R04 — o agregado pertence ao comerciante do evento @realizes MRISO-R01
 
-### APENT-R05 — um evento aplicado invalida o cache do comerciante
-
-### APENT-R06 — uma falha do cache não impede a aplicação do evento
-
-O cache expira sozinho. Perder o evento por causa dele seria pior que servir um saldo antigo por alguns segundos.
-
 ### APENT-R07 — um evento de tipo desconhecido é recusado, e não marcado como aplicado
 
 Ignorar o evento deixaria o saldo diferente dos lançamentos, sem nenhum aviso. Recusado, ele segue para as mensagens mortas, que geram alerta.
@@ -50,8 +44,6 @@ Ignorar o evento deixaria o saldo diferente dos lançamentos, sem nenhum aviso. 
 | `APENT-R02` | `EventId` |
 | `APENT-R03` | `AmountCents` |
 | `APENT-R04` | `MerchantId` |
-| `APENT-R05` | `MerchantId` |
-| `APENT-R06` | `MerchantId` |
 | `APENT-R07` | `EntryType` |
 
 ## Decisões em aberto

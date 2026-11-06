@@ -22,7 +22,7 @@ Controle de fluxo de caixa para comerciantes: registra débitos e créditos e of
 | API | ASP.NET Core |
 | banco | PostgreSQL, um por serviço |
 | mensageria | Pub/Sub; emulador no ambiente local |
-| cache | Redis |
+| cache | Redis, opcional e desligado por padrão |
 | identidade local | Keycloak, por OIDC |
 | telemetria | OpenTelemetry, Tempo, Prometheus e Grafana |
 | testes | xUnit, Testcontainers, k6 e Stryker.NET |
@@ -52,6 +52,8 @@ tools/roi/                gerador do modelo de ROI
 - Evento gravado em outbox, na mesma transação do lançamento
 - Consumidor idempotente, com entrega at-least-once
 - Portas e adaptadores dentro de cada serviço; o domínio não conhece banco nem mensageria
+- Acesso a dados com Dapper e SQL explícito
+- Row-level security no banco, com papéis separados para migração, API e worker
 
 ## Convenções
 

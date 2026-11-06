@@ -2,7 +2,7 @@
 # @anchors
 #   code: LSTFT
 #   ref: LSTEN
-#   updated_at: 2026-11-05
+#   updated_at: 2026-11-06
 #   layer: feature
 
 @LSTEN @ledger
@@ -34,3 +34,9 @@ Funcionalidade: ListEntries — conferir os lançamentos do dia
     Dado dois lançamentos no dia
     Quando a lista é pedida com limite 2
     Então a página não tem próxima posição
+
+  @LSTEN-R04 @nivel-integracao @P1
+  Cenário: sem comerciante definido, o banco não devolve nada
+    Dado lançamentos de dois comerciantes
+    Quando uma consulta sem filtro roda com o papel da API
+    Então só aparecem linhas do comerciante definido

@@ -1,6 +1,6 @@
 <!-- @anchors
   code: LSTEN
-  updated_at: 2026-11-05
+  updated_at: 2026-11-06
 -->
 
 # ListEntries — os lançamentos de um dia, em páginas
@@ -28,6 +28,8 @@ O comerciante confere o que foi lançado em um dia. Um dia pode ter muitos lanç
 
 ### LSTEN-R03 — a página informa a próxima posição só quando há mais lançamentos
 
+### LSTEN-R04 — o banco só devolve linhas do comerciante definido na transação @realizes MRISO-R03
+
 ## Uso das regras
 
 | Regra | Usa |
@@ -35,6 +37,7 @@ O comerciante confere o que foi lançado em um dia. Um dia pode ter muitos lanç
 | `LSTEN-R01` | `merchantId`, `date` |
 | `LSTEN-R02` | `limit` |
 | `LSTEN-R03` | `cursor`, `limit` |
+| `LSTEN-R04` | `merchantId` |
 
 ## Decisões em aberto
 

@@ -31,7 +31,7 @@ public static class ServiceTelemetry
             })
             .WithMetrics(metrics =>
             {
-                metrics.AddMeter(ConsolidationTelemetry.Name).AddOtlpExporter();
+                metrics.AddMeter(ConsolidationTelemetry.Name, RedisQueryCache.MeterName).AddOtlpExporter();
                 configureMetrics?.Invoke(metrics);
             });
 

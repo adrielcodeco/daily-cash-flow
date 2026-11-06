@@ -59,10 +59,10 @@ A coluna **Base** diz de onde veio cada escolha:
 
 | ID | Decisão | Alternativas | Do que abrimos mão | Base | Rever quando |
 |---|---|---|---|---|---|
-| D-22 | Versão por comerciante na chave do cache | Invalidar dia a dia | Toda mudança descarta todo o cache daquele comerciante | Julgamento | A taxa de acerto cair demais |
+| D-22 | Versão por comerciante na chave do cache | Invalidar dia a dia, invalidar a tabela inteira | Toda mudança descarta todo o cache daquele comerciante | Julgamento | A taxa de acerto cair demais |
 | D-23 | TTL de 60 s | Sem TTL, TTL maior | Se a invalidação falhar com o Redis fora, o saldo pode ficar até 60 s desatualizado | Valor inicial | O negócio exigir menos defasagem |
 | D-24 | Ignorar o cache enquanto estiver desconectado | Aguardar o tempo limite | Sem o cache, toda leitura vai ao banco | Medição | Não previsto: esperar elevou o p95 a 2,2 s |
-| D-25 | Manter o cache mesmo sem ganho medido de latência | Remover o Redis | Custo e um componente a mais, sem benefício medido nesta carga | Autor | Uma carga no GCP mostrar que o banco não precisa dessa proteção |
+| D-25 | Cache desligado por padrão, habilitável por rota ou por tabela | Sempre ligado, remover | Mais código para manter, em troca de pagar pelo Redis só onde há ganho | Autor | Não previsto |
 | D-26 | Redis local sem persistência, com 64 MB e `allkeys-lru` | Persistir | Reiniciar perde o cache | Julgamento | Não previsto: o dado é descartável |
 
 ## API e contratos
@@ -225,6 +225,12 @@ A coluna **Base** diz de onde veio cada escolha:
 | D-133 | `sbom.json` é gerado e não entra no Git | Versionar o inventário | Sem histórico do inventário | Julgamento | Publicar o SBOM como artefato do CI |
 | D-134 | Resultados de carga ficam no Git, sem `setup_data` | Não versionar resultados | Arquivos grandes no repositório, em troca de prova rastreável | Julgamento | Não previsto |
 | D-135 | README em pt-BR, com limites explícitos para produção | Só instruções de execução | Texto mais longo | Julgamento | Não previsto |
+| D-140 | Cache como camada na frente do repositório | Cache de segundo nível de um ORM | Código próprio, em troca de invalidar só o comerciante e funcionar entre processos | Julgamento | Adotar um ORM |
+| D-141 | Sem alvos de cache, o sistema não conecta ao Redis | Conectar sempre | Mudar a configuração exige reiniciar | Julgamento | Precisar ligar em execução |
+| D-142 | Valor gravado na versão lida antes da consulta | Ler a versão ao gravar | Um valor a mais para carregar | Medição | Não previsto: corrigiu uma corrida |
+| D-143 | Papéis separados por processo: migração, API e worker | Usuário único | Mais papéis para administrar | Julgamento | Não previsto |
+| D-144 | Worker ignora o RLS, porque atende todos os comerciantes | Definir o comerciante por evento | O isolamento do worker depende do código | Julgamento | Houver exigência de isolamento no worker |
+| D-145 | Leitura da API em transação, para definir o comerciante | Definir na conexão | Mais idas ao banco. Em conexões reaproveitadas, a transação evita vazar o comerciante | Julgamento | A latência pesar |
 | D-115 | Horizonte de 36 meses, sem impostos e sem cancelamento de clientes | Modelo completo | O resultado tende a ser otimista | Julgamento | Houver dados reais |
 
 ## Decisões revistas
@@ -234,6 +240,9 @@ A coluna **Base** diz de onde veio cada escolha:
 | 2026-11-05 | RabbitMQ como plano B no ambiente local | Descartado | O emulador validou entrega e mensagens mortas |
 | 2026-11-05 | Pool padrão e consumo sem limite | Limite de 16 eventos e pool definido | O teste de resiliência esgotou as conexões: ver ADR-0017 |
 | 2026-11-05 | Esperar o tempo limite do Redis | Ignorar o cache desconectado | A carga mostrou p95 de 2,2 s |
+| 2026-11-06 | Cache sempre ligado | Cache opcional, por rota ou tabela | O recálculo e a carga não mostraram ganho no volume atual |
+| 2026-11-06 | Isolamento só no código | Row-level security como segunda barreira | O recálculo apontou fraqueza para uma instituição financeira |
+| 2026-11-06 | Npgsql direto | Dapper, com SQL explícito | O recálculo favoreceu menos mapeamento manual |
 | 2026-11-06 | `X-Merchant-Id` provisório | JWT, com o comerciante vindo do token | Previsto para o M6 |
 | 2026-11-06 | Recuperação de desastres dentro de Operação | Documento próprio | O plano precisa de escopo, papéis e procedimentos próprios |
 | 2026-11-06 | RTO de 1 hora para a perda do consolidado | RTO condicionado ao volume | A medição mostrou cerca de 266 mil lançamentos por hora |

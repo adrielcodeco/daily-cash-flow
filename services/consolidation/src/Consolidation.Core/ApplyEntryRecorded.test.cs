@@ -17,12 +17,11 @@ public sealed class ApplyEntryRecordedTests
     private static readonly Guid Merchant = Guid.NewGuid();
 
     private readonly InMemoryBalanceStore store = new();
-    private readonly InMemoryBalanceCache cache = new();
 
     private static EntryRecorded Event(EntryType type, long amount, Guid? merchant = null) =>
         new(Guid.NewGuid(), DateTimeOffset.Parse("2026-11-05T14:32:00-03:00"), merchant ?? Merchant, type, amount, Day);
 
-    private Task Apply(EntryRecorded recorded) => new ApplyEntryRecorded(store, cache).ExecuteAsync(recorded, CancellationToken.None);
+    private Task Apply(EntryRecorded recorded) => new ApplyEntryRecorded(store).ExecuteAsync(recorded, CancellationToken.None);
 
     [Theory(DisplayName = "APENT-R07 an event of unknown type is refused and not marked as applied")]
     [InlineData(0)]
@@ -76,7 +75,7 @@ public sealed class ApplyEntryRecordedTests
 
         await Apply(credit);
         await Apply(debit);
-        var useCase = new ApplyEntryRecorded(reversedStore, cache);
+        var useCase = new ApplyEntryRecorded(reversedStore);
         await useCase.ExecuteAsync(debit, CancellationToken.None);
         await useCase.ExecuteAsync(credit, CancellationToken.None);
 
@@ -93,21 +92,5 @@ public sealed class ApplyEntryRecordedTests
 
         Assert.Equal((100, 0), store.Totals(Merchant, Day));
         Assert.Equal((200, 0), store.Totals(other, Day));
-    }
-
-    [Fact(DisplayName = "APENT-R05 an applied event invalidates the cache")]
-    public async Task InvalidatesCache()
-    {
-        await Apply(Event(EntryType.Credit, 100));
-
-        Assert.Equal(Merchant, Assert.Single(cache.Invalidated));
-    }
-
-    [Fact(DisplayName = "APENT-R06 a cache failure does not stop the event")]
-    public async Task SurvivesCacheFailure()
-    {
-        await new ApplyEntryRecorded(store, new BrokenBalanceCache()).ExecuteAsync(Event(EntryType.Credit, 100), CancellationToken.None);
-
-        Assert.Equal((100, 0), store.Totals(Merchant, Day));
     }
 }

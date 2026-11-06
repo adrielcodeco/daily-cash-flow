@@ -105,7 +105,8 @@ Além disso, o cálculo do fechamento em C# não verifica estouro, então a soma
 | Controle | Como foi verificado | Resultado |
 |---|---|---|
 | Injeção de SQL | Leitura dos adaptadores | Todas as entradas são parâmetros |
-| Isolamento entre comerciantes | Testes automatizados | Registro de outro comerciante responde 404 |
+| Isolamento entre comerciantes | Testes automatizados | Registro de outro comerciante responde 404, e o banco aplica RLS com papel sem privilégio |
+| Imutabilidade no banco | Teste de integração | O papel da API não consegue alterar nem excluir lançamentos |
 | Erro interno | Leitura do tratador de erros | Resposta genérica, sem detalhes internos |
 | Segredos no Git | `gitleaks` em todo o histórico | Nenhum encontrado. A senha local da V-17 é conhecida e aceita |
 | Pacotes .NET vulneráveis | `dotnet list package --vulnerable`, nos 10 projetos | Nenhum, em 2026-11-06 |

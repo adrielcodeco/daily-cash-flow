@@ -31,7 +31,7 @@ public static class ServiceTelemetry
             })
             .WithMetrics(metrics =>
             {
-                metrics.AddMeter(OutboxTelemetry.SourceName).AddOtlpExporter();
+                metrics.AddMeter(OutboxTelemetry.SourceName, RedisQueryCache.MeterName).AddOtlpExporter();
                 configureMetrics?.Invoke(metrics);
             });
 
