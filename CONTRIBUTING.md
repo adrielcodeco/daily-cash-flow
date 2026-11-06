@@ -27,7 +27,7 @@ apart and that each file respects the layer it is in. Layers are the project's o
 decision — for example: entry points, use cases, domain, repositories,
 infrastructure, presentation. Those names are illustration, not a layout to fit.
 
-No code layer is declared yet: declare each one in `anchors.yaml` once the code exists.
+The code layers here are `core`, `infrastructure` and `host`, declared in `anchors.yaml`.
 
 ### Day to day
 

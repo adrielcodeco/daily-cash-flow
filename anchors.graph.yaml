@@ -22,8 +22,15 @@ nodes:
       regime: declarativo
     - id: CONTRIBUTING.md
       kind: doc
-      rev: f6599d987ff6
+      rev: 64efd7a42e27
       updated_at: "2026-11-05"
+      layer: guidance
+      tags:
+        - guidance
+      regime: declarativo
+    - id: README.md
+      kind: doc
+      rev: fc0b3768126e
       layer: guidance
       tags:
         - guidance
@@ -96,6 +103,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Api/ApiSecurity.cs
       kind: code
       rev: f9d3363aaecc
+      updated_at: "2026-11-06"
       code: CNSEC
       file_code: CNSEC
       layer: host
@@ -109,6 +117,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Api/AuditMiddleware.cs
       kind: code
       rev: 378356e6613c
+      updated_at: "2026-11-06"
       code: CNAUD
       file_code: CNAUD
       layer: host
@@ -122,7 +131,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Api/Program.cs
       kind: code
       rev: "154362267636"
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: CNAPI
       file_code: CNAPI
       layer: host
@@ -136,7 +145,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Consumer/EntryRecordedWorker.cs
       kind: code
       rev: a8d4aee5aad3
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: CNWRK
       file_code: CNWRK
       layer: host
@@ -150,7 +159,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Consumer/Program.cs
       kind: code
       rev: c2c85d77411d
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: CNCSM
       file_code: CNCSM
       layer: host
@@ -485,6 +494,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Infrastructure/ConsolidationTelemetry.cs
       kind: code
       rev: 921c8aafdfc0
+      updated_at: "2026-11-06"
       code: CNOTL
       file_code: CNOTL
       layer: infrastructure
@@ -539,7 +549,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Infrastructure/RedisBalanceCache.cs
       kind: code
       rev: a9630ca63294
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: GTBAL
       file_code: RDBCH
       layer: infrastructure
@@ -552,6 +562,7 @@ nodes:
     - id: services/consolidation/src/Consolidation.Infrastructure/ServiceTelemetry.cs
       kind: code
       rev: 950d6f7972d0
+      updated_at: "2026-11-06"
       code: CNTEL
       file_code: CNTEL
       layer: infrastructure
@@ -565,6 +576,7 @@ nodes:
     - id: services/ledger/src/Ledger.Api/ApiSecurity.cs
       kind: code
       rev: c7a2b94d0c01
+      updated_at: "2026-11-06"
       code: LDSEC
       file_code: LDSEC
       layer: host
@@ -578,6 +590,7 @@ nodes:
     - id: services/ledger/src/Ledger.Api/AuditMiddleware.cs
       kind: code
       rev: c6964fcd686a
+      updated_at: "2026-11-06"
       code: LDAUD
       file_code: LDAUD
       layer: host
@@ -591,7 +604,7 @@ nodes:
     - id: services/ledger/src/Ledger.Api/EntryEndpoints.cs
       kind: code
       rev: a00cec1da1fd
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: LDEPT
       file_code: LDEPT
       layer: host
@@ -605,7 +618,7 @@ nodes:
     - id: services/ledger/src/Ledger.Api/MerchantContext.cs
       kind: code
       rev: 1071cc4a99b4
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: LDMCT
       file_code: LDMCT
       layer: host
@@ -619,7 +632,7 @@ nodes:
     - id: services/ledger/src/Ledger.Api/Program.cs
       kind: code
       rev: ada78f75c754
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: LDAPI
       file_code: LDAPI
       layer: host
@@ -868,7 +881,7 @@ nodes:
     - id: services/ledger/src/Ledger.Core/OutboxRelay.cs
       kind: code
       rev: 27505fc1b85a
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: OBRLY
       file_code: OBRCD
       layer: core
@@ -1116,6 +1129,7 @@ nodes:
     - id: services/ledger/src/Ledger.Infrastructure/OutboxTelemetry.cs
       kind: code
       rev: e7808720e1a1
+      updated_at: "2026-11-06"
       code: OBTEL
       file_code: OBTEL
       layer: infrastructure
@@ -1142,7 +1156,7 @@ nodes:
     - id: services/ledger/src/Ledger.Infrastructure/PostgresOutbox.cs
       kind: code
       rev: d9e02c1802a2
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: OBRLY
       file_code: PGOBX
       layer: infrastructure
@@ -1155,7 +1169,7 @@ nodes:
     - id: services/ledger/src/Ledger.Infrastructure/PubSubEventPublisher.cs
       kind: code
       rev: ecd542449376
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: OBRLY
       file_code: PSEPB
       layer: infrastructure
@@ -1168,6 +1182,7 @@ nodes:
     - id: services/ledger/src/Ledger.Infrastructure/ServiceTelemetry.cs
       kind: code
       rev: 4ea598e0ad42
+      updated_at: "2026-11-06"
       code: LDTEL
       file_code: LDTEL
       layer: infrastructure
@@ -1181,6 +1196,7 @@ nodes:
     - id: services/ledger/src/Ledger.Publisher/OutboxBacklogWorker.cs
       kind: code
       rev: 85b42bcfa616
+      updated_at: "2026-11-06"
       code: OBBWK
       file_code: OBBWK
       layer: host
@@ -1208,7 +1224,7 @@ nodes:
     - id: services/ledger/src/Ledger.Publisher/Program.cs
       kind: code
       rev: f86d400931db
-      updated_at: "2026-11-05"
+      updated_at: "2026-11-06"
       code: LDPUB
       file_code: LDPUB
       layer: host

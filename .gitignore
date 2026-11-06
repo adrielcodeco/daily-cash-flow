@@ -17,4 +17,5 @@ node_modules/
 issues/
 load-tests/results/*.txt
 reports/
+sbom.json
 StrykerOutput/
