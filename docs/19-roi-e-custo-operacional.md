@@ -6,10 +6,10 @@ Este documento estima quanto custa construir e operar a solução, quantos comer
 
 ## Conclusões
 
-- **A equipe é o principal custo, e não a nuvem.** No cenário Início, ela representa 74% do custo mensal. Otimizar a infraestrutura muda pouco o resultado.
-- **Ponto de equilíbrio mensal:** cerca de 3.998 comerciantes, a R$ 19,90 por mês.
-- **Custo adicional por comerciante:** cerca de R$ 0,11 por mês. Depois do ponto de equilíbrio, quase toda a receita vira margem.
-- **Retorno no cenário Base:** mês 21, com ROI de 73% em 36 meses.
+- **A equipe é o principal custo, e não a nuvem.** No cenário Início, ela representa 75% do custo mensal. Otimizar a infraestrutura muda pouco o resultado.
+- **Ponto de equilíbrio mensal:** cerca de 3.953 comerciantes, a R$ 19,90 por mês.
+- **Custo adicional por comerciante:** cerca de R$ 0,12 por mês. Depois do ponto de equilíbrio, quase toda a receita vira margem.
+- **Retorno no cenário Base:** mês 21, com ROI de 75% em 36 meses.
 - **O cenário Conservador não se paga em 36 meses.** O projeto depende de adoção e preço, e não de tecnologia.
 
 ## Premissas
@@ -35,25 +35,25 @@ A receita pode ser uma mensalidade ou um valor equivalente. Se o serviço for gr
 | Item | Valor |
 |---|---:|
 | Equipe de construção | R$ 660.000 |
-| Ambiente durante a construção | R$ 11.037 |
+| Ambiente durante a construção | R$ 10.188 |
 | Lançamento | R$ 100.000 |
-| **Total** | **R$ 771.037** |
+| **Total** | **R$ 770.188** |
 
 ## Custo operacional mensal
 
 | Item | Início: 13.000 comerciantes | Crescimento: 130.000 comerciantes | Peso no Início |
 |---|---:|---:|---:|
-| Infraestrutura de produção | R$ 6.898 | R$ 19.558 | 9% |
-| Ambiente de não produção | R$ 2.759 | R$ 2.759 | 3% |
-| Suporte do provedor | R$ 966 | R$ 2.232 | 1% |
-| Equipe de operação | R$ 60.000 | R$ 60.000 | 74% |
-| Plantão | R$ 10.000 | R$ 10.000 | 12% |
-| **Total** | **R$ 80.623** | **R$ 94.549** | **100%** |
+| Infraestrutura de produção | R$ 6.367 | R$ 19.855 | 8% |
+| Ambiente de não produção | R$ 2.547 | R$ 2.547 | 3% |
+| Suporte do provedor | R$ 891 | R$ 2.240 | 1% |
+| Equipe de operação | R$ 60.000 | R$ 60.000 | 75% |
+| Plantão | R$ 10.000 | R$ 10.000 | 13% |
+| **Total** | **R$ 79.806** | **R$ 94.643** | **100%** |
 
 | Custo unitário | Início | Crescimento |
 |---|---:|---:|
-| Por comerciante, por mês | R$ 6,20 | R$ 0,73 |
-| Só infraestrutura, por mil requisições | R$ 0,53 | R$ 0,15 |
+| Por comerciante, por mês | R$ 6,14 | R$ 0,73 |
+| Só infraestrutura, por mil requisições | R$ 0,49 | R$ 0,15 |
 
 O volume cresce 10 vezes, e o custo total cresce bem menos, porque a equipe fica igual. Esse modelo supõe que a mesma equipe sustente o cenário Crescimento, o que precisa ser validado.
 
@@ -65,14 +65,14 @@ O ponto de equilíbrio mensal é o número de comerciantes em que a receita cobr
 comerciantes = custo fixo mensal / (preço - custo variável por comerciante)
 ```
 
-Custo fixo mensal: R$ 79.076. Custo variável por comerciante, com suporte: R$ 0,12.
+Custo fixo mensal: R$ 78.157. Custo variável por comerciante, com suporte: R$ 0,13.
 
 | Preço mensal | Comerciantes no equilíbrio |
 |---|---:|
-| R$ 9,90 | 8.085 |
-| R$ 19,90 | 3.998 |
-| R$ 29,90 | 2.655 |
-| R$ 49,90 | 1.588 |
+| R$ 9,90 | 7.997 |
+| R$ 19,90 | 3.953 |
+| R$ 29,90 | 2.625 |
+| R$ 49,90 | 1.570 |
 
 ### Sensibilidade
 
@@ -80,12 +80,12 @@ Comerciantes necessários a R$ 19,90, mudando uma premissa de cada vez:
 
 | Mudança | Comerciantes no equilíbrio |
 |---|---:|
-| Modelo base | 3.998 |
-| Equipe de operação com 1 pessoa | 2.481 |
-| Equipe de operação com 4 pessoas | 7.031 |
-| Custo por pessoa de R$ 20.000 | 2.986 |
-| Custo por pessoa de R$ 45.000 | 5.514 |
-| Infraestrutura com o dobro do custo | 4.456 |
+| Modelo base | 3.953 |
+| Equipe de operação com 1 pessoa | 2.435 |
+| Equipe de operação com 4 pessoas | 6.987 |
+| Custo por pessoa de R$ 20.000 | 2.941 |
+| Custo por pessoa de R$ 45.000 | 5.470 |
+| Infraestrutura com o dobro do custo | 4.365 |
 
 Dobrar a infraestrutura pesa menos que acrescentar pessoas à operação.
 
@@ -99,9 +99,9 @@ O custo acumulado inclui o investimento inicial. O período é de 36 meses depoi
 
 | Cenário | Preço | Comerciantes ao fim da adoção | Mês com lucro | Retorno do investimento | Saldo em 36 meses | VPL | ROI |
 |---|---:|---:|---|---|---:|---:|---:|
-| Conservador | R$ 9,90 | 6.000 | Não ocorre em 36 meses | Não ocorre em 36 meses | R$ -2.179.960 | R$ -1.980.850 | -60% |
-| Base | R$ 19,90 | 13.000 | Mês 8 | Mês 21 | R$ 2.682.477 | R$ 1.745.793 | 73% |
-| Otimista | R$ 29,90 | 30.000 | Mês 3 | Mês 9 | R$ 18.271.252 | R$ 13.693.260 | 493% |
+| Conservador | R$ 9,90 | 6.000 | Não ocorre em 36 meses | Não ocorre em 36 meses | R$ -2.147.184 | R$ -1.954.022 | -60% |
+| Base | R$ 19,90 | 13.000 | Mês 8 | Mês 21 | R$ 2.713.918 | R$ 1.771.599 | 75% |
+| Otimista | R$ 29,90 | 30.000 | Mês 3 | Mês 9 | R$ 18.299.451 | R$ 13.716.581 | 498% |
 
 ## O que fora do modelo pode mudar o resultado
 
@@ -120,4 +120,4 @@ O custo acumulado inclui o investimento inicial. O período é de 36 meses depoi
 | Automatizar a operação | Maior alavanca, porque ataca a equipe | Exige investimento em plataforma |
 | Reduzir o Cloud SQL do consolidado | Menor custo de infraestrutura | Recuperação mais lenta |
 | Descontos por compromisso | Menor custo de infraestrutura | Compromisso de uso |
-| Deixar o Redis desligado | Cerca de US$ 64 por mês no Início | Menos proteção do banco em volumes maiores |
+| Manter o Redis desligado também no Crescimento | Cerca de US$ 635 por mês no Crescimento. O Início já não usa Redis | Menos proteção do banco em volumes maiores |

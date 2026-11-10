@@ -11,7 +11,7 @@ O relatório precisa atender 50 req/s sem depender de Lançamentos. Um lançamen
 
 Manter uma tabela de créditos e débitos por comerciante e dia, atualizada por eventos, com o acumulado calculado na consulta.
 
-O cache em Redis é opcional e fica desligado por padrão. Ele pode ser ligado por rota ou por tabela, com a variável `Cache:Targets`, nos dois serviços. Sem alvos, o sistema nem conecta ao Redis. A chave leva uma versão por comerciante, que muda a cada escrita, então a invalidação afeta só aquele comerciante.
+O cache em Redis é opcional e fica desligado por padrão. Ele pode ser ligado por rota ou por tabela, com a variável `Cache:Targets`, nos dois serviços. Sem alvos do próprio serviço, ele nem conecta ao Redis. A chave leva uma versão por comerciante, que muda a cada escrita, então uma escrita invalida só o comerciante; o reset do consolidado invalida todos por uma época global e falha se o Redis estiver fora (D-141). Como o consumidor do consolidado invalida o cache do saldo em outro processo, ele precisa receber os mesmos alvos da API.
 
 ## Opções
 
@@ -35,7 +35,7 @@ As perguntas e a evidência de cada nota estão na [avaliação dos radares](../
 
 ## Leitura do radar
 
-Consultar os lançamentos diretamente é simples, mas cria dependência entre os serviços e faz cada leitura custar mais. Event sourcing completo dá histórico e reconstrução, mas o custo de aprendizado e de operação não se paga. O agregado diário entrega quase o mesmo resultado, porque somas não dependem da ordem dos eventos e Lançamentos continua sendo a fonte para reconstrução.
+Consultar os lançamentos diretamente é simples, mas cria dependência entre os serviços e faz cada leitura custar mais. Event sourcing completo dá histórico e reconstrução, mas o custo de aprendizado e de operação não se paga. O agregado diário entrega o que importa do event sourcing, porque somas não dependem da ordem dos eventos e Lançamentos continua sendo a fonte para reconstrução.
 
 ## Consequências
 
@@ -51,11 +51,11 @@ Consultar os lançamentos diretamente é simples, mas cria dependência entre os
 
 ## Resultado medido
 
-No teste de carga, a latência foi equivalente com e sem cache, com p95 perto de 7 ms. O agregado diário sozinho atende às 50 req/s, e o cache fica como proteção do banco para volumes maiores.
+No teste de carga, a latência foi equivalente com e sem cache, com p95 perto de 7 ms. O agregado diário sozinho atende às 50 req/s, e o cache fica como proteção do banco para volumes maiores. Com dois anos de histórico por comerciante, a leitura teve p95 de 7,57 ms ([resultados](../09-resultados-de-testes.md)), e o gatilho abaixo segue para volumes maiores.
 
 ## Revisão de 2026-11-06
 
-A reavaliação às cegas favoreceu o agregado sem cache, com a maior diferença entre as decisões, e a carga já mostrava que o cache não trazia ganho. Como a necessidade muda de caso a caso, o cache virou um recurso configurável, e não uma parte fixa da arquitetura.
+A reavaliação às cegas favoreceu o agregado sem cache, com margem de 1,11 sobre o agregado com cache, uma das cinco maiores entre as decisões, e a carga já mostrava que o cache não trazia ganho. Como a necessidade muda de caso a caso, o cache virou um recurso configurável, e não uma parte fixa da arquitetura.
 
 ORMs como NHibernate, e EF Core com bibliotecas de terceiros, oferecem cache por tabela. Aqui, uma camada própria na frente do repositório invalida só o comerciante afetado, em vez da tabela inteira, e funciona com escritas feitas em outro processo.
 

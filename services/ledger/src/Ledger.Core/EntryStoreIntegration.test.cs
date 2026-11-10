@@ -1,7 +1,7 @@
 // @anchors
 //   code: ESITS
 //   layer: test
-//   updated_at: 2026-11-06
+//   updated_at: 2026-11-09
 using Ledger.Core;
 using Ledger.Infrastructure;
 using Npgsql;
@@ -189,5 +189,21 @@ public sealed class EntryStoreIntegrationTests : IAsyncLifetime
 
         Assert.Single(first.Messages);
         Assert.Empty(second.Messages);
+    }
+
+    [Fact(DisplayName = "OBRLY-R04 a deferred event is not claimed until its wait ends")]
+    public async Task SkipsDeferredRows()
+    {
+        await Record("request-0001");
+        var outbox = new PostgresOutbox(dataSource, Clock);
+
+        await using (var batch = await outbox.ClaimPendingAsync(10, CancellationToken.None))
+        {
+            await batch.DeferAsync(Assert.Single(batch.Messages).Id, CancellationToken.None);
+            await batch.CommitAsync(CancellationToken.None);
+        }
+
+        await using var next = await outbox.ClaimPendingAsync(10, CancellationToken.None);
+        Assert.Empty(next.Messages);
     }
 }

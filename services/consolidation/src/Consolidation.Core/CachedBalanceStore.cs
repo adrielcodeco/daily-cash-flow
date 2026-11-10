@@ -1,7 +1,7 @@
 // @anchors
 //   code: CBSCD
 //   ref: CBSTR
-//   updated_at: 2026-11-06
+//   updated_at: 2026-11-09
 namespace Consolidation.Core;
 
 /// <summary>Puts the optional cache in front of the store, so the use cases do not know it exists.</summary>
@@ -11,10 +11,13 @@ public sealed class CachedBalanceStore(IBalanceStore inner, IQueryCache cache, C
     public const string PeriodRoute = "balances.period";
     public const string Table = "daily_balance";
 
+    /// <summary>True when the policy names a route or the table of this store; targets of other services do not count.</summary>
+    public static bool IsOn(CachePolicy policy) => policy.Covers(DailyRoute, Table) || policy.Covers(PeriodRoute, Table);
+
     public async Task<bool> ApplyOnceAsync(BalanceChange change, CancellationToken cancellationToken)
     {
         var applied = await inner.ApplyOnceAsync(change, cancellationToken);
-        if (applied)
+        if (applied && IsOn(policy))
         {
             await TryInvalidateAsync(change.MerchantId, cancellationToken);
         }
@@ -32,7 +35,15 @@ public sealed class CachedBalanceStore(IBalanceStore inner, IQueryCache cache, C
             ? ReadThroughAsync(merchantId, $"period:{start:O}:{end:O}", () => inner.GetPeriodAsync(merchantId, start, end, cancellationToken), cancellationToken)
             : inner.GetPeriodAsync(merchantId, start, end, cancellationToken);
 
-    public Task ResetAsync(CancellationToken cancellationToken) => inner.ResetAsync(cancellationToken);
+    public async Task ResetAsync(CancellationToken cancellationToken)
+    {
+        await inner.ResetAsync(cancellationToken);
+        if (IsOn(policy))
+        {
+            // Unlike a single event, a reset that leaves the cache behind would serve balances that no longer exist.
+            await cache.InvalidateAllAsync(cancellationToken);
+        }
+    }
 
     private async Task<T> ReadThroughAsync<T>(Guid merchantId, string key, Func<Task<T>> load, CancellationToken cancellationToken)
         where T : class

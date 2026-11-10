@@ -1,7 +1,8 @@
 // @anchors
 //   code: CNAPI
+//   ref: CNHTP
 //   layer: host
-//   updated_at: 2026-11-06
+//   updated_at: 2026-11-09
 using Consolidation.Api;
 using Consolidation.Core;
 using Consolidation.Infrastructure;
@@ -62,13 +63,16 @@ app.UseExceptionHandler(handler => handler.Run(async context =>
 
     await Results.Problem(title: title, statusCode: status, type: type).ExecuteAsync(context);
 }));
+
+// Refusals that carry no body of their own (a malformed request, a missing token, a missing scope) answer in the problem format too.
+app.UseStatusCodePages();
 app.UseApiSecurity();
 
 app.MapHealthChecks("/health/live", new HealthCheckOptions { Predicate = check => check.Name == "live" });
 app.MapHealthChecks("/health/ready", new HealthCheckOptions { Predicate = check => check.Tags.Contains("ready") });
 
 static bool TryReadMerchant(HttpContext context, out Guid merchantId) =>
-    Guid.TryParse(context.User.FindFirst(ApiSecurity.MerchantClaim)?.Value, out merchantId);
+    Guid.TryParse(context.User.FindFirst(ApiSecurity.MerchantClaim)?.Value, out merchantId) && merchantId != Guid.Empty;
 
 static IResult UnknownMerchant() =>
     Results.Problem(title: "The merchant could not be identified.", statusCode: StatusCodes.Status401Unauthorized);

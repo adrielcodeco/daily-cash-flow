@@ -32,7 +32,7 @@ As perguntas e a evidência de cada nota estão na [avaliação dos radares](../
 
 ## Leitura do radar
 
-Confiabilidade é o pilar decisivo, porque atende ao requisito central. O monolito modular ganha em simplicidade e custo, mas compartilha processo, banco e ciclo de deploy, então uma falha pode atingir os lançamentos. Funções serverless também isolam falhas, mas pioram a latência em partida a frio e dificultam a execução local.
+Confiabilidade é o critério decisivo contra o monolito e o barramento, porque atende ao requisito central. O monolito modular ganha em simplicidade e custo, mas compartilha processo, banco e ciclo de deploy, então uma falha pode atingir os lançamentos. Funções serverless também isolam falhas e empatam em confiabilidade, mas perdem em desempenho, pela partida a frio, e em escalabilidade.
 
 SOA com barramento perde por ser desproporcional: um barramento central é demais para dois serviços. O monolito foi eliminado por veto, porque o mesmo processo faria a escrita depender do consolidado.
 

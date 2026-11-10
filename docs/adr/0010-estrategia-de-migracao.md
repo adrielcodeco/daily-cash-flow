@@ -31,7 +31,7 @@ As perguntas e a evidência de cada nota estão na [avaliação dos radares](../
 
 ## Leitura do radar
 
-A migração de uma vez é a mais simples e a mais barata em tempo, mas concentra todo o risco em uma janela e tem retorno difícil. A escrita dupla parece segura, mas é o mesmo problema que a outbox resolve: duas gravações sem transação comum geram divergência. O strangler fig custa mais e dura mais, mas permite parar e voltar em cada fase, e esse é o pilar decisivo em um sistema financeiro.
+A migração de uma vez é a mais simples e a mais barata em tempo, mas concentra todo o risco em uma janela e tem retorno difícil. A escrita dupla parece segura, mas é o mesmo problema que a outbox resolve: duas gravações sem transação comum geram divergência. O strangler fig custa mais e dura mais, mas permite parar e voltar em cada fase, e a confiabilidade é o critério decisivo em um sistema financeiro.
 
 ## Consequências
 

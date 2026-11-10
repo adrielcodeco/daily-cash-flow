@@ -1,7 +1,7 @@
 // @anchors
 //   code: IBSTR
 //   ref: APENT
-//   updated_at: 2026-11-06
+//   updated_at: 2026-11-09
 namespace Consolidation.Core;
 
 public sealed record BalanceChange(
@@ -42,4 +42,7 @@ public interface IQueryCache
 
     /// <summary>Makes every cached value of the merchant unreachable.</summary>
     Task InvalidateAsync(Guid merchantId, CancellationToken cancellationToken);
+
+    /// <summary>Makes every cached value of every merchant unreachable, and fails when it cannot.</summary>
+    Task InvalidateAllAsync(CancellationToken cancellationToken);
 }

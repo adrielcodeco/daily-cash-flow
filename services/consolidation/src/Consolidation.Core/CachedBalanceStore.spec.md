@@ -1,6 +1,6 @@
 <!-- @anchors
   code: CBSTR
-  updated_at: 2026-11-06
+  updated_at: 2026-11-09
 -->
 
 # CachedBalanceStore — o cache configurável das consultas
@@ -42,6 +42,10 @@ O cache expira sozinho. Perder o evento por causa dele seria pior que servir um 
 
 Sem isso, um valor antigo poderia ficar sob a versão nova se uma invalidação acontecesse durante a consulta.
 
+### CBSTR-R09 — o reset descarta o cache de todos os comerciantes, ou falha
+
+Depois de um reset, um saldo em cache seria de uma base que não existe mais. Ao contrário de um evento, o reset é um comando do operador, que pode repeti-lo, então a falha do cache o interrompe.
+
 ## Uso das regras
 
 | Regra | Usa |
@@ -54,6 +58,7 @@ Sem isso, um valor antigo poderia ficar sob a versão nova se uma invalidação 
 | `CBSTR-R06` | `merchantId` |
 | `CBSTR-R07` | `merchantId` |
 | `CBSTR-R08` | `merchantId` |
+| `CBSTR-R09` | `policy` |
 
 ## Decisões em aberto
 

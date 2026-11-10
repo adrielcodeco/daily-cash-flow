@@ -6,7 +6,9 @@ O cálculo usa 730 horas por mês, preços de lista e nenhum desconto por compro
 
 Equipe, retorno e ponto de equilíbrio estão em [ROI e custo operacional](19-roi-e-custo-operacional.md).
 
-O Memorystore só é necessário se o cache for ligado, e ele vem desligado por padrão. Os totais abaixo incluem esse serviço, então são um teto nesse item.
+Não há API Gateway: o balanceador com Cloud Armor encaminha direto ao Cloud Run, conforme a D-159 do [registro de decisões](15-registro-de-decisoes.md).
+
+O Memorystore só é necessário se o cache for ligado, e ele vem desligado por padrão. Por isso, o cenário Início não inclui esse serviço. O cenário Crescimento inclui, porque nele o cache passa a proteger o banco das leituras, conforme o [ADR-0005](adr/0005-modelo-de-leitura.md).
 
 ## Cenários
 
@@ -25,16 +27,14 @@ Esses volumes são premissas minhas. O PDF só informa o pico de 50 req/s.
 | Cloud Run | 6 instâncias sempre ativas de 1 vCPU e 0,5 GiB | 359,51 |
 | Cloud SQL lançamentos | HA, 2 vCPU, 8 GiB, 50 GiB SSD e 50 GiB de backup | 335,03 |
 | Cloud SQL consolidado | HA, 2 vCPU, 8 GiB, 50 GiB SSD e 50 GiB de backup | 335,03 |
-| Memorystore for Redis | Basic, 1 GiB | 63,51 |
 | Pub/Sub | 10 GiB por mês, sem a cota gratuita | 0,39 |
 | Balanceador | Regras de encaminhamento e 20 GiB | 28,22 |
 | Cloud Armor Standard | 1 política, 5 regras e 13 milhões de requisições | 19,75 |
-| API Gateway | 13 milhões de chamadas, 2 milhões grátis | 33,00 |
 | Cloud NAT e Private Service Connect | Gateway NAT e um endpoint | 40,15 |
 | Cloud Logging | 30 GiB, 50 GiB grátis | 0,00 |
 | Cloud Monitoring | 300 MiB, 150 MiB grátis | 38,70 |
 | Cloud Trace | 7 milhões de spans, 2,5 milhões grátis | 0,90 |
-| **Total** | | **1.254,20** |
+| **Total** | | **1.157,69** |
 
 ## Crescimento
 
@@ -43,16 +43,15 @@ Esses volumes são premissas minhas. O PDF só informa o pico de 50 req/s.
 | Cloud Run | 13 instâncias sempre ativas de 1 vCPU e 0,5 GiB | 778,94 |
 | Cloud SQL lançamentos | HA, 4 vCPU, 16 GiB, 500 GiB SSD e 500 GiB de backup | 922,07 |
 | Cloud SQL consolidado | HA, 4 vCPU, 16 GiB, 200 GiB SSD e 200 GiB de backup | 733,07 |
-| Memorystore for Redis | Standard, 5 GiB | 197,10 |
+| Memorystore for Redis | Standard, 5 GiB, preço a confirmar | 635,10 |
 | Pub/Sub | 100 GiB por mês, sem a cota gratuita | 3,91 |
 | Balanceador | Regras de encaminhamento e 200 GiB | 32,54 |
 | Cloud Armor Standard | 1 política, 5 regras e 130 milhões de requisições | 107,50 |
-| API Gateway | 130 milhões de chamadas, 2 milhões grátis | 384,00 |
 | Cloud NAT e Private Service Connect | Gateway NAT e um endpoint | 40,15 |
 | Cloud Logging | 300 GiB, 50 GiB grátis | 125,00 |
 | Cloud Monitoring | 1000 MiB, 150 MiB grátis | 219,30 |
 | Cloud Trace | 65 milhões de spans, 2,5 milhões grátis | 12,50 |
-| **Total** | | **3.556,07** |
+| **Total** | | **3.610,07** |
 
 ## Preços usados
 
@@ -64,22 +63,21 @@ Esses volumes são premissas minhas. O PDF só informa o pico de 50 req/s.
 | Cloud SQL Enterprise | GiB de memória por hora, com HA | US$ 0,021 | São Paulo |
 | Cloud SQL | GiB de SSD por hora, com HA | US$ 0,00069863 | São Paulo |
 | Cloud SQL | GiB de backup por hora | US$ 0,000164384 | São Paulo |
-| Memorystore | GiB por hora, Basic M1 | US$ 0,087 | São Paulo |
-| Memorystore | GiB por hora, Standard M2 | US$ 0,054 | São Paulo |
+| Memorystore | GiB por hora, Basic M1, a confirmar na calculadora do GCP | US$ 0,087 | São Paulo |
+| Memorystore | GiB por hora, Standard, estimado em 2 vezes o Basic M1 por causa da réplica, a confirmar na calculadora do GCP | US$ 0,174 | São Paulo |
 | Balanceador | Até cinco regras, por hora | US$ 0,038 | São Paulo |
 | Balanceador | GiB de entrada ou saída | US$ 0,012 | São Paulo |
 | Pub/Sub | TiB | US$ 40 | Todas |
 | Cloud Armor | Política por hora | US$ 0,006849315 | Global |
 | Cloud Armor | Regra por hora | US$ 0,001369863 | Global |
 | Cloud Armor | Milhão de requisições, política global | US$ 0,75 | Global |
-| API Gateway | Milhão de chamadas, acima de 2 milhões | US$ 3,00 | Global |
 | Cloud NAT | Gateway por hora, valor usado como teto | US$ 0,045 | Tabela genérica |
 | Private Service Connect | Endpoint por hora | US$ 0,01 | Tabela genérica |
 | Cloud Logging | GiB, acima de 50 GiB | US$ 0,50 | Global |
 | Cloud Monitoring | MiB, acima de 150 MiB | US$ 0,258 | Global |
 | Cloud Trace | Milhão de spans, acima de 2,5 milhões | US$ 0,20 | Global |
 
-Pontos a confirmar na calculadora: o preço do Memorystore Standard apareceu igual ao do Basic na mesma faixa, e o Cloud NAT usa um valor genérico.
+Pontos a confirmar na calculadora: os dois preços do Memorystore e o do Cloud NAT. A leitura de 06/11/2026 trouxe para o Standard um valor por GiB menor que o do Basic, o que não faz sentido, porque o Standard mantém uma réplica. Até a confirmação, o Standard usa 2 vezes o preço do Basic M1. Como faixas maiores costumam ter preço menor por GiB, esse valor é um teto. O Cloud NAT usa um valor genérico.
 
 ## Licenças
 
@@ -98,11 +96,11 @@ No alvo, a identidade usa o provedor corporativo do cliente, cujo custo não est
 | Medida | Efeito estimado |
 |---|---|
 | Desconto por compromisso de 1 ano no Cloud SQL | Cerca de 25% sobre vCPU e memória |
-| Deixar o cache para depois, já que a carga medida não mostrou ganho de latência | US$ 63,51 por mês no início |
+| Manter o cache desligado no Crescimento, se a carga no GCP confirmar que ele não traz ganho, como na medição local | US$ 635,10 por mês no Crescimento |
 | Banco do consolidado sem HA, porque ele pode ser reconstruído | Cerca de metade do custo dessa instância, com RTO maior |
 | Instância mínima de 1 nas APIs fora do pico | Reduz o Cloud Run, com menos folga contra falhas |
 
-O maior custo é o Cloud SQL com alta disponibilidade, que corresponde a 53% do cenário Início. Ele protege a fonte da verdade, por isso a primeira economia deve vir do consolidado, e não do banco de lançamentos.
+O maior custo é o Cloud SQL com alta disponibilidade, que corresponde a 58% do cenário Início. Ele protege a fonte da verdade, por isso a primeira economia deve vir do consolidado, e não do banco de lançamentos.
 
 ## Fora desta estimativa
 

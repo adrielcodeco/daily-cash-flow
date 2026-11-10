@@ -26,14 +26,15 @@ Exigir `Idempotency-Key` de 8 a 128 caracteres nas escritas. A chave fica em `id
 | Operabilidade | 2 | 5 | 3 | 5 |
 | Simplicidade | 2 | 5 | 3 | 5 |
 | Economia | 1 | 5 | 3 | 5 |
-| **Resultado** | | **4,88** | Eliminada | Eliminada |
+| Segurança | 2 | 5 | 1 | 4 |
+| **Resultado** | | **4,89** | Eliminada | Eliminada |
 
 As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0016).
 <!-- radar:end -->
 
 ## Leitura do radar
 
-A chave no Redis é mais rápida, mas colocaria o cache no caminho de toda escrita, contrariando o P1, e uma queda do cache permitiria duplicar lançamentos. Deduplicar por conteúdo bloquearia dois lançamentos legítimos iguais no mesmo dia. A chave no banco custa uma gravação a mais e dá a garantia na mesma transação.
+A chave no Redis teria a mesma nota em desempenho, mas colocaria o cache no caminho de toda escrita, contrariando o P1, e uma queda do cache permitiria duplicar lançamentos. Ela também tem a nota mais baixa em segurança: o Redis autentica por uma senha única da instância, e a separação entre comerciantes dependeria só do prefixo da chave. Deduplicar por conteúdo bloquearia dois lançamentos legítimos iguais no mesmo dia. A chave no banco custa uma gravação a mais e dá a garantia na mesma transação.
 
 ## Consequências
 

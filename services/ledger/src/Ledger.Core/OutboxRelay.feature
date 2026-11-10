@@ -2,7 +2,7 @@
 # @anchors
 #   code: OBRFT
 #   ref: OBRLY
-#   updated_at: 2026-11-05
+#   updated_at: 2026-11-09
 #   layer: feature
 
 @OBRLY @ledger
@@ -30,3 +30,15 @@ Funcionalidade: OutboxRelay — enviar sem perder eventos
     E que a mensageria falha no segundo evento
     Quando o lote é enviado
     Então apenas o primeiro evento fica marcado como publicado
+
+  @OBRLY-R03 @nivel-unit @P1
+  Cenário: o encerramento no meio do lote mantém o que foi confirmado
+    Dado três eventos pendentes
+    Quando o publicador é encerrado durante o segundo envio
+    Então só o primeiro fica marcado como publicado
+
+  @OBRLY-R04 @nivel-unit @P1
+  Cenário: o evento que falhou espera antes de nova tentativa
+    Dado três eventos pendentes
+    Quando o segundo envio falha
+    Então o segundo evento é adiado

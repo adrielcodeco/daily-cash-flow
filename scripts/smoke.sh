@@ -93,9 +93,10 @@ post_entry CREDIT 7000 "$YESTERDAY" >/dev/null
 wait_for_closing -4400
 expect 7000 "$(balance_field openingCents)" 'opening'
 
-echo '6. The query survives a cache outage'
+# With the default configuration the API does not use Redis at all; load-test.sh covers the cache on and down.
+echo '6. The query does not depend on Redis'
 docker compose stop redis >/dev/null 2>&1
-expect -4400 "$(balance_field closingCents)" 'closing without cache'
+expect -4400 "$(balance_field closingCents)" 'closing with Redis down'
 docker compose start redis >/dev/null 2>&1
 
 echo '7. Ledger keeps accepting entries while consolidation is down'
@@ -181,5 +182,9 @@ print(len(names & {'ledger-api','outbox-publisher','consolidation-consumer'}))")
   sleep 1
 done
 expect 3 "$SERVICES" 'services in the trace'
+
+echo '15. The balances match the ledger'
+for _ in $(seq 1 30); do ./scripts/reconcile.sh >/dev/null 2>&1 && break; sleep 1; done
+./scripts/reconcile.sh
 
 echo 'smoke test passed'

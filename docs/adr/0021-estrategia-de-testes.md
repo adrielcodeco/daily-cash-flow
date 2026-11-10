@@ -10,7 +10,7 @@ O princípio P7 exige prova para cada afirmação de qualidade. Parte das garant
 
 ## Decisão
 
-Testar o domínio com xUnit e falsos, os adaptadores com PostgreSQL real por Testcontainers, o fluxo completo com `smoke.sh`, a carga com k6 e a qualidade dos testes com Stryker.NET. A mutação roda sobre o núcleo e fica fora do CI.
+Testar o domínio com xUnit e falsos, os adaptadores com PostgreSQL real por Testcontainers, a fronteira HTTP em memória, com tokens assinados no teste (D-152), o fluxo completo com `smoke.sh`, a carga com k6 e a qualidade dos testes com Stryker.NET. A mutação roda sobre o núcleo e fica fora do CI.
 
 ## Opções
 

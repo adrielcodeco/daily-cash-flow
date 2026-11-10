@@ -1,7 +1,7 @@
 // @anchors
 //   code: RCETS
 //   ref: RCENT
-//   updated_at: 2026-11-05
+//   updated_at: 2026-11-09
 //   layer: test
 // Refs:
 //   feature : services/ledger/src/Ledger.Core/RecordEntry.feature
@@ -86,11 +86,22 @@ public sealed class RecordEntryTests
         Assert.Equal(RuleKind.Conflict, refusal.Kind);
     }
 
+    [Fact(DisplayName = "RCENT-R05 an empty description is other content than no description")]
+    public async Task SeparatesEmptyDescription()
+    {
+        await Record(35000);
+
+        var refusal = await Assert.ThrowsAsync<DomainRuleException>(() =>
+            useCase.ExecuteAsync(Credit(35000) with { Description = "" }, Key, CancellationToken.None));
+
+        Assert.Equal("idempotency_key_reused", refusal.Code);
+    }
+
     [Fact(DisplayName = "RCENT-R06 a concurrent call receives the winning entry")]
     public async Task ReturnsConcurrentWinner()
     {
         var winner = LedgerEntry.Record(Merchant, EntryType.Credit, 35000, Today, null, Clock);
-        var hash = IdempotentWriter.HashOf($"record|{EntryType.Credit}|35000|{Today:O}|");
+        var hash = RecordEntry.HashOf(Credit(35000));
         store.RacingWinner = (Key, new ClaimedEntry(hash, winner.Id), winner);
 
         var entry = await Record(35000);

@@ -6,7 +6,7 @@
 
 ## Contexto
 
-Cada serviço tem poucas consultas, e as mais importantes usam recursos próprios do PostgreSQL: `FOR UPDATE SKIP LOCKED` na outbox e `ON CONFLICT` na idempotência e no agregado.
+Cada serviço tem poucas consultas, e as mais importantes usam recursos próprios do PostgreSQL: `FOR UPDATE SKIP LOCKED` na outbox e `ON CONFLICT` na idempotência do consumidor, no agregado e na recolocação de eventos na outbox. A chave de idempotência da escrita usa uma restrição de unicidade, com a violação tratada no código.
 
 ## Decisão
 
@@ -23,14 +23,15 @@ Usar Dapper sobre Npgsql, com SQL escrito à mão dentro dos adaptadores de infr
 | Aderência ao problema | 3 | 5 | 5 | 3 |
 | Desempenho | 2 | 5 | 5 | 4 |
 | Simplicidade | 2 | 5 | 4 | 5 |
-| **Resultado** | | **5,00** | **4,82** | **4,27** |
+| Segurança | 2 | 5 | 5 | 4 |
+| **Resultado** | | **5,00** | **4,85** | **4,23** |
 
 As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0012).
 <!-- radar:end -->
 
 ## Leitura do radar
 
-As notas ficaram próximas, e nenhuma opção compromete um requisito. Dapper reduz o código de leitura e mantém visível o SQL que sustenta as garantias, ao custo de uma dependência a mais. EF Core ajudaria num modelo grande, mas aqui seus benefícios são pequenos, e as consultas críticas precisariam de SQL de qualquer forma.
+As notas ficaram próximas, e nenhuma opção compromete um requisito. Dapper reduz o código de leitura e mantém visível o SQL que sustenta as garantias, ao custo de uma dependência a mais. EF Core ajudaria num modelo grande, mas aqui seus benefícios são pequenos, e as consultas críticas precisariam de SQL de qualquer forma. Em segurança, Dapper e Npgsql empatam, com o SQL escrito à vista para revisar. EF Core fica um ponto atrás, porque gera o SQL. A row-level security não muda entre as opções.
 
 ## Consequências
 
@@ -46,7 +47,7 @@ As notas ficaram próximas, e nenhuma opção compromete um requisito. Dapper re
 
 ## Revisão de 2026-11-06
 
-A primeira versão usava Npgsql direto. A reavaliação às cegas favoreceu o Dapper, que elimina o mapeamento manual e mantém o SQL explícito, e a troca foi feita.
+A primeira versão usava Npgsql direto. A reavaliação às cegas favoreceu o Dapper, que reduz o mapeamento manual e mantém o SQL explícito; a conversão para o domínio segue explícita, e a troca foi feita.
 
 ## Gatilho de revisão
 

@@ -6,7 +6,7 @@
 
 ## Contexto
 
-As APIs têm poucas rotas, consumidas por clientes externos pelo gateway, e o contrato é publicado em OpenAPI.
+As APIs têm poucas rotas, consumidas por clientes externos pelo balanceador, e o contrato é publicado em OpenAPI.
 
 ## Decisão
 
@@ -31,7 +31,7 @@ As perguntas e a evidência de cada nota estão na [avaliação dos radares](../
 
 ## Leitura do radar
 
-Controllers organizam bem APIs grandes, mas acrescentam estrutura para um punhado de rotas. gRPC tem melhor desempenho, mas dificulta o consumo externo e o gateway, e a medição mostrou que a latência não é o gargalo. Minimal APIs mantêm cada rota curta e próxima do caso de uso.
+Controllers organizam bem APIs grandes, mas acrescentam estrutura para um punhado de rotas. gRPC empata com Minimal APIs em desempenho, mas dificulta o consumo externo pelo navegador e por ferramentas HTTP comuns, e a medição mostrou que a latência não é o gargalo. Minimal APIs mantêm cada rota curta e próxima do caso de uso.
 
 ## Consequências
 

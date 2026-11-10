@@ -77,6 +77,11 @@ A nota compara a opção com a necessidade deste sistema. Ela não mede o produt
 | 2 | Relevante para esta decisão |
 | 1 | Secundário |
 
+Duas regras completam a tabela:
+
+- **Segurança pesa no mínimo 2** em toda decisão em que é critério, porque este é um sistema financeiro. Ela entra em toda decisão cujas opções mudam a exposição dos dados, e pesa 3 quando a decisão afeta diretamente o isolamento entre comerciantes ou as exigências de uma instituição financeira (PRE-11).
+- **A equipe reduzida é premissa, e não restrição do desafio.** A premissa PRE-12 diz que a operação fica com uma equipe reduzida, sem especialista dedicado em infraestrutura, e ela pesa em Operabilidade.
+
 ## Catálogo de critérios
 
 | Critério | Perguntas | Veto |

@@ -10,10 +10,10 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 |---|---|---|
 | Alinhamento com o negócio | 4 | Peso fixo da régua. O estilo define se lançamentos sobrevive à queda do consolidado. |
 | Confiabilidade | 3 | Afeta diretamente a restrição de lançamentos não cair com o consolidado e a de não perder lançamento confirmado. |
-| Operabilidade | 3 | Afeta diretamente a restrição de equipe pequena sem especialista em infraestrutura. |
+| Operabilidade | 3 | Afeta diretamente a operação pela equipe reduzida, sem especialista em infraestrutura (premissa PRE-12). |
 | Desempenho | 2 | Relevante: o estilo define saltos de rede e partida a frio no caminho das metas de p95. |
 | Escalabilidade | 2 | Relevante: o estilo define se leitura e escrita crescem separadas até 500 req/s. |
-| Simplicidade | 2 | Relevante: a quantidade de partes pesa para equipe pequena. |
+| Simplicidade | 2 | Relevante: a quantidade de partes muda bastante entre as opções. |
 | Economia | 1 | Secundário: o estilo muda o custo fixo, mas em valores pequenos diante do banco. |
 
 ### Dois serviços orientados a eventos (escolhida)
@@ -73,11 +73,12 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Alinhamento com o negócio | 4 | Peso fixo da régua. |
 | Aderência ao problema | 3 | Há dois bancos, e a garantia exigida é que commit e aviso não divirjam. |
 | Confiabilidade | 3 | A decisão define se a escrita depende do consolidado e se um lançamento confirmado chega a ele. |
-| Operabilidade | 3 | A equipe é pequena e não tem especialista de infraestrutura, e a integração roda continuamente. |
+| Operabilidade | 3 | A integração roda continuamente, e a operação fica com uma equipe reduzida, sem especialista em infraestrutura (premissa PRE-12). |
 | Desempenho | 2 | A opção pode acrescentar chamada ao caminho da escrita, com meta de p95 de 300 ms. |
 | Escalabilidade | 2 | O fluxo de eventos acompanha a escrita no cenário de 500 req/s. |
 | Simplicidade | 2 | As opções variam muito em componentes e conceitos novos. |
 | Economia | 1 | O volume é baixo e o custo pesa pouco frente à garantia. |
+| Segurança | 2 | Relevante: as opções mudam quem lê os lançamentos e por qual canal, mas nenhuma expõe um comerciante a outro. |
 
 ### Outbox na transação e mensageria (escolhida)
 
@@ -91,6 +92,7 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Escalabilidade | 5 | Vários relays podem dividir o trabalho com bloqueio de linhas e lotes; 500 eventos por segundo não foi medido, mas é carga modesta para inserts em PostgreSQL. |
 | Simplicidade | 2 | Acrescenta relay e mensageria, exige entender entrega ao menos uma vez e idempotência, e pede código próprio ou biblioteca; roda localmente. |
 | Economia | 3 | A mensageria é paga por volume, com custo inicial baixo (não verificado), e o relay é pequeno. |
+| Segurança | 5 | O relay publica com identidade própria e permissão só no tópico, o evento leva o mínimo, sem a descrição, cada envio fica registrado na outbox junto do lançamento, e o consumidor grava sob row-level security (docs/07-seguranca.md). |
 
 ### CDC do banco
 
@@ -104,6 +106,7 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Escalabilidade | 3 | Atende 500 req/s, mas um slot tem um único leitor, o que torna o conector um gargalo que não escala sozinho. |
 | Simplicidade | 3 | Exige conector, replicação lógica e slots, conceitos fora do dia a dia .NET, com pouco código próprio e execução local possível em contêiner. |
 | Economia | 3 | Soma conector e mensageria; o Datastream cobra por GiB (https://cloud.google.com/datastream/pricing) e o custo do conector próprio é estimativa não verificada; operar slots e conector tende a passar de 1 pessoa-mês por ano (não verificado). |
+| Segurança | 2 | O conector usa um papel próprio, mas com privilégio de replicação, que lê o log de todas as tabelas e de todos os comerciantes, inclusive a descrição, sem passar pela row-level security; o deslocamento do conector não é trilha de auditoria. |
 
 ### Publicar na mensageria durante a requisição (eliminada)
 
@@ -117,6 +120,7 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Escalabilidade | 5 | Publicação direta em mensageria gerenciada escala com as instâncias da API, sem etapa intermediária. |
 | Simplicidade | 4 | Acrescenta a mensageria, mas é conceito conhecido, com pouco código e emulador local. |
 | Economia | 3 | A mensageria é paga por volume; o custo inicial fica baixo (não verificado) e o esforço não inclui a reconciliação de divergências. |
+| Segurança | 4 | Usa a mesma identidade e o mesmo tópico com permissão restrita, e o consumidor grava sob row-level security, mas não fica registro do que foi publicado para auditar. |
 
 ### HTTP síncrono entre os serviços (eliminada)
 
@@ -130,6 +134,7 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Escalabilidade | 3 | O consolidado vira gargalo da escrita, e o esforço cresce a cada consumidor. |
 | Simplicidade | 5 | Sem componente novo, com conceito conhecido e execução local simples. |
 | Economia | 4 | Sem componente pago, mas o consolidado precisa escalar junto com as escritas. |
+| Segurança | 3 | A chamada pode exigir identidade de serviço e o consolidado grava sob row-level security, mas abre no consolidado uma rota de escrita na rede, e o aviso só fica no log de requisição, sem registro ligado ao lançamento. |
 
 ## ADR-0003
 
@@ -139,12 +144,13 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 |---|---|---|
 | Alinhamento com o negócio | 4 | Peso fixo da régua. |
 | Confiabilidade | 3 | O transporte separa lançamentos do consolidado e carrega lançamentos confirmados: afeta duas restrições diretamente. |
-| Operabilidade | 3 | A equipe não tem especialista em infraestrutura, e um broker é o item mais pesado de operar nesta decisão. |
+| Operabilidade | 3 | Um broker é o item mais pesado de operar nesta decisão, e a equipe é reduzida, sem especialista em infraestrutura (premissa PRE-12). |
 | Aderência ao problema | 2 | O volume é de dezenas de eventos por segundo, então importa se a ferramenta tem o tamanho certo. |
 | Economia | 2 | O custo fixo mínimo varia muito entre as opções. |
 | Escalabilidade | 2 | Há cenário de 500 req/s e novos consumidores, mas não é a restrição imediata. |
-| Simplicidade | 2 | A equipe é pequena e o conceito novo pesa. |
+| Simplicidade | 2 | Relevante: o número de partes e de conceitos novos muda entre as opções. |
 | Portabilidade | 1 | Trocar de transporte é possível, mas não há exigência de sair do GCP. |
+| Segurança | 2 | Relevante: o broker carrega dados de lançamento, e as opções mudam o controle de acesso e a superfície a proteger, sem expor um comerciante a outro. |
 
 ### Pub/Sub (escolhida)
 
@@ -158,6 +164,7 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Escalabilidade | 5 | Não há capacidade a dimensionar pelo cliente, e 500 mensagens por segundo está muito abaixo do uso típico do serviço; limite exato por projeto não verificado. |
 | Simplicidade | 4 | Acrescenta um serviço, mas tópico, assinatura e confirmação são conceitos simples, e há emulador local, com limitações documentadas (https://docs.cloud.google.com/pubsub/docs/emulator). |
 | Portabilidade | 2 | A API é proprietária e o emulador pode diferir do serviço real, mas as mensagens são transitórias e não prendem dados (https://docs.cloud.google.com/pubsub/docs/emulator). |
+| Segurança | 5 | Permissão por IAM em cada tópico e assinatura, sem servidor nem senha a guardar; o Cloud Audit Logs registra mudanças de configuração e de permissão, mas não cada publicação, que fica registrada na outbox (https://docs.cloud.google.com/pubsub/docs/audit-logging). |
 
 ### Kafka gerenciado
 
@@ -171,6 +178,7 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Escalabilidade | 4 | Atende 500 mensagens por segundo com folga, mas partições e vCPUs são dimensionados pela equipe (https://cloud.google.com/managed-service-for-apache-kafka/pricing). |
 | Simplicidade | 3 | Partições, offsets e rebalanceamento de grupos não são conceitos de uma equipe .NET típica, embora rode localmente em contêiner. |
 | Portabilidade | 5 | Usa o protocolo Apache Kafka aberto, que roda igual em contêiner local e pode migrar de fornecedor (https://docs.cloud.google.com/managed-service-for-apache-kafka/docs/overview). |
+| Segurança | 5 | Os clientes autenticam por IAM, sem chave com OAUTHBEARER, e o acesso por tópico vai em ACLs do Kafka, que é configuração, não código; mudanças no cluster ficam no Cloud Audit Logs (https://docs.cloud.google.com/managed-service-for-apache-kafka/docs/authentication-kafka). |
 
 ### RabbitMQ autogerenciado
 
@@ -184,6 +192,7 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Escalabilidade | 2 | 500 mensagens por segundo cabem em um cluster pequeno, mas cada fila tem um líder, o que cria gargalo, e crescer exige ação manual. |
 | Simplicidade | 4 | A biblioteca é conhecida em .NET e roda em contêiner local, mas acrescenta um serviço a executar. |
 | Portabilidade | 5 | AMQP é padrão aberto, e o mesmo broker roda no local e em qualquer nuvem. |
+| Segurança | 2 | Usuários e senhas ficam no próprio broker, fora do IAM, e VMs, SSH e o painel de gestão são novos caminhos de acesso; só a separação por virtual host e permissão é configuração do broker, e não há trilha de auditoria central. |
 
 ## ADR-0004
 
@@ -194,12 +203,12 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Alinhamento com o negócio | 4 | Peso fixo da régua. |
 | Aderência ao problema | 3 | Afeta diretamente a restrição de não perder lançamento: o contexto exige transação entre lançamento e evento e agregação por período. |
 | Confiabilidade | 3 | Afeta diretamente a restrição de não perder lançamento confirmado. |
-| Operabilidade | 3 | Afeta diretamente a restrição de equipe sem especialista em infraestrutura. |
+| Operabilidade | 3 | Afeta diretamente a operação pela equipe reduzida, sem especialista em infraestrutura (premissa PRE-12). |
 | Segurança | 3 | Afeta diretamente a restrição de dados isolados entre comerciantes. |
 | Desempenho | 2 | Relevante: o banco está no caminho das metas de p95. |
 | Economia | 2 | Relevante: o banco tende a ser o maior custo fixo. |
 | Escalabilidade | 2 | Relevante: o banco precisa acompanhar o cenário de 500 req/s. |
-| Simplicidade | 2 | Relevante: modelo novo pesa para equipe pequena. |
+| Simplicidade | 2 | Relevante: o modelo de dados novo muda o número de conceitos e de partes. |
 | Portabilidade | 1 | Secundário: o provedor está definido, mas dados financeiros têm vida longa. |
 
 ### Cloud SQL para PostgreSQL (escolhida)
@@ -273,7 +282,7 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Desempenho | 3 | A decisão afeta diretamente a meta de leitura p95 de 200 ms a 50 req/s. |
 | Confiabilidade | 2 | O modelo define se a leitura pesa na escrita e como o saldo se recompõe. |
 | Escalabilidade | 2 | O crescimento previsto é 500 req/s, e o custo de leitura muda conforme o histórico. |
-| Operabilidade | 2 | Cache e event store acrescentam operação a uma equipe pequena. |
+| Operabilidade | 2 | Cache e event store acrescentam operação a uma equipe reduzida (premissa PRE-12). |
 | Simplicidade | 2 | As opções vão de uma consulta até um novo paradigma. |
 | Economia | 1 | O custo importa, mas o valor em jogo é pequeno. |
 
@@ -283,7 +292,7 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 |---|---|---|
 | Alinhamento com o negócio | 5 | Atende a meta com folga e mantém a leitura separada da escrita, usando só o banco já existente. |
 | Aderência ao problema | 4 | Combina com dados relacionais e transação, mas o retroativo exige lógica no consumidor para refletir nos dias seguintes. |
-| Desempenho | 5 | Medido: p95 de 6,54 ms a 50 leituras por segundo, 0% de falha, sem chamada adicional. |
+| Desempenho | 5 | Medido: p95 de 7,55 ms a 50 leituras por segundo, 0% de falha, sem chamada adicional, e 7,57 ms com dois anos de histórico. |
 | Confiabilidade | 5 | O agregado fica isolado da escrita e pode ser recomposto a partir dos eventos. |
 | Escalabilidade | 4 | Leitura indexada por dia deve atender 500 req/s (não medido); a API escala sozinha, mas o banco é dimensionado à mão. |
 | Operabilidade | 5 | Usa o PostgreSQL gerenciado, sem nada novo. |
@@ -296,7 +305,7 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 |---|---|---|
 | Alinhamento com o negócio | 5 | Atende a meta e existe como serviço gerenciado no GCP, mas sem ganho medido no volume atual. |
 | Aderência ao problema | 2 | Cache e banco não têm transação comum, o retroativo exige invalidar dias seguintes, e o ganho não aparece neste volume. |
-| Desempenho | 3 | Medido: p95 de 7,55 ms, 0% de falha, pior que 6,54 ms sem cache; acrescenta chamada e uma operação a mais por leitura. |
+| Desempenho | 3 | Medido: p95 de 7,91 ms, 0% de falha, pior que 7,55 ms sem cache; acrescenta chamada e uma operação a mais por leitura. |
 | Confiabilidade | 4 | O dado continua no banco e a leitura pode cair nele, mas a invalidação pode falhar e servir saldo antigo depois de um retroativo. |
 | Escalabilidade | 3 | Reduz carga no banco em volumes maiores (não medido), mas o Redis é novo nó a dimensionar. |
 | Operabilidade | 4 | O Memorystore é gerenciado, sem domínio informado na equipe. |
@@ -337,13 +346,13 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 |---|---|---|
 | Alinhamento com o negócio | 4 | Peso fixo da régua. |
 | Confiabilidade | 3 | A plataforma define se a queda do consolidado fica isolada de lançamentos. |
-| Operabilidade | 3 | Sem especialista em infraestrutura, a plataforma define quase toda a carga de operação. |
+| Operabilidade | 3 | A plataforma define quase toda a carga de operação, e a equipe não tem especialista em infraestrutura (premissa PRE-12). |
 | Desempenho | 2 | Partida a frio pode afetar o p95 das metas. |
 | Economia | 2 | São processos pequenos, então o custo fixo importa. |
 | Escalabilidade | 2 | O crescimento a 500 req/s passa pela plataforma, mas 50 req/s não é o limite aqui. |
-| Simplicidade | 2 | Equipe pequena, e o modelo da plataforma entra no dia a dia. |
+| Simplicidade | 2 | Relevante: o modelo da plataforma entra no dia a dia, e o número de partes muda entre as opções. |
 | Portabilidade | 1 | Todas rodam contêineres, então pesa pouco. |
-| Segurança | 1 | A identidade da carga muda pouco entre as opções, mas a superfície de acesso muda. |
+| Segurança | 2 | Relevante: a plataforma define a superfície de acesso, como SSH, a API de controle do cluster e a identidade de cada carga, e isso pesa em um sistema financeiro. |
 
 ### Cloud Run (escolhida)
 
@@ -394,7 +403,7 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Critério | Peso | Por que este peso |
 |---|---|---|
 | Alinhamento com o negócio | 4 | Peso fixo da régua. A stack do cliente está na lista de restrições. |
-| Operabilidade | 3 | Afeta diretamente a restrição de equipe pequena: quem mantém precisa dominar a tecnologia. |
+| Operabilidade | 3 | Afeta diretamente a operação pela equipe reduzida (premissa PRE-12): quem mantém precisa dominar a tecnologia. |
 | Desempenho | 2 | Relevante: o runtime influi em latência e consumo, embora o trabalho seja dominado por E/S. |
 | Simplicidade | 2 | Relevante: curva de aprendizado e código próprio mudam conforme a linguagem. |
 | Economia | 1 | Secundário: as linguagens são gratuitas, e o custo vem da manutenção. |
@@ -453,17 +462,17 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Economia | 1 | Há diferença de custo, mas ela é secundária. |
 | Portabilidade | 1 | O padrão importa para clientes externos, mas é secundário. |
 
-### Gateway, OIDC e JWT (escolhida)
+### OIDC e JWT, validados em cada serviço (escolhida)
 
 | Critério | Nota | Evidência |
 |---|---|---|
 | Alinhamento com o negócio | 5 | Dá identidade e escopos por padrões conhecidos, e o ASP.NET Core valida JWT; o provedor de identidade ainda precisa ser escolhido. |
 | Segurança | 4 | Tokens curtos e assinados trazem a identidade e facilitam auditar por cliente, mas o client secret segue como credencial do cliente, e o isolamento dos dados depende de outra camada. |
-| Operabilidade | 5 | Gateway gerenciado e validação JWT nativa no .NET; o provedor de identidade pode ser gerenciado. |
-| Simplicidade | 4 | Acrescenta gateway e provedor de identidade, mas o conceito é conhecido e a API testa localmente com tokens de desenvolvimento. |
-| Desempenho | 4 | O gateway acrescenta um salto, mas a validação do JWT é local, sem chamada por requisição. |
-| Economia | 3 | O API Gateway tem 2 milhões de chamadas grátis por mês e depois US$ 3 por milhão (https://cloud.google.com/api-gateway/pricing), logo o custo acompanha a carga, e 500 req/s contínuos passariam de US$ 3 mil por mês; o provedor de identidade não foi precificado. |
-| Portabilidade | 4 | OIDC e JWT são abertos, mas o gateway não existe no ambiente local. |
+| Operabilidade | 5 | Validação JWT nativa no ASP.NET Core, e a borda é o balanceador com Cloud Armor, ambos gerenciados; o provedor de identidade pode ser gerenciado. |
+| Simplicidade | 4 | Acrescenta o provedor de identidade, mas o conceito é conhecido e a API testa localmente com tokens de desenvolvimento. |
+| Desempenho | 5 | Sem salto extra no caminho: a validação do JWT é local em cada serviço, com as chaves públicas em cache, sem chamada por requisição. |
+| Economia | 4 | Sem cobrança por chamada na borda: o balanceador e o Cloud Armor já existem para todas as opções, e o token vale para muitas requisições, logo o custo cresce menos que a carga; o provedor de identidade ainda é componente a pagar e não foi precificado. |
+| Portabilidade | 5 | OIDC e JWT são abertos, e a mesma validação roda no ambiente local, com Keycloak, e na nuvem, com qualquer provedor OIDC. |
 
 ### Chaves de API
 
@@ -496,11 +505,11 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Critério | Peso | Por que este peso |
 |---|---|---|
 | Alinhamento com o negócio | 4 | Peso fixo da régua. |
-| Operabilidade | 3 | Sem especialista, a telemetria é o meio de operar e de provar as metas de p95. |
+| Operabilidade | 3 | A equipe não tem especialista em infraestrutura (premissa PRE-12), e a telemetria é o meio de operar e de provar as metas de p95. |
 | Economia | 2 | Licença e volume de dados variam bastante entre as opções. |
 | Portabilidade | 2 | O fato exige que a instrumentação rode no local e no GCP, mas isso não é restrição do negócio. |
 | Simplicidade | 2 | A instrumentação entra em todos os serviços. |
-| Segurança | 1 | Dados de telemetria podem sair para terceiros, o que é secundário mas real em uma instituição financeira. |
+| Segurança | 2 | Relevante: dados de telemetria podem sair para terceiros, e em um sistema financeiro Segurança pesa no mínimo 2. |
 
 ### OpenTelemetry (escolhida)
 
@@ -544,8 +553,8 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Alinhamento com o negócio | 4 | Peso fixo da régua. |
 | Aderência ao problema | 3 | Afeta diretamente a mesma restrição: sistema financeiro exige garantia sem compensação frágil. |
 | Confiabilidade | 3 | Afeta diretamente a restrição de não perder lançamento confirmado durante a migração. |
-| Operabilidade | 2 | Relevante: a migração precisa ser conduzida por equipe pequena. |
-| Simplicidade | 2 | Relevante: código temporário de migração pesa para equipe pequena. |
+| Operabilidade | 2 | Relevante: a migração precisa ser conduzida por uma equipe reduzida (premissa PRE-12). |
+| Simplicidade | 2 | Relevante: o código temporário de migração muda bastante entre as opções. |
 | Economia | 1 | Secundário: é custo temporário. |
 
 ### Strangler fig, por fases (escolhida)
@@ -588,7 +597,7 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Critério | Peso | Por que este peso |
 |---|---|---|
 | Alinhamento com o negócio | 4 | Peso fixo da régua. |
-| Operabilidade | 3 | Muitos comerciantes multiplicam migrações e operação para uma equipe pequena. |
+| Operabilidade | 3 | Muitos comerciantes multiplicam migrações e operação para uma equipe reduzida (premissa PRE-12). |
 | Segurança | 3 | A decisão define diretamente o isolamento de dados exigido. |
 | Aderência ao problema | 2 | A garantia de isolamento pode ser nativa ou ficar na aplicação. |
 | Economia | 2 | Comerciantes pequenos não pagam um custo fixo por unidade. |
@@ -658,6 +667,7 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Aderência ao problema | 3 | As consultas críticas sustentam a garantia de lançamento confirmado por meio de FOR UPDATE SKIP LOCKED e ON CONFLICT. |
 | Desempenho | 2 | A biblioteca fica no caminho das metas de p95, embora o banco domine o tempo. |
 | Simplicidade | 2 | Há poucas consultas, então o peso da ferramenta precisa ser proporcional. |
+| Segurança | 2 | Relevante: a camada de acesso define como o SQL chega ao banco, embora a row-level security e o papel de cada processo não mudem entre as opções. |
 
 ### Dapper (escolhida)
 
@@ -667,6 +677,7 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Aderência ao problema | 5 | Envia o SQL escrito tal como está, com transação do Npgsql, e o tamanho combina com poucas consultas. |
 | Desempenho | 5 | A camada é fina e o mapeamento é leve; não acrescenta chamada de rede. |
 | Simplicidade | 5 | É uma biblioteca pequena e conhecida, que evita o mapeamento manual de resultados. |
+| Segurança | 5 | O processo usa o papel próprio do banco e parâmetros, a row-level security continua no banco, o SQL fica escrito no código e fácil de revisar, e a biblioteca não abre novo caminho ao dado. |
 
 ### Npgsql com SQL explícito
 
@@ -676,6 +687,7 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Aderência ao problema | 5 | Dá acesso direto a todo o SQL do PostgreSQL e às transações, sem camada extra, e cabe em poucas consultas. |
 | Desempenho | 5 | É a camada mais fina, sem mapeador, e não acrescenta chamada de rede. |
 | Simplicidade | 4 | Não acrescenta dependência, mas o mapeamento de leitura é código próprio, ainda que pequeno por haver poucas consultas. |
+| Segurança | 5 | O processo usa o papel próprio do banco e parâmetros, a row-level security continua no banco, e o SQL fica escrito no código e fácil de revisar. |
 
 ### EF Core
 
@@ -685,6 +697,7 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Aderência ao problema | 3 | Tem transações, mas não tem API própria de lock, então a consulta crítica vai em SQL escrito à mão, e o ORM sobra para poucas consultas (https://milanjovanovic.tech/blog/pessimistic-locking-ef-core-postgresql). |
 | Desempenho | 4 | Cumpre as metas, mas rastreamento de mudanças e tradução de consultas consomem mais por operação; números não verificados. |
 | Simplicidade | 5 | É biblioteca conhecida, com pouco código de mapeamento, e roda no local com PostgreSQL. |
+| Segurança | 4 | Usa o mesmo papel do banco e parâmetros, e a row-level security continua no banco, mas o SQL é gerado pelo ORM, o que torna mais difícil revisar o que chega ao banco. |
 
 ## ADR-0013
 
@@ -693,11 +706,12 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Critério | Peso | Por que este peso |
 |---|---|---|
 | Alinhamento com o negócio | 4 | Peso fixo da régua. |
-| Simplicidade | 3 | Afeta diretamente a restrição de equipe pequena: a ferramenta não deve trazer runtime ou modelo a manter. |
+| Simplicidade | 3 | A ferramenta não deve trazer runtime ou modelo a manter, e o número de partes muda entre as opções. |
 | Aderência ao problema | 2 | Relevante: a aplicação não usa ORM, e a ferramenta precisa combinar com isso. |
 | Operabilidade | 2 | Relevante: a ferramenta roda em toda implantação. |
 | Economia | 1 | Secundário: as opções têm versão gratuita. |
 | Portabilidade | 1 | Secundário: scripts SQL sobrevivem à troca da ferramenta. |
+| Segurança | 2 | Relevante: as migrações criam papéis, permissões e políticas de row-level security, e rodam com a credencial de dono do esquema. |
 
 ### DbUp com SQL (escolhida)
 
@@ -709,6 +723,7 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Operabilidade | 5 | Não há serviço a operar, e usa a linguagem que a equipe domina; a parada depende do script, não da ferramenta. |
 | Economia | 5 | Licença MIT (github.com/DbUp/DbUp), sem custo e com manutenção pequena. |
 | Portabilidade | 5 | Os scripts são SQL padrão do PostgreSQL e valem com outra ferramenta. |
+| Segurança | 5 | A migração roda uma vez, pela opção --migrate, com o papel de dono, separado dos papéis da API e do worker, e os papéis e políticas de row-level security ficam em SQL revisável, com journal no banco (docker-compose.yml e V005). |
 
 ### Flyway
 
@@ -720,6 +735,7 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Operabilidade | 4 | Não há serviço permanente, mas a equipe .NET não domina o runtime da ferramenta. |
 | Economia | 5 | A edição Community é gratuita; a Redgate já moveu recursos entre edições (github.com/flyway/flyway/issues/3881), o que é risco a acompanhar, sem custo hoje. |
 | Portabilidade | 5 | Scripts SQL padrão e edição de código aberto. |
+| Segurança | 5 | Também roda à parte, com o papel de dono, e mantém SQL revisável e histórico com checksum no banco; o contêiner a mais recebe a mesma credencial que o job do DbUp receberia. |
 
 ### EF Core Migrations
 
@@ -731,6 +747,7 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Operabilidade | 5 | Bundles e scripts idempotentes rodam sem serviço novo (learn.microsoft.com/ef/core/managing-schemas/migrations/applying), e a equipe conhece a ferramenta. |
 | Economia | 4 | Sem custo de licença, mas manter um modelo só para o esquema é trabalho contínuo. Esforço não medido. |
 | Portabilidade | 5 | Código aberto, igual em local e nuvem, e o esquema resultante é PostgreSQL comum. |
+| Segurança | 4 | O bundle roda à parte, com o papel de dono, mas as migrações são C#, e papéis e políticas de row-level security iriam em SQL bruto dentro delas, o que exige gerar o script para revisar (learn.microsoft.com/ef/core/managing-schemas/migrations/applying). |
 
 ## ADR-0014
 
@@ -790,11 +807,11 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 |---|---|---|
 | Alinhamento com o negócio | 4 | Peso fixo da régua. |
 | Confiabilidade | 3 | O envio é o caminho do lançamento confirmado até o consolidado e precisa resistir à queda da mensageria. |
-| Operabilidade | 3 | Sem especialista, um componente de replicação pesa diretamente na restrição da equipe. |
+| Operabilidade | 3 | Um componente de replicação pesa diretamente na operação pela equipe reduzida, sem especialista (premissa PRE-12). |
 | Aderência ao problema | 2 | O volume é de dezenas de eventos por segundo, e a opção precisa ter esse tamanho. |
 | Desempenho | 2 | A opção pode tocar o commit da escrita, que tem meta de p95. |
 | Escalabilidade | 2 | O envio precisa acompanhar o cenário de 500 req/s. |
-| Simplicidade | 2 | Equipe pequena, e o código de envio é próprio. |
+| Simplicidade | 2 | Relevante: o código de envio é próprio, e o número de partes muda entre as opções. |
 | Economia | 1 | O custo só muda de forma relevante com um conector à parte. |
 
 ### Consulta periódica com SKIP LOCKED (escolhida)
@@ -847,8 +864,9 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Confiabilidade | 3 | Afeta diretamente a restrição de não perder lançamento: repetir a operação precisa ser seguro. |
 | Desempenho | 2 | Relevante: a verificação fica no caminho da escrita. |
 | Operabilidade | 2 | Relevante: um novo armazenamento precisa ser operado. |
-| Simplicidade | 2 | Relevante: componente e código a mais pesam para equipe pequena. |
+| Simplicidade | 2 | Relevante: componente e código a mais mudam entre as opções. |
 | Economia | 1 | Secundário: os valores são pequenos. |
+| Segurança | 2 | Relevante: a chave e a resposta guardada são dados do comerciante, e a opção decide onde ficam e quem as lê. |
 
 ### Idempotency-Key guardada no banco (escolhida)
 
@@ -861,6 +879,7 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Operabilidade | 5 | Usa o banco que a equipe já opera, sem peça nova. |
 | Simplicidade | 5 | Uma tabela ou coluna e uma restrição única, e o teste roda no mesmo banco local. |
 | Economia | 5 | Sem componente novo, só um pouco de armazenamento. |
+| Segurança | 5 | A tabela de chaves fica no banco já protegido, com o papel da API e row-level security forçada por comerciante (V005), e a chave liga cada lançamento à requisição que o criou. |
 
 ### Idempotency-Key guardada no Redis (eliminada)
 
@@ -873,6 +892,7 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Operabilidade | 3 | Gerenciado, mas o failover deixa o serviço indisponível por cerca de 30 s (FAQ do Memorystore); não há informação de que a equipe domine Redis. |
 | Simplicidade | 3 | Acrescenta um componente e código para tratar o intervalo entre a chave e o commit. |
 | Economia | 3 | Componente pago novo; com US$ 0,064 por GiB-hora em Iowa no Standard, 1 GiB fica perto de US$ 47 por mês (fitgap, terceiro); preço de São Paulo não verificado. |
+| Segurança | 1 | O Memorystore for Redis autentica por uma string AUTH única da instância, e não por identidade (https://docs.cloud.google.com/memorystore/docs/redis/about-redis-auth), acrescenta um armazenamento com dados de comerciantes, a chave expira sem trilha, e a separação entre comerciantes depende só do prefixo da chave no código. |
 
 ### Deduplicar por conteúdo do lançamento (eliminada)
 
@@ -885,6 +905,7 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Operabilidade | 5 | Não há nada novo a operar. |
 | Simplicidade | 5 | Só um hash e um índice único, sem contrato novo com o cliente. |
 | Economia | 5 | Não há componente novo. |
+| Segurança | 4 | Fica no banco já protegido, com o papel da API e row-level security, mas a repetição descartada não deixa registro de qual requisição foi recusada. |
 
 ## ADR-0017
 
@@ -946,9 +967,9 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Aderência ao problema | 3 | A opção precisa cobrar a garantia de refazer tudo, e a retenção limitada e o saldo parcial tocam isso diretamente. |
 | Confiabilidade | 3 | A reconstrução precisa recuperar todo lançamento confirmado sem afetar a escrita. |
 | Escalabilidade | 2 | O fato medido de 74 por segundo define o tempo de reconstrução à medida que o histórico cresce. |
-| Operabilidade | 2 | Reconstruir é operação rara, feita por equipe sem especialista. |
+| Operabilidade | 2 | Reconstruir é operação rara, feita por uma equipe sem especialista (premissa PRE-12). |
 | Segurança | 2 | Ler o banco do outro serviço abre caminho novo de acesso. |
-| Simplicidade | 2 | Equipe pequena, e o mecanismo raramente roda. |
+| Simplicidade | 2 | Relevante: o mecanismo raramente roda, e o número de partes muda entre as opções. |
 | Economia | 1 | O custo é esporádico. |
 
 ### Reenvio dos lançamentos pela outbox (escolhida)
@@ -957,7 +978,7 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 |---|---|---|
 | Alinhamento com o negócio | 5 | Respeita a fronteira entre serviços, parte da fonte da verdade e também serve para alimentar um novo consumidor, como conciliação. |
 | Aderência ao problema | 3 | Cobre todo o histórico, mas, medido, a API respondeu saldo parcial durante o processo, o que exige marcar reconstrução na aplicação, e 74 por segundo fica curto para histórico grande. |
-| Confiabilidade | 4 | Refaz tudo a partir dos lançamentos, com repetição idempotente, mas precisa ser acionado manualmente; medido: 8.809 lançamentos em 126 s. |
+| Confiabilidade | 4 | Refaz tudo a partir dos lançamentos, com repetição idempotente, mas precisa ser acionado manualmente; medido: 13.104 lançamentos em 178 s. |
 | Escalabilidade | 2 | Medido: cerca de 74 por segundo, abaixo do cenário de 500 req/s, e o reenvio divide o canal com os eventos em tempo real; paralelismo com SKIP LOCKED não foi medido. |
 | Operabilidade | 4 | Não há componente novo, mas a reconstrução não é transparente para o leitor: medido, a API respondeu saldo parcial durante o processo. |
 | Segurança | 4 | Os dados seguem pelo canal já autorizado, sem novo acesso, e o isolamento entre comerciantes não muda. |
@@ -1042,7 +1063,7 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Critério | Peso | Por que este peso |
 |---|---|---|
 | Alinhamento com o negócio | 4 | Peso fixo da régua. |
-| Operabilidade | 2 | A equipe .NET mantém a API, e o gateway exige contrato conhecido. |
+| Operabilidade | 2 | A equipe .NET mantém a API, e o contrato publicado em OpenAPI precisa ser conhecido de quem a consome. |
 | Portabilidade | 2 | Clientes externos usam a API, e o padrão do contrato importa. |
 | Simplicidade | 2 | Poucas rotas pedem pouca estrutura. |
 | Desempenho | 1 | Medido: a latência não é gargalo, com p95 abaixo de 12 ms. |
@@ -1086,7 +1107,7 @@ Este documento guarda a evidência de cada nota. O método está em [método dos
 | Alinhamento com o negócio | 4 | Peso fixo da régua. |
 | Aderência ao problema | 3 | Parte das garantias mora no SQL, e a estratégia precisa exercitar exatamente isso. |
 | Eficácia de detecção | 3 | Critério próprio: o catálogo não mede se a estratégia acha defeitos, e os fatos medidos giram em torno disso, ligados à restrição de não perder lançamento. |
-| Simplicidade | 2 | Equipe pequena mantém essa estrutura. |
+| Simplicidade | 2 | Relevante: a quantidade de estrutura de teste a manter muda entre as opções. |
 | Economia | 1 | O custo de CI é secundário aqui. |
 
 Perguntas de Eficácia de detecção: ["Exercita as garantias onde elas moram, inclusive unicidade, travas e ON CONFLICT em banco real?","Detecta regressão de domínio com retorno rápido?","Exercita a validação de entrada na fronteira da API?","Aponta a causa da falha sem investigação longa?","Veto: deixa sem exercício uma garantia exigida."]

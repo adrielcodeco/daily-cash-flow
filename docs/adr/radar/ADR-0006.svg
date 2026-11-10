@@ -30,7 +30,7 @@
 <line x1="380" y1="245" x2="232.3" y2="219.0" stroke="#d9d8d3" stroke-width="1"/>
 <text x="220.5" y="220.9" text-anchor="end" font-size="12" fill="#0b0b0b">Portabilidade (1)</text>
 <line x1="380" y1="245" x2="283.6" y2="130.1" stroke="#d9d8d3" stroke-width="1"/>
-<text x="275.9" y="124.9" text-anchor="end" font-size="12" fill="#0b0b0b">Segurança (1)</text>
+<text x="275.9" y="124.9" text-anchor="end" font-size="12" fill="#0b0b0b">Segurança (2)</text>
 <polygon points="380.0,155.0 476.4,130.1 468.6,229.4 509.9,320.0 400.5,301.4 339.0,357.8 302.1,290.0 232.3,219.0 322.1,176.1" fill="#1baf7a" fill-opacity="0.08" stroke="#1baf7a" stroke-width="2" stroke-linejoin="round" stroke-dasharray="2 4"/>
 <polygon points="380.0,148.0 387.0,155.0 380.0,162.0 373.0,155.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Compute Engine, Alinhamento com o negócio: 3</title></polygon>
 <polygon points="476.4,123.1 483.4,130.1 476.4,137.1 469.4,130.1" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>Compute Engine, Confiabilidade: 5</title></polygon>
@@ -63,11 +63,11 @@
 <circle cx="302.9" cy="153.1" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Cloud Run, Segurança: 4</title></circle>
 <line x1="24" y1="465" x2="60" y2="465" stroke="#2a78d6" stroke-width="2"/>
 <circle cx="42.0" cy="465.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"></circle>
-<text x="70" y="469" font-size="13" fill="#0b0b0b">Cloud Run (escolhida): 4,50</text>
+<text x="70" y="469" font-size="13" fill="#0b0b0b">Cloud Run (escolhida): 4,48</text>
 <line x1="24" y1="491" x2="60" y2="491" stroke="#eb6834" stroke-width="2" stroke-dasharray="7 4"/>
 <rect x="37.0" y="486.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"></rect>
-<text x="70" y="495" font-size="13" fill="#0b0b0b">GKE Autopilot: 4,35</text>
+<text x="70" y="495" font-size="13" fill="#0b0b0b">GKE Autopilot: 4,29</text>
 <line x1="24" y1="517" x2="60" y2="517" stroke="#1baf7a" stroke-width="2" stroke-dasharray="2 4"/>
 <polygon points="42.0,510.0 49.0,517.0 42.0,524.0 35.0,517.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"></polygon>
-<text x="70" y="521" font-size="13" fill="#0b0b0b">Compute Engine: 3,60</text>
+<text x="70" y="521" font-size="13" fill="#0b0b0b">Compute Engine: 3,57</text>
 </svg>

@@ -5,8 +5,8 @@ REALM=daily-cash-flow
 ALL_SCOPES='"api-audience","entries.read","entries.write","balances.read"'
 
 admin_token() {
-  curl -sf "$KEYCLOAK/realms/master/protocol/openid-connect/token" \
-    -d grant_type=password -d client_id=admin-cli -d username=admin -d password=local-only |
+  curl -sf "$KEYCLOAK/realms/$REALM/protocol/openid-connect/token" \
+    -d grant_type=client_credentials -d client_id=local-admin -d client_secret=local-only |
     python3 -c "import json,sys; print(json.load(sys.stdin)['access_token'])"
 }
 

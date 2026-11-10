@@ -37,17 +37,30 @@ components:
       name: entry.recorded
       title: Lançamento registrado
       contentType: application/json
+      headers:
+        type: object
+        description: Atributos da mensagem no Pub/Sub
+        properties:
+          eventId:
+            type: string
+            format: uuid
+            description: Igual ao `eventId` do corpo
+          type:
+            const: entry.recorded
+          traceparent:
+            type: string
+            description: Contexto W3C do traço da requisição que registrou o lançamento. Ausente quando não houve traço
       payload:
         $ref: './entry-recorded.v1.schema.json'
       examples:
         - name: credit
           payload:
-            eventId: 9f1c2e7a-6b1d-4c55-9a53-2f0b7c8e1d10
+            eventId: 01a1acc4-a32c-7d3c-9b21-5c1e8f0d2b77
             type: entry.recorded
             version: 1
-            occurredAt: '2026-11-05T14:32:10-03:00'
+            occurredAt: '2026-11-05T17:32:10.412+00:00'
             merchantId: 3a7d1c44-0f6e-4f55-8d2a-1b9c2e6f7a10
-            entryId: 6e2b9f10-7d3c-4b21-9a44-5c1e8f0d2b77
+            entryId: 01a1acc4-a32c-7d3c-9b21-5c1e8f0d2b77
             entryType: CREDIT
             amountCents: 35000
             accountingDate: '2026-11-05'

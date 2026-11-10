@@ -280,7 +280,7 @@ pre { margin: 0; background: var(--ink); color: var(--sheet); padding: .7rem .9r
             <tr><td>Arquitetura-alvo</td><td>docs/03, com C4</td></tr>
             <tr><td>Justificativa das escolhas</td><td>21 ADRs, com radar</td></tr>
             <tr><td>Linguagem dominada</td><td>C# com .NET 10</td></tr>
-            <tr><td>Testes</td><td>129 testes, carga, resiliência e mutação</td></tr>
+            <tr><td>Testes</td><td>206 testes, carga, resiliência e mutação</td></tr>
             <tr><td>README</td><td>Como funciona e como rodar</td></tr>
             <tr><td>Repositório público</td><td>GitHub</td></tr>
             <tr><td>Documentação no repositório</td><td>Pasta docs</td></tr>
@@ -371,7 +371,7 @@ pre { margin: 0; background: var(--ink); color: var(--sheet); padding: .7rem .9r
         <rect class="edge" x="0" y="20" width="150" height="410"/>
         <text class="name" x="14" y="52">Borda</text>
         <text class="sub" x="14" y="76">Comerciante,</text><text class="sub" x="14" y="94">por API, com JWT</text>
-        <text class="sub" x="14" y="340">Cloud Armor,</text><text class="sub" x="14" y="358">balanceador e</text><text class="sub" x="14" y="376">API Gateway</text>
+        <text class="sub" x="14" y="340">Cloud Armor e</text><text class="sub" x="14" y="358">balanceador</text>
 
         <rect class="box" x="210" y="40" width="185" height="84"/>
         <text class="name" x="224" y="74">ledger-api</text><text class="sub" x="224" y="98">Cloud Run</text>
@@ -432,7 +432,7 @@ pre { margin: 0; background: var(--ink); color: var(--sheet); padding: .7rem .9r
       <div><strong id="v-balance">R$ 0,00</strong>Saldo consolidado</div>
       <div><strong id="v-lag">Em dia</strong>Situação do saldo</div>
     </div>
-    <p class="note">Simulação didática, com R$ 1,00 por lançamento. A medição real parou o consolidado por 60 s e congelou a mensageria por 20 s, sob 50 escritas por segundo: 4.501 enviadas, 0 recusadas, saldo fechado em 2 s.</p>
+    <p class="note">Simulação didática, com R$ 1,00 por lançamento. A medição real parou o consolidado por 60 s e congelou a mensageria por 20 s, sob 50 escritas por segundo: 4.500 enviadas, 0 recusadas, saldo fechado em 1 s.</p>
   </div>
 </section>
 
@@ -445,7 +445,7 @@ pre { margin: 0; background: var(--ink); color: var(--sheet); padding: .7rem .9r
       <li><span>Lançamento e evento são gravados na mesma transação</span><span>Ou os dois existem, ou nenhum. Não há evento sem lançamento</span></li>
       <li><span>O publicador lê a outbox com <code>SKIP LOCKED</code> e envia à mensageria</span><span>Mensageria fora: os eventos esperam na outbox. Entrega pelo menos uma vez</span></li>
       <li><span>O consumidor registra o <code>eventId</code> e soma no agregado do dia, na mesma transação</span><span>Evento repetido é desfeito. Fora de ordem não importa, porque a soma comuta</span></li>
-      <li><span>A API do consolidado lê o saldo sem chamar Lançamentos</span><span>Saldo perdido pode ser refeito: 8.809 lançamentos reenviados em 126 s</span></li>
+      <li><span>A API do consolidado lê o saldo sem chamar Lançamentos</span><span>Saldo perdido pode ser refeito: 13.104 lançamentos reenviados em 178 s</span></li>
     </ol>
     <p class="note">Consumidor limitado a 16 eventos em processamento. Sem isso, a volta de uma queda esgotava as conexões e derrubava a API de saldo: o teste de resiliência mostrou o defeito.</p>
   </div>
@@ -479,7 +479,7 @@ pre { margin: 0; background: var(--ink); color: var(--sheet); padding: .7rem .9r
     <div class="cols radar-cols grow">
       <div id="radar" class="chart"></div>
       <div class="stack">
-        <h3>ADR-0001, estilo arquitetural</h3>
+        <h3><a href="https://github.com/adrielcodeco/daily-cash-flow/blob/main/docs/adr/0001-estilo-arquitetural.md">ADR-0001</a>, estilo arquitetural</h3>
         <ul class="legend">
           <li><i style="background:var(--credit)"></i><span>Dois serviços por eventos</span><b>4,24</b></li>
           <li><i style="background:var(--held)"></i><span>Funções serverless</span><b>4,06</b></li>
@@ -490,7 +490,7 @@ pre { margin: 0; background: var(--ink); color: var(--sheet); padding: .7rem .9r
           <li>Cada critério tem 4 perguntas, e a nota é 1 mais os sins</li>
           <li>Pesos de 1 a 3, e Alinhamento com o negócio sempre vale 4</li>
           <li>Opção com veto é eliminada</li>
-          <li>Cada decisão usa de 4 a 10 critérios e de 2 a 4 opções</li>
+          <li>Cada decisão usa de 5 a 10 critérios e de 2 a 4 opções</li>
           <li>A avaliação foi feita às cegas, e todo ajuste do arquiteto fica registrado</li>
         </ul>
       </div>
@@ -519,7 +519,7 @@ pre { margin: 0; background: var(--ink); color: var(--sheet); padding: .7rem .9r
 
 <section class="slide" aria-label="Segurança">
   <div class="sheet">
-    <h2>Um erro no código não entrega o dado de outro comerciante</h2>
+    <h2>O comerciante vem do token, e o banco confere de novo</h2>
     <div class="scroll grow">
       <table class="big">
         <thead><tr><th>Barreira</th><th>Onde</th><th>O que foi verificado</th><th>Situação</th></tr></thead>
@@ -527,9 +527,9 @@ pre { margin: 0; background: var(--ink); color: var(--sheet); padding: .7rem .9r
           <tr><td>JWT, com o comerciante vindo do token</td><td>APIs</td><td>Sem token: 401. <code>X-Merchant-Id</code> é ignorado</td><td><span class="tag done">Testado</span></td></tr>
           <tr><td>Escopo por operação</td><td>APIs</td><td>Sem o escopo: 403. Dado de outro comerciante: 404</td><td><span class="tag done">Testado</span></td></tr>
           <tr><td>Limite de 100 req/s por comerciante</td><td>APIs</td><td>Um recebe 429, e outro segue com 200</td><td><span class="tag done">Testado</span></td></tr>
-          <tr><td>Row-level security</td><td>PostgreSQL</td><td>Sem comerciante definido, nenhuma linha volta</td><td><span class="tag done">Testado</span></td></tr>
-          <tr><td>Papéis separados para migração, API e worker</td><td>PostgreSQL</td><td>A API não altera nem exclui lançamento</td><td><span class="tag done">Testado</span></td></tr>
-          <tr><td>Cloud Armor e API Gateway</td><td>Borda</td><td>Nada: depende de implantação</td><td><span class="tag plan">Proposto</span></td></tr>
+          <tr><td>Row-level security</td><td>PostgreSQL</td><td>Sem comerciante definido, nenhuma linha volta. O consumidor também grava sob a política</td><td><span class="tag done">Testado</span></td></tr>
+          <tr><td>Papéis separados para migração, API e worker</td><td>PostgreSQL</td><td>A API não altera nem exclui lançamento. Só o publicador da outbox passa por cima da política</td><td><span class="tag done">Testado</span></td></tr>
+          <tr><td>Cloud Armor e balanceador</td><td>Borda</td><td>Nada: depende de implantação</td><td><span class="tag plan">Proposto</span></td></tr>
         </tbody>
       </table>
     </div>
@@ -578,21 +578,22 @@ pre { margin: 0; background: var(--ink); color: var(--sheet); padding: .7rem .9r
   <div class="sheet">
     <h2>Os dois requisitos foram medidos, e as metas passaram com folga</h2>
     <div class="figures">
-      <div class="figure"><b>0</b><span>escritas recusadas em 4.501, com o consolidado fora por 60 s</span><small>Meta: nenhuma</small></div>
+      <div class="figure"><b>0</b><span>escritas recusadas em 4.500, com o consolidado fora por 60 s</span><small>Meta: nenhuma</small></div>
       <div class="figure"><b>50 req/s</b><span>de leitura por 5 minutos, com 10 escritas por segundo ao mesmo tempo</span><small>Meta: 50 req/s</small></div>
-      <div class="figure"><b>0%</b><span>de perda em 15.001 leituras</span><small>Meta: no máximo 5%</small></div>
+      <div class="figure"><b>0%</b><span>de perda em 15.000 leituras</span><small>Meta: no máximo 5%</small></div>
     </div>
     <div class="scroll grow">
       <table>
         <thead><tr><th>Cenário de carga, cada um com 50 leituras por segundo</th><th class="num">Falhas</th><th class="num">Leitura p95</th><th class="num">Leitura máx.</th><th class="num">Escrita p95</th></tr></thead>
         <tbody>
-          <tr><td>Cache desligado, 5 min</td><td class="num">0</td><td class="num">7,24 ms</td><td class="num">374,08 ms</td><td class="num">11,89 ms</td></tr>
-          <tr><td>Cache ligado, 5 min</td><td class="num">0</td><td class="num">7,69 ms</td><td class="num">408,55 ms</td><td class="num">13,22 ms</td></tr>
-          <tr><td>Cache ligado com o Redis fora, 2 min</td><td class="num">0</td><td class="num">7,26 ms</td><td class="num">20,72 ms</td><td class="num">11,83 ms</td></tr>
+          <tr><td>Cache desligado, 5 min</td><td class="num">0</td><td class="num">7,55 ms</td><td class="num">32,63 ms</td><td class="num">13,14 ms</td></tr>
+          <tr><td>Cache ligado, 5 min</td><td class="num">0</td><td class="num">7,91 ms</td><td class="num">410,58 ms</td><td class="num">12,85 ms</td></tr>
+          <tr><td>Cache ligado com o Redis fora, 2 min</td><td class="num">0</td><td class="num">7,61 ms</td><td class="num">21,01 ms</td><td class="num">12,65 ms</td></tr>
+          <tr><td>Cache desligado, dois anos de histórico, 2 min</td><td class="num">0</td><td class="num">7,57 ms</td><td class="num">485,56 ms</td><td class="num">11,76 ms</td></tr>
         </tbody>
       </table>
     </div>
-    <p class="note">Tudo na mesma máquina, com emulador do Pub/Sub e histórico pequeno: referência local, sem valor de previsão para o GCP. O cache não trouxe ganho nesta carga, por isso vem desligado. Os picos de 400 ms não têm causa investigada.</p>
+    <p class="note">Tudo na mesma máquina, com emulador do Pub/Sub e 50 comerciantes: referência local, sem valor de previsão para o GCP. O cache não trouxe ganho nem com dois anos de histórico, por isso vem desligado. Os picos isolados de 400 ms não têm causa investigada.</p>
   </div>
 </section>
 
@@ -612,9 +613,9 @@ pre { margin: 0; background: var(--ink); color: var(--sheet); padding: .7rem .9r
       </table>
     </div>
     <div class="figures compact">
-      <div class="figure"><b>129</b><span>testes, com PostgreSQL real em contêiner</span></div>
-      <div class="figure"><b>97,56%</b><span>de mutação em <code>Ledger.Core</code></span></div>
-      <div class="figure"><b>97,92%</b><span>de mutação em <code>Consolidation.Core</code></span></div>
+      <div class="figure"><b>206</b><span>testes, com PostgreSQL real e a API em memória</span></div>
+      <div class="figure"><b>96,59%</b><span>de mutação em <code>Ledger.Core</code></span></div>
+      <div class="figure"><b>98,11%</b><span>de mutação em <code>Consolidation.Core</code></span></div>
     </div>
     <p class="note">Mutação avalia os testes que existem e não aponta os cenários que faltam: o último defeito passou por 69 testes e por mutação acima de 97%.</p>
   </div>
@@ -639,14 +640,14 @@ pre { margin: 0; background: var(--ink); color: var(--sheet); padding: .7rem .9r
   <div class="sheet">
     <h2>A equipe custa mais que a nuvem, e o retorno depende de adoção</h2>
     <div class="stack">
-      <h3>Custo mensal de R$ 80.623 no cenário Início</h3>
-      <div class="bar" role="img" aria-label="Equipe de operação 74%, plantão 12%, infraestrutura 9%, não produção 3%, suporte 1%.">
-        <i style="flex:74;background:var(--ink)"></i><i style="flex:12;background:var(--ink-soft)"></i><i style="flex:9;background:var(--credit)"></i><i style="flex:3;background:var(--held)"></i><i style="flex:1;background:var(--margin)"></i>
+      <h3>Custo mensal de R$ 79.806 no cenário Início</h3>
+      <div class="bar" role="img" aria-label="Equipe de operação 75%, plantão 13%, infraestrutura 8%, não produção 3%, suporte 1%.">
+        <i style="flex:75;background:var(--ink)"></i><i style="flex:13;background:var(--ink-soft)"></i><i style="flex:8;background:var(--credit)"></i><i style="flex:3;background:var(--held)"></i><i style="flex:1;background:var(--margin)"></i>
       </div>
       <div class="barkey">
-        <span><i style="background:var(--ink)"></i>Equipe de operação, 74%</span>
-        <span><i style="background:var(--ink-soft)"></i>Plantão, 12%</span>
-        <span><i style="background:var(--credit)"></i>Produção, 9%</span>
+        <span><i style="background:var(--ink)"></i>Equipe de operação, 75%</span>
+        <span><i style="background:var(--ink-soft)"></i>Plantão, 13%</span>
+        <span><i style="background:var(--credit)"></i>Produção, 8%</span>
         <span><i style="background:var(--held)"></i>Não produção, 3%</span>
         <span><i style="background:var(--margin)"></i>Suporte, 1%</span>
       </div>
@@ -655,11 +656,11 @@ pre { margin: 0; background: var(--ink); color: var(--sheet); padding: .7rem .9r
       <table style="font-size:.95rem">
         <thead><tr><th>Medida</th><th class="num">Valor</th><th>Observação</th></tr></thead>
         <tbody>
-          <tr><td>Nuvem, 50 req/s de pico</td><td class="num">US$ 1.254 por mês</td><td>Preços de lista de <code>southamerica-east1</code></td></tr>
-          <tr><td>Nuvem, 500 req/s de pico</td><td class="num">US$ 3.556 por mês</td><td>Volume 10 vezes maior, custo 2,8 vezes maior</td></tr>
-          <tr><td>Investimento inicial</td><td class="num">R$ 771 mil</td><td>Construção, ambiente e lançamento</td></tr>
-          <tr><td>Ponto de equilíbrio</td><td class="num">3.998 comerciantes</td><td>A R$ 19,90 por mês</td></tr>
-          <tr><td>Retorno no cenário Base</td><td class="num">Mês 21</td><td>ROI de 73% em 36 meses. O Conservador não se paga nesse prazo</td></tr>
+          <tr><td>Nuvem, 50 req/s de pico</td><td class="num">US$ 1.158 por mês</td><td>Preços de lista de <code>southamerica-east1</code></td></tr>
+          <tr><td>Nuvem, 500 req/s de pico</td><td class="num">US$ 3.610 por mês</td><td>Volume 10 vezes maior, custo 3,1 vezes maior</td></tr>
+          <tr><td>Investimento inicial</td><td class="num">R$ 770 mil</td><td>Construção, ambiente e lançamento</td></tr>
+          <tr><td>Ponto de equilíbrio</td><td class="num">3.953 comerciantes</td><td>A R$ 19,90 por mês</td></tr>
+          <tr><td>Retorno no cenário Base</td><td class="num">Mês 21</td><td>ROI de 75% em 36 meses. O Conservador não se paga nesse prazo</td></tr>
         </tbody>
       </table>
     </div>
@@ -709,7 +710,7 @@ pre { margin: 0; background: var(--ink); color: var(--sheet); padding: .7rem .9r
   <div class="sheet">
     <h2>Tudo roda com um comando</h2>
     <pre style="font-size:1.05rem;padding:1rem 1.2rem">docker compose up -d --build --wait
-./scripts/smoke.sh        # 14 verificações de ponta a ponta
+./scripts/smoke.sh        # 15 verificações de ponta a ponta
 ./scripts/resilience.sh   # derruba dependências durante a carga
 ./scripts/load-test.sh    # 50 leituras por segundo</pre>
     <div class="cols grow">
@@ -818,7 +819,7 @@ pre { margin: 0; background: var(--ink); color: var(--sheet); padding: .7rem .9r
   });
 
   // Margin of the chosen option over the best one left, from docs/adr/radar/data.json. ADR-0016 has no rival left.
-  const margins = [['0018', .05], ['0020', .09], ['0004', .12], ['0006', .15], ['0003', .16], ['0001', .18], ['0012', .18], ['0014', .24], ['0011', .53], ['0013', .69], ['0015', .79], ['0009', .86], ['0008', 1], ['0021', 1.08], ['0002', 1.1], ['0005', 1.11], ['0010', 1.2], ['0017', 1.59], ['0007', 1.67], ['0019', 2.14]];
+  const margins = [['0018', .05], ['0020', .09], ['0004', .12], ['0003', .14], ['0012', .15], ['0001', .18], ['0006', .19], ['0014', .24], ['0011', .53], ['0013', .6], ['0015', .79], ['0009', .8], ['0021', 1.08], ['0005', 1.11], ['0010', 1.2], ['0008', 1.21], ['0002', 1.27], ['0017', 1.59], ['0007', 1.67], ['0019', 2.14]];
   const chart = el(document.getElementById('margins'), 'svg', { viewBox: '0 0 640 430', role: 'img', 'aria-label': 'Margem da escolhida sobre a melhor alternativa, em 20 decisões, de 0,05 no ADR-0018 a 2,14 no ADR-0019. Oito ficam abaixo de 0,25.' });
   const left = 34, bottom = 386, top = 16, right = 636, max = 2.25;
   const y = (value) => bottom - (bottom - top) * value / max;

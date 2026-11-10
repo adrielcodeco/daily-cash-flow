@@ -24,7 +24,7 @@
 <line x1="380" y1="245" x2="250.1" y2="320.0" stroke="#d9d8d3" stroke-width="1"/>
 <text x="239.7" y="330.0" text-anchor="end" font-size="12" fill="#0b0b0b">Simplicidade (2)</text>
 <line x1="380" y1="245" x2="250.1" y2="170.0" stroke="#d9d8d3" stroke-width="1"/>
-<text x="239.7" y="168.0" text-anchor="end" font-size="12" fill="#0b0b0b">Segurança (1)</text>
+<text x="239.7" y="168.0" text-anchor="end" font-size="12" fill="#0b0b0b">Segurança (2)</text>
 <polygon points="380.0,125.0 483.9,185.0 432.0,275.0 380.0,275.0 302.1,290.0 328.0,215.0" fill="#1baf7a" fill-opacity="0.08" stroke="#1baf7a" stroke-width="2" stroke-linejoin="round" stroke-dasharray="2 4"/>
 <polygon points="380.0,118.0 387.0,125.0 380.0,132.0 373.0,125.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>APM comercial, Alinhamento com o negócio: 4</title></polygon>
 <polygon points="483.9,178.0 490.9,185.0 483.9,192.0 476.9,185.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>APM comercial, Operabilidade: 4</title></polygon>
@@ -48,11 +48,11 @@
 <circle cx="276.1" cy="185.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>OpenTelemetry, Segurança: 4</title></circle>
 <line x1="24" y1="465" x2="60" y2="465" stroke="#2a78d6" stroke-width="2"/>
 <circle cx="42.0" cy="465.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"></circle>
-<text x="70" y="469" font-size="13" fill="#0b0b0b">OpenTelemetry (escolhida): 4,57</text>
+<text x="70" y="469" font-size="13" fill="#0b0b0b">OpenTelemetry (escolhida): 4,53</text>
 <line x1="24" y1="491" x2="60" y2="491" stroke="#eb6834" stroke-width="2" stroke-dasharray="7 4"/>
 <rect x="37.0" y="486.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"></rect>
-<text x="70" y="495" font-size="13" fill="#0b0b0b">SDK do provedor de nuvem: 3,71</text>
+<text x="70" y="495" font-size="13" fill="#0b0b0b">SDK do provedor de nuvem: 3,73</text>
 <line x1="24" y1="517" x2="60" y2="517" stroke="#1baf7a" stroke-width="2" stroke-dasharray="2 4"/>
 <polygon points="42.0,510.0 49.0,517.0 42.0,524.0 35.0,517.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"></polygon>
-<text x="70" y="521" font-size="13" fill="#0b0b0b">APM comercial: 3,00</text>
+<text x="70" y="521" font-size="13" fill="#0b0b0b">APM comercial: 2,93</text>
 </svg>

@@ -30,7 +30,7 @@ As perguntas e a evidência de cada nota estão na [avaliação dos radares](../
 
 ## Leitura do radar
 
-Go tem o melhor desempenho e o menor consumo, mas a operabilidade pesa mais aqui: quem vai manter o sistema é uma equipe que já domina C#. O .NET moderno entrega bom desempenho, com suporte de longo prazo e bibliotecas maduras. TypeScript não traz vantagem para este caso.
+Go empata com C# em desempenho, mas perde em operabilidade, que pesa mais aqui: quem vai manter o sistema é uma equipe que já domina C#. O .NET moderno entrega bom desempenho, com suporte de longo prazo e bibliotecas maduras. TypeScript não traz vantagem para este caso.
 
 ## Consequências
 

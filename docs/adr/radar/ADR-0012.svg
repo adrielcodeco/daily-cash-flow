@@ -3,46 +3,51 @@
 <rect width="760" height="551" fill="#fcfcfb"/>
 <text x="24" y="30" font-size="16" font-weight="600" fill="#0b0b0b">Acesso a dados</text>
 <text x="24" y="50" font-size="12" fill="#52514e">Quanto mais longe do centro, melhor</text>
-<polygon points="380.0,215.0 410.0,245.0 380.0,275.0 350.0,245.0" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<polygon points="380.0,215.0 408.5,235.7 397.6,269.3 362.4,269.3 351.5,235.7" fill="none" stroke="#d9d8d3" stroke-width="1"/>
 <text x="390.0" y="227.0" font-size="10" fill="#52514e">1</text>
-<polygon points="380.0,185.0 440.0,245.0 380.0,305.0 320.0,245.0" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<polygon points="380.0,185.0 437.1,226.5 415.3,293.5 344.7,293.5 322.9,226.5" fill="none" stroke="#d9d8d3" stroke-width="1"/>
 <text x="390.0" y="197.0" font-size="10" fill="#52514e">2</text>
-<polygon points="380.0,155.0 470.0,245.0 380.0,335.0 290.0,245.0" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<polygon points="380.0,155.0 465.6,217.2 432.9,317.8 327.1,317.8 294.4,217.2" fill="none" stroke="#d9d8d3" stroke-width="1"/>
 <text x="390.0" y="167.0" font-size="10" fill="#52514e">3</text>
-<polygon points="380.0,125.0 500.0,245.0 380.0,365.0 260.0,245.0" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<polygon points="380.0,125.0 494.1,207.9 450.5,342.1 309.5,342.1 265.9,207.9" fill="none" stroke="#d9d8d3" stroke-width="1"/>
 <text x="390.0" y="137.0" font-size="10" fill="#52514e">4</text>
-<polygon points="380.0,95.0 530.0,245.0 380.0,395.0 230.0,245.0" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<polygon points="380.0,95.0 522.7,198.6 468.2,366.4 291.8,366.4 237.3,198.6" fill="none" stroke="#d9d8d3" stroke-width="1"/>
 <text x="390.0" y="107.0" font-size="10" fill="#52514e">5</text>
 <line x1="380" y1="245" x2="380.0" y2="95.0" stroke="#d9d8d3" stroke-width="1"/>
 <text x="380.0" y="87.0" text-anchor="middle" font-size="12" fill="#0b0b0b">Alinhamento com o negócio (4)</text>
-<line x1="380" y1="245" x2="530.0" y2="245.0" stroke="#d9d8d3" stroke-width="1"/>
-<text x="542.0" y="249.0" text-anchor="start" font-size="12" fill="#0b0b0b">Aderência ao problema (3)</text>
-<line x1="380" y1="245" x2="380.0" y2="395.0" stroke="#d9d8d3" stroke-width="1"/>
-<text x="380.0" y="411.0" text-anchor="middle" font-size="12" fill="#0b0b0b">Desempenho (2)</text>
-<line x1="380" y1="245" x2="230.0" y2="245.0" stroke="#d9d8d3" stroke-width="1"/>
-<text x="218.0" y="249.0" text-anchor="end" font-size="12" fill="#0b0b0b">Simplicidade (2)</text>
-<polygon points="380.0,95.0 470.0,245.0 380.0,365.0 230.0,245.0" fill="#1baf7a" fill-opacity="0.08" stroke="#1baf7a" stroke-width="2" stroke-linejoin="round" stroke-dasharray="2 4"/>
+<line x1="380" y1="245" x2="522.7" y2="198.6" stroke="#d9d8d3" stroke-width="1"/>
+<text x="534.1" y="198.9" text-anchor="start" font-size="12" fill="#0b0b0b">Aderência ao problema (3)</text>
+<line x1="380" y1="245" x2="468.2" y2="366.4" stroke="#d9d8d3" stroke-width="1"/>
+<text x="475.2" y="380.1" text-anchor="start" font-size="12" fill="#0b0b0b">Desempenho (2)</text>
+<line x1="380" y1="245" x2="291.8" y2="366.4" stroke="#d9d8d3" stroke-width="1"/>
+<text x="284.8" y="380.1" text-anchor="end" font-size="12" fill="#0b0b0b">Simplicidade (2)</text>
+<line x1="380" y1="245" x2="237.3" y2="198.6" stroke="#d9d8d3" stroke-width="1"/>
+<text x="225.9" y="198.9" text-anchor="end" font-size="12" fill="#0b0b0b">Segurança (2)</text>
+<polygon points="380.0,95.0 465.6,217.2 450.5,342.1 291.8,366.4 265.9,207.9" fill="#1baf7a" fill-opacity="0.08" stroke="#1baf7a" stroke-width="2" stroke-linejoin="round" stroke-dasharray="2 4"/>
 <polygon points="380.0,88.0 387.0,95.0 380.0,102.0 373.0,95.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>EF Core, Alinhamento com o negócio: 5</title></polygon>
-<polygon points="470.0,238.0 477.0,245.0 470.0,252.0 463.0,245.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>EF Core, Aderência ao problema: 3</title></polygon>
-<polygon points="380.0,358.0 387.0,365.0 380.0,372.0 373.0,365.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>EF Core, Desempenho: 4</title></polygon>
-<polygon points="230.0,238.0 237.0,245.0 230.0,252.0 223.0,245.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>EF Core, Simplicidade: 5</title></polygon>
-<polygon points="380.0,95.0 530.0,245.0 380.0,395.0 260.0,245.0" fill="#eb6834" fill-opacity="0.08" stroke="#eb6834" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 4"/>
+<polygon points="465.6,210.2 472.6,217.2 465.6,224.2 458.6,217.2" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>EF Core, Aderência ao problema: 3</title></polygon>
+<polygon points="450.5,335.1 457.5,342.1 450.5,349.1 443.5,342.1" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>EF Core, Desempenho: 4</title></polygon>
+<polygon points="291.8,359.4 298.8,366.4 291.8,373.4 284.8,366.4" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>EF Core, Simplicidade: 5</title></polygon>
+<polygon points="265.9,200.9 272.9,207.9 265.9,214.9 258.9,207.9" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>EF Core, Segurança: 4</title></polygon>
+<polygon points="380.0,95.0 522.7,198.6 468.2,366.4 309.5,342.1 237.3,198.6" fill="#eb6834" fill-opacity="0.08" stroke="#eb6834" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 4"/>
 <rect x="375.0" y="90.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Npgsql com SQL explícito, Alinhamento com o negócio: 5</title></rect>
-<rect x="525.0" y="240.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Npgsql com SQL explícito, Aderência ao problema: 5</title></rect>
-<rect x="375.0" y="390.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Npgsql com SQL explícito, Desempenho: 5</title></rect>
-<rect x="255.0" y="240.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Npgsql com SQL explícito, Simplicidade: 4</title></rect>
-<polygon points="380.0,95.0 530.0,245.0 380.0,395.0 230.0,245.0" fill="#2a78d6" fill-opacity="0.08" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
+<rect x="517.7" y="193.6" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Npgsql com SQL explícito, Aderência ao problema: 5</title></rect>
+<rect x="463.2" y="361.4" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Npgsql com SQL explícito, Desempenho: 5</title></rect>
+<rect x="304.5" y="337.1" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Npgsql com SQL explícito, Simplicidade: 4</title></rect>
+<rect x="232.3" y="193.6" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Npgsql com SQL explícito, Segurança: 5</title></rect>
+<polygon points="380.0,95.0 522.7,198.6 468.2,366.4 291.8,366.4 237.3,198.6" fill="#2a78d6" fill-opacity="0.08" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
 <circle cx="380.0" cy="95.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Dapper, Alinhamento com o negócio: 5</title></circle>
-<circle cx="530.0" cy="245.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Dapper, Aderência ao problema: 5</title></circle>
-<circle cx="380.0" cy="395.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Dapper, Desempenho: 5</title></circle>
-<circle cx="230.0" cy="245.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Dapper, Simplicidade: 5</title></circle>
+<circle cx="522.7" cy="198.6" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Dapper, Aderência ao problema: 5</title></circle>
+<circle cx="468.2" cy="366.4" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Dapper, Desempenho: 5</title></circle>
+<circle cx="291.8" cy="366.4" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Dapper, Simplicidade: 5</title></circle>
+<circle cx="237.3" cy="198.6" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Dapper, Segurança: 5</title></circle>
 <line x1="24" y1="465" x2="60" y2="465" stroke="#2a78d6" stroke-width="2"/>
 <circle cx="42.0" cy="465.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"></circle>
 <text x="70" y="469" font-size="13" fill="#0b0b0b">Dapper (escolhida): 5,00</text>
 <line x1="24" y1="491" x2="60" y2="491" stroke="#eb6834" stroke-width="2" stroke-dasharray="7 4"/>
 <rect x="37.0" y="486.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"></rect>
-<text x="70" y="495" font-size="13" fill="#0b0b0b">Npgsql com SQL explícito: 4,82</text>
+<text x="70" y="495" font-size="13" fill="#0b0b0b">Npgsql com SQL explícito: 4,85</text>
 <line x1="24" y1="517" x2="60" y2="517" stroke="#1baf7a" stroke-width="2" stroke-dasharray="2 4"/>
 <polygon points="42.0,510.0 49.0,517.0 42.0,524.0 35.0,517.0" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"></polygon>
-<text x="70" y="521" font-size="13" fill="#0b0b0b">EF Core: 4,27</text>
+<text x="70" y="521" font-size="13" fill="#0b0b0b">EF Core: 4,23</text>
 </svg>

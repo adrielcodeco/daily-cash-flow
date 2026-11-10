@@ -1,7 +1,7 @@
 // @anchors
 //   code: OBRCD
 //   ref: OBRLY
-//   updated_at: 2026-11-06
+//   updated_at: 2026-11-09
 namespace Ledger.Core;
 
 public sealed record OutboxMessage(Guid Id, string Type, string Payload, string? TraceContext = null);
@@ -15,7 +15,10 @@ public interface IOutboxBatch : IAsyncDisposable
 {
     IReadOnlyList<OutboxMessage> Messages { get; }
 
-    Task MarkPublishedAsync(Guid id, CancellationToken cancellationToken);
+    Task MarkPublishedAsync(IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken);
+
+    /// <summary>Puts the event behind the others for a while, longer after each failure.</summary>
+    Task DeferAsync(Guid id, CancellationToken cancellationToken);
 
     Task CommitAsync(CancellationToken cancellationToken);
 }
@@ -31,33 +34,41 @@ public sealed class OutboxRelay(IOutbox outbox, IEventPublisher publisher)
     public async Task<int> PublishPendingAsync(int limit, CancellationToken cancellationToken)
     {
         await using var batch = await outbox.ClaimPendingAsync(limit, cancellationToken);
-        var published = 0;
+        var confirmed = new List<Guid>();
         Exception? failure = null;
 
-        foreach (var message in batch.Messages)
+        try
         {
-            try
+            foreach (var message in batch.Messages)
             {
-                await publisher.PublishAsync(message, cancellationToken);
-            }
-            catch (Exception exception) when (exception is not OperationCanceledException)
-            {
-                failure = exception;
-                break;
-            }
+                try
+                {
+                    await publisher.PublishAsync(message, cancellationToken);
+                }
+                catch (Exception exception) when (exception is not OperationCanceledException)
+                {
+                    failure = exception;
+                    // A message that keeps failing must not hold back the ones behind it.
+                    await batch.DeferAsync(message.Id, CancellationToken.None);
+                    break;
+                }
 
-            await batch.MarkPublishedAsync(message.Id, cancellationToken);
-            published++;
+                confirmed.Add(message.Id);
+            }
         }
-
-        await batch.CommitAsync(cancellationToken);
+        finally
+        {
+            // What the broker confirmed stays marked, even when the publisher is stopping.
+            await batch.MarkPublishedAsync(confirmed, CancellationToken.None);
+            await batch.CommitAsync(CancellationToken.None);
+        }
 
         if (failure is not null)
         {
-            throw new OutboxPublishException(published, failure);
+            throw new OutboxPublishException(confirmed.Count, failure);
         }
 
-        return published;
+        return confirmed.Count;
     }
 }
 

@@ -2,7 +2,7 @@
 # @anchors
 #   code: CBSFT
 #   ref: CBSTR
-#   updated_at: 2026-11-06
+#   updated_at: 2026-11-09
 #   layer: feature
 
 @CBSTR @consolidation
@@ -53,8 +53,20 @@ Funcionalidade: CachedBalanceStore — o cache configurável
     Quando uma escrita acontece
     Então a escrita termina normalmente
 
+  @CBSTR-R01 @nivel-unit @P1
+  Cenário: o alvo de outro serviço não liga o cache
+    Dado o cache ligado só para uma tabela de Lançamentos
+    Quando um evento é aplicado
+    Então o cache não é tocado
+
   @CBSTR-R08 @nivel-unit @P1
   Cenário: a invalidação durante a consulta não guarda valor antigo
     Dado uma invalidação durante a consulta
     Quando a consulta seguinte é feita
     Então o valor vem do armazenamento
+
+  @CBSTR-R09 @nivel-unit @P1
+  Cenário: o reset descarta o cache
+    Dado um saldo em cache
+    Quando o consolidado é reiniciado
+    Então a consulta seguinte vem do armazenamento

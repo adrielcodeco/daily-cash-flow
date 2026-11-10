@@ -31,6 +31,30 @@
    "from": "veto",
    "to": 2,
    "reason": "C# é a stack da empresa, mas é preferência de negócio, e não restrição. A opção perde em Alinhamento, sem ser eliminada."
+  },
+  {
+   "adr": "ADR-0008",
+   "option": "OIDC e JWT, validados em cada serviço",
+   "criterion": "Desempenho",
+   "from": 4,
+   "to": 5,
+   "reason": "Revisão de 2026-11-09, sem API Gateway: o salto do gateway saiu do caminho, e a validação do JWT é local, então a opção não acrescenta chamada de rede. As 4 perguntas passam a ter resposta sim."
+  },
+  {
+   "adr": "ADR-0008",
+   "option": "OIDC e JWT, validados em cada serviço",
+   "criterion": "Economia",
+   "from": 3,
+   "to": 4,
+   "reason": "Revisão de 2026-11-09, sem API Gateway: acabou a cobrança por chamada, e o custo passa a crescer menos que a carga. O provedor de identidade segue como componente pago, então uma pergunta continua com resposta não."
+  },
+  {
+   "adr": "ADR-0008",
+   "option": "OIDC e JWT, validados em cada serviço",
+   "criterion": "Portabilidade",
+   "from": 4,
+   "to": 5,
+   "reason": "Revisão de 2026-11-09, sem API Gateway: a borda não faz mais parte da autenticação, e a mesma validação de JWT roda no local e na nuvem. As 4 perguntas passam a ter resposta sim."
   }
  ],
  "adrs": [
@@ -55,7 +79,7 @@
     {
      "name": "Operabilidade",
      "weight": 3,
-     "why": "Afeta diretamente a restrição de equipe pequena sem especialista em infraestrutura."
+     "why": "Afeta diretamente a operação pela equipe reduzida, sem especialista em infraestrutura (premissa PRE-12)."
     },
     {
      "name": "Desempenho",
@@ -70,7 +94,7 @@
     {
      "name": "Simplicidade",
      "weight": 2,
-     "why": "Relevante: a quantidade de partes pesa para equipe pequena."
+     "why": "Relevante: a quantidade de partes muda bastante entre as opções."
     },
     {
      "name": "Economia",
@@ -198,7 +222,7 @@
     {
      "name": "Operabilidade",
      "weight": 3,
-     "why": "A equipe é pequena e não tem especialista de infraestrutura, e a integração roda continuamente."
+     "why": "A integração roda continuamente, e a operação fica com uma equipe reduzida, sem especialista em infraestrutura (premissa PRE-12)."
     },
     {
      "name": "Desempenho",
@@ -219,6 +243,11 @@
      "name": "Economia",
      "weight": 1,
      "why": "O volume é baixo e o custo pesa pouco frente à garantia."
+    },
+    {
+     "name": "Segurança",
+     "weight": 2,
+     "why": "Relevante: as opções mudam quem lê os lançamentos e por qual canal, mas nenhuma expõe um comerciante a outro."
     }
    ],
    "options": [
@@ -232,7 +261,8 @@
       5,
       5,
       2,
-      3
+      3,
+      5
      ],
      "vetoes": [],
      "evidence": [
@@ -243,7 +273,8 @@
       "Acrescenta só um INSERT na transação existente, sem chamada de rede; a estabilidade depende de limpar a tabela de saída.",
       "Vários relays podem dividir o trabalho com bloqueio de linhas e lotes; 500 eventos por segundo não foi medido, mas é carga modesta para inserts em PostgreSQL.",
       "Acrescenta relay e mensageria, exige entender entrega ao menos uma vez e idempotência, e pede código próprio ou biblioteca; roda localmente.",
-      "A mensageria é paga por volume, com custo inicial baixo (não verificado), e o relay é pequeno."
+      "A mensageria é paga por volume, com custo inicial baixo (não verificado), e o relay é pequeno.",
+      "O relay publica com identidade própria e permissão só no tópico, o evento leva o mínimo, sem a descrição, cada envio fica registrado na outbox junto do lançamento, e o consumidor grava sob row-level security (docs/07-seguranca.md)."
      ]
     },
     {
@@ -256,7 +287,8 @@
       5,
       3,
       3,
-      3
+      3,
+      2
      ],
      "vetoes": [],
      "evidence": [
@@ -267,7 +299,8 @@
       "A leitura do log ocorre fora da requisição, sem chamada nova na escrita.",
       "Atende 500 req/s, mas um slot tem um único leitor, o que torna o conector um gargalo que não escala sozinho.",
       "Exige conector, replicação lógica e slots, conceitos fora do dia a dia .NET, com pouco código próprio e execução local possível em contêiner.",
-      "Soma conector e mensageria; o Datastream cobra por GiB (https://cloud.google.com/datastream/pricing) e o custo do conector próprio é estimativa não verificada; operar slots e conector tende a passar de 1 pessoa-mês por ano (não verificado)."
+      "Soma conector e mensageria; o Datastream cobra por GiB (https://cloud.google.com/datastream/pricing) e o custo do conector próprio é estimativa não verificada; operar slots e conector tende a passar de 1 pessoa-mês por ano (não verificado).",
+      "O conector usa um papel próprio, mas com privilégio de replicação, que lê o log de todas as tabelas e de todos os comerciantes, inclusive a descrição, sem passar pela row-level security; o deslocamento do conector não é trilha de auditoria."
      ]
     },
     {
@@ -280,7 +313,8 @@
       4,
       5,
       4,
-      3
+      3,
+      4
      ],
      "vetoes": [
       "Aderência ao problema"
@@ -293,7 +327,8 @@
       "Acrescenta uma chamada de rede à escrita; a latência de publicação não foi medida, e a folga da meta de 300 ms sugere que cabe.",
       "Publicação direta em mensageria gerenciada escala com as instâncias da API, sem etapa intermediária.",
       "Acrescenta a mensageria, mas é conceito conhecido, com pouco código e emulador local.",
-      "A mensageria é paga por volume; o custo inicial fica baixo (não verificado) e o esforço não inclui a reconciliação de divergências."
+      "A mensageria é paga por volume; o custo inicial fica baixo (não verificado) e o esforço não inclui a reconciliação de divergências.",
+      "Usa a mesma identidade e o mesmo tópico com permissão restrita, e o consumidor grava sob row-level security, mas não fica registro do que foi publicado para auditar."
      ]
     },
     {
@@ -306,7 +341,8 @@
       2,
       3,
       5,
-      4
+      4,
+      3
      ],
      "vetoes": [
       "Alinhamento com o negócio",
@@ -321,7 +357,8 @@
       "Soma a latência do consolidado à escrita, e a escrita herda seus picos; deve caber em 300 ms em condição normal.",
       "O consolidado vira gargalo da escrita, e o esforço cresce a cada consumidor.",
       "Sem componente novo, com conceito conhecido e execução local simples.",
-      "Sem componente pago, mas o consolidado precisa escalar junto com as escritas."
+      "Sem componente pago, mas o consolidado precisa escalar junto com as escritas.",
+      "A chamada pode exigir identidade de serviço e o consolidado grava sob row-level security, mas abre no consolidado uma rota de escrita na rede, e o aviso só fica no log de requisição, sem registro ligado ao lançamento."
      ]
     }
    ]
@@ -347,7 +384,7 @@
     {
      "name": "Operabilidade",
      "weight": 3,
-     "why": "A equipe não tem especialista em infraestrutura, e um broker é o item mais pesado de operar nesta decisão."
+     "why": "Um broker é o item mais pesado de operar nesta decisão, e a equipe é reduzida, sem especialista em infraestrutura (premissa PRE-12)."
     },
     {
      "name": "Aderência ao problema",
@@ -367,12 +404,17 @@
     {
      "name": "Simplicidade",
      "weight": 2,
-     "why": "A equipe é pequena e o conceito novo pesa."
+     "why": "Relevante: o número de partes e de conceitos novos muda entre as opções."
     },
     {
      "name": "Portabilidade",
      "weight": 1,
      "why": "Trocar de transporte é possível, mas não há exigência de sair do GCP."
+    },
+    {
+     "name": "Segurança",
+     "weight": 2,
+     "why": "Relevante: o broker carrega dados de lançamento, e as opções mudam o controle de acesso e a superfície a proteger, sem expor um comerciante a outro."
     }
    ],
    "options": [
@@ -386,7 +428,8 @@
       3,
       5,
       4,
-      2
+      2,
+      5
      ],
      "vetoes": [],
      "evidence": [
@@ -397,7 +440,8 @@
       "É componente pago novo e cobrado por volume, portanto cresce com a carga; o valor mensal em dezenas de eventos por segundo parece baixo, mas a tabela de preços não pôde ser lida e o valor é não verificado (https://cloud.google.com/pubsub/pricing).",
       "Não há capacidade a dimensionar pelo cliente, e 500 mensagens por segundo está muito abaixo do uso típico do serviço; limite exato por projeto não verificado.",
       "Acrescenta um serviço, mas tópico, assinatura e confirmação são conceitos simples, e há emulador local, com limitações documentadas (https://docs.cloud.google.com/pubsub/docs/emulator).",
-      "A API é proprietária e o emulador pode diferir do serviço real, mas as mensagens são transitórias e não prendem dados (https://docs.cloud.google.com/pubsub/docs/emulator)."
+      "A API é proprietária e o emulador pode diferir do serviço real, mas as mensagens são transitórias e não prendem dados (https://docs.cloud.google.com/pubsub/docs/emulator).",
+      "Permissão por IAM em cada tópico e assinatura, sem servidor nem senha a guardar; o Cloud Audit Logs registra mudanças de configuração e de permissão, mas não cada publicação, que fica registrada na outbox (https://docs.cloud.google.com/pubsub/docs/audit-logging)."
      ]
     },
     {
@@ -410,6 +454,7 @@
       3,
       4,
       3,
+      5,
       5
      ],
      "vetoes": [],
@@ -421,7 +466,8 @@
       "O mínimo de 3 vCPU e 3 GiB equivale a 2,1 DCU, cerca de US$ 138 por mês em us-central1 a US$ 0,09 por DCU-hora, cálculo próprio sem armazenamento, e o preço de São Paulo é não verificado (https://cloud.google.com/managed-service-for-apache-kafka/pricing).",
       "Atende 500 mensagens por segundo com folga, mas partições e vCPUs são dimensionados pela equipe (https://cloud.google.com/managed-service-for-apache-kafka/pricing).",
       "Partições, offsets e rebalanceamento de grupos não são conceitos de uma equipe .NET típica, embora rode localmente em contêiner.",
-      "Usa o protocolo Apache Kafka aberto, que roda igual em contêiner local e pode migrar de fornecedor (https://docs.cloud.google.com/managed-service-for-apache-kafka/docs/overview)."
+      "Usa o protocolo Apache Kafka aberto, que roda igual em contêiner local e pode migrar de fornecedor (https://docs.cloud.google.com/managed-service-for-apache-kafka/docs/overview).",
+      "Os clientes autenticam por IAM, sem chave com OAUTHBEARER, e o acesso por tópico vai em ACLs do Kafka, que é configuração, não código; mudanças no cluster ficam no Cloud Audit Logs (https://docs.cloud.google.com/managed-service-for-apache-kafka/docs/authentication-kafka)."
      ]
     },
     {
@@ -434,7 +480,8 @@
       2,
       2,
       4,
-      5
+      5,
+      2
      ],
      "vetoes": [],
      "evidence": [
@@ -445,7 +492,8 @@
       "Três VMs com disco em São Paulo devem ficar perto ou acima de US$ 100, valor não verificado, e a manutenção contínua tende a passar de 1 pessoa-mês por ano.",
       "500 mensagens por segundo cabem em um cluster pequeno, mas cada fila tem um líder, o que cria gargalo, e crescer exige ação manual.",
       "A biblioteca é conhecida em .NET e roda em contêiner local, mas acrescenta um serviço a executar.",
-      "AMQP é padrão aberto, e o mesmo broker roda no local e em qualquer nuvem."
+      "AMQP é padrão aberto, e o mesmo broker roda no local e em qualquer nuvem.",
+      "Usuários e senhas ficam no próprio broker, fora do IAM, e VMs, SSH e o painel de gestão são novos caminhos de acesso; só a separação por virtual host e permissão é configuração do broker, e não há trilha de auditoria central."
      ]
     }
    ]
@@ -454,9 +502,9 @@
    "id": "ADR-0004",
    "file": "0004-banco-de-dados.md",
    "title": "Banco de dados",
-   "decisive": "Simplicidade",
-   "basis": "Fora dos pilares",
-   "reason": "Transações, restrições e SQL. A aderência ao modelo relacional não é um pilar",
+   "decisive": "Alinhamento com o negócio",
+   "basis": "Julgamento",
+   "reason": "O AlloyDB tem capacidade acima da necessidade atual (P6). Sem o critério de negócio, o AlloyDB venceria",
    "criteria": [
     {
      "name": "Alinhamento com o negócio",
@@ -476,7 +524,7 @@
     {
      "name": "Operabilidade",
      "weight": 3,
-     "why": "Afeta diretamente a restrição de equipe sem especialista em infraestrutura."
+     "why": "Afeta diretamente a operação pela equipe reduzida, sem especialista em infraestrutura (premissa PRE-12)."
     },
     {
      "name": "Segurança",
@@ -501,7 +549,7 @@
     {
      "name": "Simplicidade",
      "weight": 2,
-     "why": "Relevante: modelo novo pesa para equipe pequena."
+     "why": "Relevante: o modelo de dados novo muda o número de conceitos e de partes."
     },
     {
      "name": "Portabilidade",
@@ -660,7 +708,7 @@
     {
      "name": "Operabilidade",
      "weight": 2,
-     "why": "Cache e event store acrescentam operação a uma equipe pequena."
+     "why": "Cache e event store acrescentam operação a uma equipe reduzida (premissa PRE-12)."
     },
     {
      "name": "Simplicidade",
@@ -690,7 +738,7 @@
      "evidence": [
       "Atende a meta com folga e mantém a leitura separada da escrita, usando só o banco já existente.",
       "Combina com dados relacionais e transação, mas o retroativo exige lógica no consumidor para refletir nos dias seguintes.",
-      "Medido: p95 de 6,54 ms a 50 leituras por segundo, 0% de falha, sem chamada adicional.",
+      "Medido: p95 de 7,55 ms a 50 leituras por segundo, 0% de falha, sem chamada adicional, e 7,57 ms com dois anos de histórico.",
       "O agregado fica isolado da escrita e pode ser recomposto a partir dos eventos.",
       "Leitura indexada por dia deve atender 500 req/s (não medido); a API escala sozinha, mas o banco é dimensionado à mão.",
       "Usa o PostgreSQL gerenciado, sem nada novo.",
@@ -714,7 +762,7 @@
      "evidence": [
       "Atende a meta e existe como serviço gerenciado no GCP, mas sem ganho medido no volume atual.",
       "Cache e banco não têm transação comum, o retroativo exige invalidar dias seguintes, e o ganho não aparece neste volume.",
-      "Medido: p95 de 7,55 ms, 0% de falha, pior que 6,54 ms sem cache; acrescenta chamada e uma operação a mais por leitura.",
+      "Medido: p95 de 7,91 ms, 0% de falha, pior que 7,55 ms sem cache; acrescenta chamada e uma operação a mais por leitura.",
       "O dado continua no banco e a leitura pode cair nele, mas a invalidação pode falhar e servir saldo antigo depois de um retroativo.",
       "Reduz carga no banco em volumes maiores (não medido), mas o Redis é novo nó a dimensionar.",
       "O Memorystore é gerenciado, sem domínio informado na equipe.",
@@ -793,7 +841,7 @@
     {
      "name": "Operabilidade",
      "weight": 3,
-     "why": "Sem especialista em infraestrutura, a plataforma define quase toda a carga de operação."
+     "why": "A plataforma define quase toda a carga de operação, e a equipe não tem especialista em infraestrutura (premissa PRE-12)."
     },
     {
      "name": "Desempenho",
@@ -813,7 +861,7 @@
     {
      "name": "Simplicidade",
      "weight": 2,
-     "why": "Equipe pequena, e o modelo da plataforma entra no dia a dia."
+     "why": "Relevante: o modelo da plataforma entra no dia a dia, e o número de partes muda entre as opções."
     },
     {
      "name": "Portabilidade",
@@ -822,8 +870,8 @@
     },
     {
      "name": "Segurança",
-     "weight": 1,
-     "why": "A identidade da carga muda pouco entre as opções, mas a superfície de acesso muda."
+     "weight": 2,
+     "why": "Relevante: a plataforma define a superfície de acesso, como SSH, a API de controle do cluster e a identidade de cada carga, e isso pesa em um sistema financeiro."
     }
    ],
    "options": [
@@ -923,7 +971,7 @@
     {
      "name": "Operabilidade",
      "weight": 3,
-     "why": "Afeta diretamente a restrição de equipe pequena: quem mantém precisa dominar a tecnologia."
+     "why": "Afeta diretamente a operação pela equipe reduzida (premissa PRE-12): quem mantém precisa dominar a tecnologia."
     },
     {
      "name": "Desempenho",
@@ -1062,25 +1110,25 @@
    ],
    "options": [
     {
-     "name": "Gateway, OIDC e JWT",
+     "name": "OIDC e JWT, validados em cada serviço",
      "scores": [
       5,
       4,
       5,
       4,
+      5,
       4,
-      3,
-      4
+      5
      ],
      "vetoes": [],
      "evidence": [
       "Dá identidade e escopos por padrões conhecidos, e o ASP.NET Core valida JWT; o provedor de identidade ainda precisa ser escolhido.",
       "Tokens curtos e assinados trazem a identidade e facilitam auditar por cliente, mas o client secret segue como credencial do cliente, e o isolamento dos dados depende de outra camada.",
-      "Gateway gerenciado e validação JWT nativa no .NET; o provedor de identidade pode ser gerenciado.",
-      "Acrescenta gateway e provedor de identidade, mas o conceito é conhecido e a API testa localmente com tokens de desenvolvimento.",
-      "O gateway acrescenta um salto, mas a validação do JWT é local, sem chamada por requisição.",
-      "O API Gateway tem 2 milhões de chamadas grátis por mês e depois US$ 3 por milhão (https://cloud.google.com/api-gateway/pricing), logo o custo acompanha a carga, e 500 req/s contínuos passariam de US$ 3 mil por mês; o provedor de identidade não foi precificado.",
-      "OIDC e JWT são abertos, mas o gateway não existe no ambiente local."
+      "Validação JWT nativa no ASP.NET Core, e a borda é o balanceador com Cloud Armor, ambos gerenciados; o provedor de identidade pode ser gerenciado.",
+      "Acrescenta o provedor de identidade, mas o conceito é conhecido e a API testa localmente com tokens de desenvolvimento.",
+      "Sem salto extra no caminho: a validação do JWT é local em cada serviço, com as chaves públicas em cache, sem chamada por requisição.",
+      "Sem cobrança por chamada na borda: o balanceador e o Cloud Armor já existem para todas as opções, e o token vale para muitas requisições, logo o custo cresce menos que a carga; o provedor de identidade ainda é componente a pagar e não foi precificado.",
+      "OIDC e JWT são abertos, e a mesma validação roda no ambiente local, com Keycloak, e na nuvem, com qualquer provedor OIDC."
      ]
     },
     {
@@ -1145,7 +1193,7 @@
     {
      "name": "Operabilidade",
      "weight": 3,
-     "why": "Sem especialista, a telemetria é o meio de operar e de provar as metas de p95."
+     "why": "A equipe não tem especialista em infraestrutura (premissa PRE-12), e a telemetria é o meio de operar e de provar as metas de p95."
     },
     {
      "name": "Economia",
@@ -1164,8 +1212,8 @@
     },
     {
      "name": "Segurança",
-     "weight": 1,
-     "why": "Dados de telemetria podem sair para terceiros, o que é secundário mas real em uma instituição financeira."
+     "weight": 2,
+     "why": "Relevante: dados de telemetria podem sair para terceiros, e em um sistema financeiro Segurança pesa no mínimo 2."
     }
    ],
    "options": [
@@ -1257,12 +1305,12 @@
     {
      "name": "Operabilidade",
      "weight": 2,
-     "why": "Relevante: a migração precisa ser conduzida por equipe pequena."
+     "why": "Relevante: a migração precisa ser conduzida por uma equipe reduzida (premissa PRE-12)."
     },
     {
      "name": "Simplicidade",
      "weight": 2,
-     "why": "Relevante: código temporário de migração pesa para equipe pequena."
+     "why": "Relevante: o código temporário de migração muda bastante entre as opções."
     },
     {
      "name": "Economia",
@@ -1353,7 +1401,7 @@
     {
      "name": "Operabilidade",
      "weight": 3,
-     "why": "Muitos comerciantes multiplicam migrações e operação para uma equipe pequena."
+     "why": "Muitos comerciantes multiplicam migrações e operação para uma equipe reduzida (premissa PRE-12)."
     },
     {
      "name": "Segurança",
@@ -1512,12 +1560,18 @@
      "name": "Simplicidade",
      "weight": 2,
      "why": "Há poucas consultas, então o peso da ferramenta precisa ser proporcional."
+    },
+    {
+     "name": "Segurança",
+     "weight": 2,
+     "why": "Relevante: a camada de acesso define como o SQL chega ao banco, embora a row-level security e o papel de cada processo não mudem entre as opções."
     }
    ],
    "options": [
     {
      "name": "Dapper",
      "scores": [
+      5,
       5,
       5,
       5,
@@ -1528,7 +1582,8 @@
       "Biblioteca .NET sobre Npgsql, que aceita o SQL crítico sem contorno.",
       "Envia o SQL escrito tal como está, com transação do Npgsql, e o tamanho combina com poucas consultas.",
       "A camada é fina e o mapeamento é leve; não acrescenta chamada de rede.",
-      "É uma biblioteca pequena e conhecida, que evita o mapeamento manual de resultados."
+      "É uma biblioteca pequena e conhecida, que evita o mapeamento manual de resultados.",
+      "O processo usa o papel próprio do banco e parâmetros, a row-level security continua no banco, o SQL fica escrito no código e fácil de revisar, e a biblioteca não abre novo caminho ao dado."
      ]
     },
     {
@@ -1537,14 +1592,16 @@
       5,
       5,
       5,
-      4
+      4,
+      5
      ],
      "vetoes": [],
      "evidence": [
       "É o driver oficial de PostgreSQL para .NET, necessário nas outras opções também, e atende às consultas críticas.",
       "Dá acesso direto a todo o SQL do PostgreSQL e às transações, sem camada extra, e cabe em poucas consultas.",
       "É a camada mais fina, sem mapeador, e não acrescenta chamada de rede.",
-      "Não acrescenta dependência, mas o mapeamento de leitura é código próprio, ainda que pequeno por haver poucas consultas."
+      "Não acrescenta dependência, mas o mapeamento de leitura é código próprio, ainda que pequeno por haver poucas consultas.",
+      "O processo usa o papel próprio do banco e parâmetros, a row-level security continua no banco, e o SQL fica escrito no código e fácil de revisar."
      ]
     },
     {
@@ -1553,14 +1610,16 @@
       5,
       3,
       4,
-      5
+      5,
+      4
      ],
      "vetoes": [],
      "evidence": [
       "É a escolha padrão em .NET e atende às consultas críticas por SQL bruto, com FromSql para o lock (https://milanjovanovic.tech/blog/pessimistic-locking-ef-core-postgresql).",
       "Tem transações, mas não tem API própria de lock, então a consulta crítica vai em SQL escrito à mão, e o ORM sobra para poucas consultas (https://milanjovanovic.tech/blog/pessimistic-locking-ef-core-postgresql).",
       "Cumpre as metas, mas rastreamento de mudanças e tradução de consultas consomem mais por operação; números não verificados.",
-      "É biblioteca conhecida, com pouco código de mapeamento, e roda no local com PostgreSQL."
+      "É biblioteca conhecida, com pouco código de mapeamento, e roda no local com PostgreSQL.",
+      "Usa o mesmo papel do banco e parâmetros, e a row-level security continua no banco, mas o SQL é gerado pelo ORM, o que torna mais difícil revisar o que chega ao banco."
      ]
     }
    ]
@@ -1581,7 +1640,7 @@
     {
      "name": "Simplicidade",
      "weight": 3,
-     "why": "Afeta diretamente a restrição de equipe pequena: a ferramenta não deve trazer runtime ou modelo a manter."
+     "why": "A ferramenta não deve trazer runtime ou modelo a manter, e o número de partes muda entre as opções."
     },
     {
      "name": "Aderência ao problema",
@@ -1602,12 +1661,18 @@
      "name": "Portabilidade",
      "weight": 1,
      "why": "Secundário: scripts SQL sobrevivem à troca da ferramenta."
+    },
+    {
+     "name": "Segurança",
+     "weight": 2,
+     "why": "Relevante: as migrações criam papéis, permissões e políticas de row-level security, e rodam com a credencial de dono do esquema."
     }
    ],
    "options": [
     {
      "name": "DbUp com SQL",
      "scores": [
+      5,
       5,
       5,
       5,
@@ -1622,7 +1687,8 @@
       "Trabalha com SQL puro, sem modelo de ORM; o modo transacional não foi confirmado na página do projeto e foi respondido por conhecimento prévio, não verificado.",
       "Não há serviço a operar, e usa a linguagem que a equipe domina; a parada depende do script, não da ferramenta.",
       "Licença MIT (github.com/DbUp/DbUp), sem custo e com manutenção pequena.",
-      "Os scripts são SQL padrão do PostgreSQL e valem com outra ferramenta."
+      "Os scripts são SQL padrão do PostgreSQL e valem com outra ferramenta.",
+      "A migração roda uma vez, pela opção --migrate, com o papel de dono, separado dos papéis da API e do worker, e os papéis e políticas de row-level security ficam em SQL revisável, com journal no banco (docker-compose.yml e V005)."
      ]
     },
     {
@@ -1633,6 +1699,7 @@
       5,
       4,
       5,
+      5,
       5
      ],
      "vetoes": [],
@@ -1642,7 +1709,8 @@
       "Foi feito para migração em SQL, sem depender de ORM.",
       "Não há serviço permanente, mas a equipe .NET não domina o runtime da ferramenta.",
       "A edição Community é gratuita; a Redgate já moveu recursos entre edições (github.com/flyway/flyway/issues/3881), o que é risco a acompanhar, sem custo hoje.",
-      "Scripts SQL padrão e edição de código aberto."
+      "Scripts SQL padrão e edição de código aberto.",
+      "Também roda à parte, com o papel de dono, e mantém SQL revisável e histórico com checksum no banco; o contêiner a mais recebe a mesma credencial que o job do DbUp receberia."
      ]
     },
     {
@@ -1653,7 +1721,8 @@
       2,
       5,
       4,
-      5
+      5,
+      4
      ],
      "vetoes": [],
      "evidence": [
@@ -1662,7 +1731,8 @@
       "Cada migração inclui um snapshot do modelo, e não é só SQL (learn.microsoft.com/ef/core/managing-schemas/migrations/teams), o que não combina com aplicação sem ORM; gera script idempotente.",
       "Bundles e scripts idempotentes rodam sem serviço novo (learn.microsoft.com/ef/core/managing-schemas/migrations/applying), e a equipe conhece a ferramenta.",
       "Sem custo de licença, mas manter um modelo só para o esquema é trabalho contínuo. Esforço não medido.",
-      "Código aberto, igual em local e nuvem, e o esquema resultante é PostgreSQL comum."
+      "Código aberto, igual em local e nuvem, e o esquema resultante é PostgreSQL comum.",
+      "O bundle roda à parte, com o papel de dono, mas as migrações são C#, e papéis e políticas de row-level security iriam em SQL bruto dentro delas, o que exige gerar o script para revisar (learn.microsoft.com/ef/core/managing-schemas/migrations/applying)."
      ]
     }
    ]
@@ -1801,7 +1871,7 @@
     {
      "name": "Operabilidade",
      "weight": 3,
-     "why": "Sem especialista, um componente de replicação pesa diretamente na restrição da equipe."
+     "why": "Um componente de replicação pesa diretamente na operação pela equipe reduzida, sem especialista (premissa PRE-12)."
     },
     {
      "name": "Aderência ao problema",
@@ -1821,7 +1891,7 @@
     {
      "name": "Simplicidade",
      "weight": 2,
-     "why": "Equipe pequena, e o código de envio é próprio."
+     "why": "Relevante: o código de envio é próprio, e o número de partes muda entre as opções."
     },
     {
      "name": "Economia",
@@ -1940,12 +2010,17 @@
     {
      "name": "Simplicidade",
      "weight": 2,
-     "why": "Relevante: componente e código a mais pesam para equipe pequena."
+     "why": "Relevante: componente e código a mais mudam entre as opções."
     },
     {
      "name": "Economia",
      "weight": 1,
      "why": "Secundário: os valores são pequenos."
+    },
+    {
+     "name": "Segurança",
+     "weight": 2,
+     "why": "Relevante: a chave e a resposta guardada são dados do comerciante, e a opção decide onde ficam e quem as lê."
     }
    ],
    "options": [
@@ -1958,6 +2033,7 @@
       4,
       5,
       5,
+      5,
       5
      ],
      "vetoes": [],
@@ -1968,7 +2044,8 @@
       "Usa a mesma conexão e transação, com o custo de um índice a mais por escrita; a tabela de chaves precisa de expurgo. Não medido.",
       "Usa o banco que a equipe já opera, sem peça nova.",
       "Uma tabela ou coluna e uma restrição única, e o teste roda no mesmo banco local.",
-      "Sem componente novo, só um pouco de armazenamento."
+      "Sem componente novo, só um pouco de armazenamento.",
+      "A tabela de chaves fica no banco já protegido, com o papel da API e row-level security forçada por comerciante (V005), e a chave liga cada lançamento à requisição que o criou."
      ]
     },
     {
@@ -1980,7 +2057,8 @@
       4,
       3,
       3,
-      3
+      3,
+      1
      ],
      "vetoes": [
       "Aderência ao problema"
@@ -1992,7 +2070,8 @@
       "A consulta é rápida, mas acrescenta uma chamada de rede ao caminho da escrita.",
       "Gerenciado, mas o failover deixa o serviço indisponível por cerca de 30 s (FAQ do Memorystore); não há informação de que a equipe domine Redis.",
       "Acrescenta um componente e código para tratar o intervalo entre a chave e o commit.",
-      "Componente pago novo; com US$ 0,064 por GiB-hora em Iowa no Standard, 1 GiB fica perto de US$ 47 por mês (fitgap, terceiro); preço de São Paulo não verificado."
+      "Componente pago novo; com US$ 0,064 por GiB-hora em Iowa no Standard, 1 GiB fica perto de US$ 47 por mês (fitgap, terceiro); preço de São Paulo não verificado.",
+      "O Memorystore for Redis autentica por uma string AUTH única da instância, e não por identidade (https://docs.cloud.google.com/memorystore/docs/redis/about-redis-auth), acrescenta um armazenamento com dados de comerciantes, a chave expira sem trilha, e a separação entre comerciantes depende só do prefixo da chave no código."
      ]
     },
     {
@@ -2004,7 +2083,8 @@
       5,
       5,
       5,
-      5
+      5,
+      4
      ],
      "vetoes": [
       "Alinhamento com o negócio",
@@ -2018,7 +2098,8 @@
       "Índice único no próprio banco, sem chamada adicional.",
       "Não há nada novo a operar.",
       "Só um hash e um índice único, sem contrato novo com o cliente.",
-      "Não há componente novo."
+      "Não há componente novo.",
+      "Fica no banco já protegido, com o papel da API e row-level security, mas a repetição descartada não deixa registro de qual requisição foi recusada."
      ]
     }
    ]
@@ -2143,9 +2224,9 @@
    "id": "ADR-0018",
    "file": "0018-reconstrucao-do-saldo.md",
    "title": "Reconstrução do saldo",
-   "decisive": "Confiabilidade",
+   "decisive": "Alinhamento com o negócio",
    "basis": "Requisito",
-   "reason": "Um só caminho de cálculo, sem ler o banco do outro serviço",
+   "reason": "Um só caminho de cálculo, sem ler o banco do outro serviço. As finalistas empatam em confiabilidade, e o critério de negócio decide",
    "criteria": [
     {
      "name": "Alinhamento com o negócio",
@@ -2170,7 +2251,7 @@
     {
      "name": "Operabilidade",
      "weight": 2,
-     "why": "Reconstruir é operação rara, feita por equipe sem especialista."
+     "why": "Reconstruir é operação rara, feita por uma equipe sem especialista (premissa PRE-12)."
     },
     {
      "name": "Segurança",
@@ -2180,7 +2261,7 @@
     {
      "name": "Simplicidade",
      "weight": 2,
-     "why": "Equipe pequena, e o mecanismo raramente roda."
+     "why": "Relevante: o mecanismo raramente roda, e o número de partes muda entre as opções."
     },
     {
      "name": "Economia",
@@ -2205,7 +2286,7 @@
      "evidence": [
       "Respeita a fronteira entre serviços, parte da fonte da verdade e também serve para alimentar um novo consumidor, como conciliação.",
       "Cobre todo o histórico, mas, medido, a API respondeu saldo parcial durante o processo, o que exige marcar reconstrução na aplicação, e 74 por segundo fica curto para histórico grande.",
-      "Refaz tudo a partir dos lançamentos, com repetição idempotente, mas precisa ser acionado manualmente; medido: 8.809 lançamentos em 126 s.",
+      "Refaz tudo a partir dos lançamentos, com repetição idempotente, mas precisa ser acionado manualmente; medido: 13.104 lançamentos em 178 s.",
       "Medido: cerca de 74 por segundo, abaixo do cenário de 500 req/s, e o reenvio divide o canal com os eventos em tempo real; paralelismo com SKIP LOCKED não foi medido.",
       "Não há componente novo, mas a reconstrução não é transparente para o leitor: medido, a API respondeu saldo parcial durante o processo.",
       "Os dados seguem pelo canal já autorizado, sem novo acesso, e o isolamento entre comerciantes não muda.",
@@ -2380,7 +2461,7 @@
     {
      "name": "Operabilidade",
      "weight": 2,
-     "why": "A equipe .NET mantém a API, e o gateway exige contrato conhecido."
+     "why": "A equipe .NET mantém a API, e o contrato publicado em OpenAPI precisa ser conhecido de quem a consome."
     },
     {
      "name": "Portabilidade",
@@ -2488,7 +2569,7 @@
     {
      "name": "Simplicidade",
      "weight": 2,
-     "why": "Equipe pequena mantém essa estrutura."
+     "why": "Relevante: a quantidade de estrutura de teste a manter muda entre as opções."
     },
     {
      "name": "Economia",

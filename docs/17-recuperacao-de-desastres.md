@@ -22,13 +22,13 @@ Este plano diz o que proteger, quando acioná-lo, em que ordem recuperar e como 
 |---|---|---:|---:|
 | Falha de uma instância | Cloud Run recria a instância | Segundos | 0 |
 | Falha de uma zona | Cloud SQL regional faz failover, e Cloud Run segue em outras zonas | Minutos | 0 |
-| Mensageria indisponível | A outbox retém os eventos, e o publicador retoma | Depende do provedor | 0 |
+| Mensageria indisponível | A outbox retém os eventos, e o publicador retoma, com espera de 1 a 60 s por evento entre tentativas | Depende do provedor | 0 |
 | Erro humano no banco | Recuperação a um ponto no tempo, em uma cópia | 1 hora | 5 minutos |
 | Perda do consolidado | Reconstrução a partir dos lançamentos | Ver a [capacidade medida](#o-que-foi-provado) | 0 |
 | Perda da região | Réplica entre regiões promovida, com serviços implantados na região secundária | 1 hora | 5 minutos |
 | Comprometimento de segurança | Isolar, trocar credenciais e restaurar de um ponto confiável | Definido no incidente | Definido no incidente |
 
-**Exceção à perda zero:** a meta RNF-04 vale em operação normal e em falha de zona. Nos cenários de erro humano e de perda da região, até 5 minutos de lançamentos confirmados podem se perder, porque a réplica entre regiões é assíncrona. Evitar isso exigiria replicação síncrona entre regiões, com latência maior em toda escrita. A escolha é aceitar esse risco raro e tratá-lo com comunicação e reconciliação.
+**Exceção à perda zero:** a meta RNF-04 vale em operação normal e em falha de zona. Na perda da região, até 5 minutos de lançamentos confirmados podem se perder, porque a réplica entre regiões é assíncrona. No erro humano, a perda só acontece quando a correção pontual em uma cópia não é possível e o banco precisa voltar a um ponto no tempo. Evitar isso exigiria replicação síncrona entre regiões, com latência maior em toda escrita. A escolha é aceitar esse risco raro e tratá-lo com comunicação e reconciliação.
 
 ## Backups
 
@@ -170,7 +170,7 @@ O plano só vale se for testado.
 | Consolidado fora do ar | Testado localmente | Lançamentos seguiu sem falhas, com a outbox retendo os eventos |
 | Mensageria parada | Testado localmente | Nenhum evento perdido |
 | Cache fora do ar | Testado localmente | Nenhuma falha de leitura |
-| Reconstrução completa | Medido localmente | 8.809 lançamentos em 126 s, cerca de 74 por segundo, com saldo igual ao dos lançamentos |
+| Reconstrução completa | Medido localmente | 13.104 lançamentos em 178 s, cerca de 74 por segundo, com saldo igual ao dos lançamentos |
 | Failover, restauração e perda da região | Não testado | Depende de um ambiente no GCP |
 
 A medição da reconstrução mudou duas conclusões:

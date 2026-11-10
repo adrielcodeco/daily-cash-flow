@@ -13,6 +13,8 @@ O plano para desastres está em [recuperação de desastres](17-recuperacao-de-d
 3. Reinicie o publicador, se necessário. Ele retoma do que ficou pendente.
 4. Lançamentos continuam sendo aceitos durante o problema.
 
+Um evento que a mensageria recusa espera mais a cada falha, em 1, 2, 4… segundos, até 60 s, e não trava os que vêm depois. Se a idade do mais antigo cresce enquanto os demais eventos saem, o problema está em um evento específico: o log de erro do publicador mostra a falha, e a coluna `attempts` da `outbox` mostra quantas vezes ele foi tentado.
+
 ### Consumidor atrasado
 
 **Sintoma:** mensagem mais antiga da assinatura há mais de 2 minutos.
@@ -44,10 +46,10 @@ O plano para desastres está em [recuperação de desastres](17-recuperacao-de-d
 
 **Sintoma:** diferença entre os lançamentos e o saldo.
 
-1. Confira se há mensagens mortas ou fila acumulada.
+1. Confira a divergência com `./scripts/reconcile.sh`, que compara os totais por comerciante e dia. Confira também se há mensagens mortas ou fila acumulada.
 2. Coloque a leitura de saldo em manutenção, porque a API responde saldo parcial durante a reconstrução.
-3. Pare o consumidor e limpe o consolidado.
-4. Reenvie os eventos. Localmente, `./scripts/rebuild-consolidation.sh` faz os dois passos.
+3. Pare o consumidor e limpe o consolidado. Com o cache ligado, a limpeza precisa dos mesmos alvos de cache das APIs, para invalidar o cache delas, e falha se o Redis estiver fora. Nesse caso, repita a reconstrução quando o Redis voltar.
+4. Reenvie os eventos. Localmente, `./scripts/rebuild-consolidation.sh` faz os passos 3 e 4 e espera a reconciliação passar.
 5. Confira o saldo. Evento repetido não altera o resultado, porque `eventId` é a identidade do lançamento.
 
 ## Implantação

@@ -59,7 +59,7 @@ presentation/             apresentação em HTML, publicada no GitHub Pages
 ## Convenções
 
 - Documentação em pt-BR: `docs/`, specs, features, ADRs e README
-- Código em en-US: identificadores, comentários, logs, testes, contratos, rotas, eventos, tabelas, mensagens de erro da API e mensagens de commit
+- Código em en-US: identificadores, comentários, logs, testes, rotas, eventos, tabelas, mensagens de erro da API e mensagens de commit. Nos contratos, nomes de campos, operações, rotas e eventos ficam em en-US, e títulos e descrições para pessoas ficam em pt-BR
 - Termos de negócio ligados ao código pelo glossário em `docs/00-principios-e-glossario.md`
 - Rotas versionadas em `/v1`
 - Dinheiro sempre em `long`, em centavos (`AmountCents`)

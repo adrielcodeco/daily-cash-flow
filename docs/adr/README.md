@@ -11,7 +11,7 @@ Cada ADR registra o contexto, as opções, a decisão, as consequências e o gat
 | [0005](0005-modelo-de-leitura.md) | Modelo de leitura do saldo | Agregado diário, com cache opcional por rota ou tabela |
 | [0006](0006-computacao.md) | Plataforma de computação | Cloud Run |
 | [0007](0007-linguagem.md) | Linguagem e plataforma | C# com .NET 10 |
-| [0008](0008-autenticacao-e-autorizacao.md) | Autenticação e autorização | Gateway, OIDC e JWT |
+| [0008](0008-autenticacao-e-autorizacao.md) | Autenticação e autorização | OIDC e JWT, validados em cada serviço |
 | [0009](0009-observabilidade.md) | Observabilidade | OpenTelemetry |
 | [0010](0010-estrategia-de-migracao.md) | Estratégia de migração | Strangler fig |
 | [0011](0011-isolamento-de-comerciantes.md) | Isolamento entre comerciantes | Tabelas compartilhadas com row-level security |

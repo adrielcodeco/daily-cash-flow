@@ -23,15 +23,15 @@ Instrumentar com OpenTelemetry. Localmente, usar Prometheus e Grafana. No GCP, e
 | Economia | 2 | 5 | 5 | 2 |
 | Portabilidade | 2 | 5 | 1 | 1 |
 | Simplicidade | 2 | 4 | 4 | 3 |
-| Segurança | 1 | 4 | 4 | 2 |
-| **Resultado** | | **4,57** | **3,71** | **3,00** |
+| Segurança | 2 | 4 | 4 | 2 |
+| **Resultado** | | **4,53** | **3,73** | **2,93** |
 
 As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0009).
 <!-- radar:end -->
 
 ## Leitura do radar
 
-O SDK do provedor é mais direto e integrado, mas prende a instrumentação ao GCP e não funciona igual no ambiente local. O APM comercial é forte em experiência, com custo maior. OpenTelemetry mantém o mesmo código nos dois ambientes.
+O SDK do provedor é integrado e empata em operabilidade e simplicidade, mas prende a instrumentação ao GCP e não funciona igual no ambiente local. O APM comercial é forte em experiência, com custo maior. OpenTelemetry mantém o mesmo código nos dois ambientes.
 
 ## Consequências
 
@@ -47,7 +47,7 @@ O SDK do provedor é mais direto e integrado, mas prende a instrumentação ao G
 
 ## Resultado
 
-Implementado no M6. `smoke.sh` prova que um traço liga a API, o publicador e o consumidor, e que a queda do coletor não afeta a escrita. O custo medido da telemetria está nos [resultados de testes](../09-resultados-de-testes.md).
+Implementado. `smoke.sh` prova que um traço liga a API, o publicador e o consumidor, e que a queda do coletor não afeta a escrita. O custo medido da telemetria está nos [resultados de testes](../09-resultados-de-testes.md).
 
 ## Gatilho de revisão
 

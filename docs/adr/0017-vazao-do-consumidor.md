@@ -33,7 +33,7 @@ As perguntas e a evidência de cada nota estão na [avaliação dos radares](../
 
 ## Leitura do radar
 
-Aumentar o pool só adia o problema e foi o que falhou no teste. Um pooler resolve melhor em escala, mas é mais um componente para um risco que o limite já trata. O limite deixa a fila esvaziar mais devagar, o que é aceitável: o teste terminou com saldo exato 3 segundos depois do fim da carga, e sem nenhuma leitura com falha.
+Aumentar o pool só adia o problema e foi o que falhou no teste. Um pooler resolve melhor em escala, mas é mais um componente para um risco que o limite já trata. O limite deixa a fila esvaziar mais devagar, o que é aceitável: o teste terminou com saldo exato 3 s depois do fim da carga na primeira medição e 1 s na atual, e sem nenhuma leitura com falha.
 
 ## Consequências
 

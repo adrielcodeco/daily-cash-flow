@@ -43,17 +43,17 @@
 <rect x="322.9" y="348.1" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Chaves de API, Desempenho: 4</title></rect>
 <rect x="228.8" y="273.4" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Chaves de API, Economia: 5</title></rect>
 <rect x="281.2" y="165.2" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>Chaves de API, Portabilidade: 4</title></rect>
-<polygon points="380.0,95.0 473.8,170.2 526.2,278.4 432.1,353.1 327.9,353.1 292.3,265.0 286.2,170.2" fill="#2a78d6" fill-opacity="0.08" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
-<circle cx="380.0" cy="95.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Gateway, OIDC e JWT, Alinhamento com o negócio: 5</title></circle>
-<circle cx="473.8" cy="170.2" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Gateway, OIDC e JWT, Segurança: 4</title></circle>
-<circle cx="526.2" cy="278.4" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Gateway, OIDC e JWT, Operabilidade: 5</title></circle>
-<circle cx="432.1" cy="353.1" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Gateway, OIDC e JWT, Simplicidade: 4</title></circle>
-<circle cx="327.9" cy="353.1" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Gateway, OIDC e JWT, Desempenho: 4</title></circle>
-<circle cx="292.3" cy="265.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Gateway, OIDC e JWT, Economia: 3</title></circle>
-<circle cx="286.2" cy="170.2" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Gateway, OIDC e JWT, Portabilidade: 4</title></circle>
+<polygon points="380.0,95.0 473.8,170.2 526.2,278.4 432.1,353.1 314.9,380.1 263.0,271.7 262.7,151.5" fill="#2a78d6" fill-opacity="0.08" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="380.0" cy="95.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>OIDC e JWT, validados em cada serviço, Alinhamento com o negócio: 5</title></circle>
+<circle cx="473.8" cy="170.2" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>OIDC e JWT, validados em cada serviço, Segurança: 4</title></circle>
+<circle cx="526.2" cy="278.4" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>OIDC e JWT, validados em cada serviço, Operabilidade: 5</title></circle>
+<circle cx="432.1" cy="353.1" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>OIDC e JWT, validados em cada serviço, Simplicidade: 4</title></circle>
+<circle cx="314.9" cy="380.1" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>OIDC e JWT, validados em cada serviço, Desempenho: 5</title></circle>
+<circle cx="263.0" cy="271.7" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>OIDC e JWT, validados em cada serviço, Economia: 4</title></circle>
+<circle cx="262.7" cy="151.5" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>OIDC e JWT, validados em cada serviço, Portabilidade: 5</title></circle>
 <line x1="24" y1="465" x2="60" y2="465" stroke="#2a78d6" stroke-width="2"/>
 <circle cx="42.0" cy="465.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"></circle>
-<text x="70" y="469" font-size="13" fill="#0b0b0b">Gateway, OIDC e JWT (escolhida): 4,36</text>
+<text x="70" y="469" font-size="13" fill="#0b0b0b">OIDC e JWT, validados em cada serviço (escolhida): 4,57</text>
 <line x1="24" y1="491" x2="60" y2="491" stroke="#eb6834" stroke-width="2" stroke-dasharray="7 4"/>
 <rect x="37.0" y="486.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"></rect>
 <text x="70" y="495" font-size="13" fill="#0b0b0b">Chaves de API: 3,36</text>

@@ -7,8 +7,8 @@ import { fileURLToPath } from 'node:url';
 const target = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'docs', '19-roi-e-custo-operacional.md');
 
 // Infrastructure totals come from docs/05-custos.md.
-const INFRA_START_USD = 1254.20;
-const INFRA_GROWTH_USD = 3556.07;
+const INFRA_START_USD = 1157.69;
+const INFRA_GROWTH_USD = 3610.07;
 const REQUESTS_START = 13_000_000;
 const REQUESTS_GROWTH = 130_000_000;
 
@@ -219,7 +219,7 @@ ${table(['Cenário', 'Preço', 'Comerciantes ao fim da adoção', 'Mês com lucr
 | Automatizar a operação | Maior alavanca, porque ataca a equipe | Exige investimento em plataforma |
 | Reduzir o Cloud SQL do consolidado | Menor custo de infraestrutura | Recuperação mais lenta |
 | Descontos por compromisso | Menor custo de infraestrutura | Compromisso de uso |
-| Deixar o Redis desligado | Cerca de US$ 64 por mês no Início | Menos proteção do banco em volumes maiores |
+| Manter o Redis desligado também no Crescimento | Cerca de US$ 635 por mês no Crescimento. O Início já não usa Redis | Menos proteção do banco em volumes maiores |
 `;
 
 writeFileSync(target, doc);

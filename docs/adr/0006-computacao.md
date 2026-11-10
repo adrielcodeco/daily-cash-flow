@@ -9,7 +9,7 @@ Os serviços são contêineres sem estado, com carga variável. A equipe de oper
 
 ## Decisão
 
-Usar Cloud Run com instância mínima, com o publicador e o consumidor em CPU sempre alocada.
+Usar Cloud Run com instâncias mínimas, 6 no cenário Início, e CPU sempre alocada. O publicador e o consumidor precisam dela, porque trabalham fora de requisições; a [estimativa de custos](../05-custos.md) aplica o mesmo faturamento por instância a todos os serviços.
 
 ## Opções
 
@@ -26,27 +26,28 @@ Usar Cloud Run com instância mínima, com o publicador e o consumidor em CPU se
 | Escalabilidade | 2 | 5 | 5 | 4 |
 | Simplicidade | 2 | 4 | 3 | 3 |
 | Portabilidade | 1 | 5 | 5 | 5 |
-| Segurança | 1 | 4 | 3 | 3 |
-| **Resultado** | | **4,50** | **4,35** | **3,60** |
+| Segurança | 2 | 4 | 3 | 3 |
+| **Resultado** | | **4,48** | **4,29** | **3,57** |
 
 As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0006).
 <!-- radar:end -->
 
 ## Leitura do radar
 
-GKE tem mais controle e o melhor resultado em confiabilidade, mas exige mais operação. Compute Engine traz trabalho de sistema operacional sem vantagem aqui. Se o padrão do cliente for GKE, a troca é simples, porque os serviços já são contêineres.
+Em confiabilidade, as três opções empatam. GKE tem mais controle e desempenho melhor, mas é menos simples, custa mais e tem nota menor em segurança. Compute Engine empata com o GKE em desempenho, mas traz trabalho de sistema operacional e o maior custo. Se o padrão do cliente for GKE, a troca é simples, porque os serviços já são contêineres.
 
 ## Consequências
 
 **Positivas**
 
 - Escala automática e operação reduzida
-- Pagamento proporcional ao uso
+- Escala automática acima do mínimo, pagando o excedente conforme o uso
 
 **Negativas**
 
 - Menos controle de rede e de execução do que no Kubernetes
 - Processos contínuos precisam de configuração própria para não serem suspensos
+- Instâncias mínimas sempre ativas formam um custo fixo
 
 ## Gatilho de revisão
 

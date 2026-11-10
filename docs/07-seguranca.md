@@ -1,6 +1,6 @@
 # Segurança
 
-A autenticação segue o [ADR-0008](adr/0008-autenticacao-e-autorizacao.md). A coluna "Situação" separa o que já existe do que entra no M6 ou fica como proposta para o GCP.
+A autenticação segue o [ADR-0008](adr/0008-autenticacao-e-autorizacao.md). A coluna "Situação" separa o que está implementado e testado localmente do que fica como proposta para o GCP.
 
 ## Fronteiras de confiança e fluxo de dados
 

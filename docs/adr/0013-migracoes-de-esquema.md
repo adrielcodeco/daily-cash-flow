@@ -25,14 +25,15 @@ Usar DbUp com arquivos SQL embutidos no projeto de infraestrutura. A migração 
 | Operabilidade | 2 | 5 | 4 | 5 |
 | Economia | 1 | 5 | 5 | 4 |
 | Portabilidade | 1 | 5 | 5 | 5 |
-| **Resultado** | | **5,00** | **4,31** | **3,69** |
+| Segurança | 2 | 5 | 5 | 4 |
+| **Resultado** | | **5,00** | **4,40** | **3,73** |
 
 As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0013).
 <!-- radar:end -->
 
 ## Leitura do radar
 
-EF Core Migrations pressupõe o EF Core, descartado no ADR-0012. Flyway é maduro, mas traz outra ferramenta e outro ambiente de execução para uma stack .NET. DbUp mantém o SQL explícito e cabe no próprio binário do serviço.
+EF Core Migrations pressupõe o EF Core, descartado no ADR-0012. Flyway é maduro, mas traz outra ferramenta e outro ambiente de execução para uma stack .NET. DbUp mantém o SQL explícito e cabe no próprio binário do serviço. Em segurança, DbUp e Flyway empatam: os dois rodam à parte, com o papel de dono do esquema, e mantêm em SQL revisável os papéis e as políticas de row-level security.
 
 ## Consequências
 

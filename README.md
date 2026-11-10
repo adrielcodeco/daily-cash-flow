@@ -32,9 +32,9 @@ Medidos localmente, com autenticação, rate limiting e telemetria ativos. Os de
 
 | Requisito | Meta | Resultado |
 |---|---|---|
-| Lançamentos disponível com o consolidado fora | Nenhuma escrita recusada | 0 falhas em 4.501 escritas |
+| Lançamentos disponível com o consolidado fora | Nenhuma escrita recusada | 0 falhas em 4.500 escritas |
 | Vazão do consolidado | 50 req/s | 50 req/s por 5 minutos |
-| Perda de requisições | No máximo 5% | 0%, com p95 de 7,24 ms |
+| Perda de requisições | No máximo 5% | 0%, com p95 de 7,55 ms |
 
 ## Executar
 
@@ -96,7 +96,7 @@ Os contratos completos estão em [docs/contratos](docs/contratos/README.md). Val
 | Comando | O que faz | Tempo aproximado |
 |---|---|---|
 | `./scripts/test.sh` | Testes de unidade e de integração, em contêiner | 30 segundos |
-| `./scripts/smoke.sh` | 14 verificações de ponta a ponta, com a stack no ar | 30 segundos |
+| `./scripts/smoke.sh` | 15 verificações de ponta a ponta, com a stack no ar | 30 segundos |
 | `./scripts/resilience.sh` | Derruba dependências durante a carga e prova que nada se perdeu | 3 minutos |
 | `./scripts/load-test.sh` | Pico de 50 leituras por segundo, com e sem cache | 8 minutos |
 | `./scripts/mutation.sh` | Testes de mutação do domínio | 2 minutos |
@@ -110,7 +110,7 @@ docker compose up -d --build --wait
 
 ## Cache
 
-O cache vem desligado, e sem ele o sistema nem conecta ao Redis. Para ligar, informe rotas ou tabelas:
+O cache vem desligado. Cada serviço só conecta ao Redis quando recebe um alvo próprio. Para ligar, informe rotas ou tabelas:
 
 ```bash
 CACHE_TARGETS=daily_balance,entries.get docker compose up -d --wait

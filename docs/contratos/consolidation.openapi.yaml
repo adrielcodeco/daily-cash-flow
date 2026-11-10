@@ -2,7 +2,9 @@ openapi: 3.1.0
 info:
   title: API do Consolidado
   version: 1.0.0
-  description: Informa o saldo diário consolidado. O comerciante vem do token.
+  description: >-
+    Informa o saldo diário consolidado. O comerciante vem da claim `merchant_id` do token.
+    Um token sem essa claim recebe 403. Com valor que não é UUID ou com o UUID todo em zeros, recebe 401.
   license:
     name: MIT
     identifier: MIT
@@ -49,7 +51,7 @@ paths:
       tags: [Consolidado]
       operationId: getPeriodBalance
       summary: Consulta o saldo de cada dia de um período
-      description: O período tem no máximo 366 dias.
+      description: O período tem no máximo 366 dias, e `start` não pode ser posterior a `end`. Fora disso, a resposta é 400.
       security:
         - oidc: [balances.read]
       parameters:

@@ -38,7 +38,7 @@ groups:
         labels:
           severity: low
         annotations:
-          summary: The balance API is reading without the cache.
+          summary: An API with the cache turned on is reading without it.
       - alert: AccessDeniedHigh
         expr: sum(rate(http_server_request_duration_seconds_count{http_response_status_code=~"401|403"}[5m])) > 1
         for: 10m

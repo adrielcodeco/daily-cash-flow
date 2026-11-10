@@ -2,7 +2,7 @@
 # @anchors
 #   code: CESFT
 #   ref: CESTR
-#   updated_at: 2026-11-06
+#   updated_at: 2026-11-09
 #   layer: feature
 
 @CESTR @ledger
@@ -15,6 +15,12 @@ Funcionalidade: CachedEntryStore — o cache configurável
   Cenário: sem alvo ligado, o cache não é usado
     Dado nenhum alvo de cache
     Quando a consulta é feita
+    Então o cache não é tocado
+
+  @CESTR-R01 @nivel-unit @P1
+  Cenário: o alvo de outro serviço não liga o cache
+    Dado o cache ligado só para uma tabela do consolidado
+    Quando uma escrita acontece
     Então o cache não é tocado
 
   @CESTR-R02 @nivel-unit @P1

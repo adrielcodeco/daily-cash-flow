@@ -4,6 +4,9 @@ This project is kept coherent by [Anchors](https://github.com/co2-lab/anchors). 
 section below says how work flows here; it was seeded by `anchors init` from
 `anchors.yaml`, and the configuration stays the source of truth.
 
+Running and testing the project needs only Docker, as the README says. Anchors is needed
+only to run the gates that guard a commit.
+
 ## Working with Anchors
 
 ### The order of the work

@@ -1,7 +1,7 @@
 // @anchors
 //   code: GTBTS
 //   ref: GTBAL
-//   updated_at: 2026-11-06
+//   updated_at: 2026-11-09
 //   layer: test
 // Refs:
 //   feature : services/consolidation/src/Consolidation.Core/GetDailyBalance.feature
@@ -114,5 +114,19 @@ public sealed class GetDailyBalanceTests : IAsyncLifetime
 
         var after = await Query(merchant, Day);
         Assert.Equal(before.OpeningCents + 5000, after.OpeningCents);
+    }
+
+    [Fact(DisplayName = "APENT-R04 the consumer writes under row-level security, as the event's merchant")]
+    public async Task ConsumerWritesUnderRowLevelSecurity()
+    {
+        await using var worker = NpgsqlDataSource.Create($"{database.GetConnectionString()};Options=-c role=consolidation_worker");
+        var consumer = new PostgresBalanceStore(worker, TimeProvider.System);
+        var merchant = Guid.NewGuid();
+
+        await consumer.ApplyOnceAsync(new BalanceChange(Guid.NewGuid(), merchant, Day, 100, 0, AppliedAt), CancellationToken.None);
+
+        Assert.Equal(100, (await Query(merchant, Day)).ClosingCents);
+        await using var bypass = dataSource.CreateCommand("SELECT rolbypassrls FROM pg_roles WHERE rolname = 'consolidation_worker'");
+        Assert.Equal(false, await bypass.ExecuteScalarAsync());
     }
 }

@@ -1,6 +1,6 @@
 <!-- @anchors
   code: FPAPL
-  updated_at: 2026-11-05
+  updated_at: 2026-11-09
 -->
 
 # Plano 01 — Fluxo de ponta a ponta
@@ -13,7 +13,7 @@ Um lançamento criado pela API aparece no saldo do dia, com todo o sistema subin
 
 ## Motivo
 
-O fluxo completo valida a decisão central da arquitetura antes de qualquer refinamento. O escopo foi aprovado no portão G1.
+O fluxo completo valida a decisão central da arquitetura antes de qualquer refinamento. O escopo foi aprovado antes do início da implementação.
 
 ## Doutrina de produto semeada
 
@@ -37,7 +37,7 @@ O fluxo completo valida a decisão central da arquitetura antes de qualquer refi
 
 ## Fora de escopo
 
-Estorno, idempotência da API, cache, reconstrução, autenticação real e telemetria ficam para os marcos seguintes.
+Estorno, idempotência da API, cache, reconstrução, autenticação real e telemetria ficam para as etapas seguintes.
 
 ## Definição de pronto
 

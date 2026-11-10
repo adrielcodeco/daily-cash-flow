@@ -14,6 +14,15 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
+      - name: Check formatting
+        run: dotnet format DailyCashFlow.slnx --verify-no-changes
+      - name: Check generated documents
+        run: |
+          node tools/radar/generate.mjs
+          node tools/radar/method.mjs
+          node tools/decisions/generate.mjs
+          node tools/roi/generate.mjs
+          git diff --exit-code -- docs
       - name: Run unit and integration tests
         run: dotnet test DailyCashFlow.slnx
       - name: Start the stack
@@ -22,6 +31,7 @@ jobs:
         run: |
           for port in 18081 18082; do
             for _ in $(seq 1 60); do curl -sf "localhost:$port/health/ready" >/dev/null && break; sleep 1; done
+            curl -sf "localhost:$port/health/ready" >/dev/null
           done
       - name: Run the end-to-end test
         run: ./scripts/smoke.sh

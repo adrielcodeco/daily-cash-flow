@@ -3,40 +3,43 @@
 <rect width="760" height="525" fill="#fcfcfb"/>
 <text x="24" y="30" font-size="16" font-weight="600" fill="#0b0b0b">Idempotência da escrita</text>
 <text x="24" y="50" font-size="12" fill="#52514e">Quanto mais longe do centro, melhor</text>
-<polygon points="380.0,215.0 403.5,226.3 409.2,251.7 393.0,272.0 367.0,272.0 350.8,251.7 356.5,226.3" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<polygon points="380.0,215.0 401.2,223.8 410.0,245.0 401.2,266.2 380.0,275.0 358.8,266.2 350.0,245.0 358.8,223.8" fill="none" stroke="#d9d8d3" stroke-width="1"/>
 <text x="390.0" y="227.0" font-size="10" fill="#52514e">1</text>
-<polygon points="380.0,185.0 426.9,207.6 438.5,258.4 406.0,299.1 354.0,299.1 321.5,258.4 333.1,207.6" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<polygon points="380.0,185.0 422.4,202.6 440.0,245.0 422.4,287.4 380.0,305.0 337.6,287.4 320.0,245.0 337.6,202.6" fill="none" stroke="#d9d8d3" stroke-width="1"/>
 <text x="390.0" y="197.0" font-size="10" fill="#52514e">2</text>
-<polygon points="380.0,155.0 450.4,188.9 467.7,265.0 419.0,326.1 341.0,326.1 292.3,265.0 309.6,188.9" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<polygon points="380.0,155.0 443.6,181.4 470.0,245.0 443.6,308.6 380.0,335.0 316.4,308.6 290.0,245.0 316.4,181.4" fill="none" stroke="#d9d8d3" stroke-width="1"/>
 <text x="390.0" y="167.0" font-size="10" fill="#52514e">3</text>
-<polygon points="380.0,125.0 473.8,170.2 497.0,271.7 432.1,353.1 327.9,353.1 263.0,271.7 286.2,170.2" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<polygon points="380.0,125.0 464.9,160.1 500.0,245.0 464.9,329.9 380.0,365.0 295.1,329.9 260.0,245.0 295.1,160.1" fill="none" stroke="#d9d8d3" stroke-width="1"/>
 <text x="390.0" y="137.0" font-size="10" fill="#52514e">4</text>
-<polygon points="380.0,95.0 497.3,151.5 526.2,278.4 445.1,380.1 314.9,380.1 233.8,278.4 262.7,151.5" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<polygon points="380.0,95.0 486.1,138.9 530.0,245.0 486.1,351.1 380.0,395.0 273.9,351.1 230.0,245.0 273.9,138.9" fill="none" stroke="#d9d8d3" stroke-width="1"/>
 <text x="390.0" y="107.0" font-size="10" fill="#52514e">5</text>
 <line x1="380" y1="245" x2="380.0" y2="95.0" stroke="#d9d8d3" stroke-width="1"/>
 <text x="380.0" y="87.0" text-anchor="middle" font-size="12" fill="#0b0b0b">Alinhamento com o negócio (4)</text>
-<line x1="380" y1="245" x2="497.3" y2="151.5" stroke="#d9d8d3" stroke-width="1"/>
-<text x="506.7" y="148.0" text-anchor="start" font-size="12" fill="#0b0b0b">Aderência ao problema (3)</text>
-<line x1="380" y1="245" x2="526.2" y2="278.4" stroke="#d9d8d3" stroke-width="1"/>
-<text x="537.9" y="285.0" text-anchor="start" font-size="12" fill="#0b0b0b">Confiabilidade (3)</text>
-<line x1="380" y1="245" x2="445.1" y2="380.1" stroke="#d9d8d3" stroke-width="1"/>
-<text x="450.3" y="395.0" text-anchor="start" font-size="12" fill="#0b0b0b">Desempenho (2)</text>
-<line x1="380" y1="245" x2="314.9" y2="380.1" stroke="#d9d8d3" stroke-width="1"/>
-<text x="309.7" y="395.0" text-anchor="end" font-size="12" fill="#0b0b0b">Operabilidade (2)</text>
-<line x1="380" y1="245" x2="233.8" y2="278.4" stroke="#d9d8d3" stroke-width="1"/>
-<text x="222.1" y="285.0" text-anchor="end" font-size="12" fill="#0b0b0b">Simplicidade (2)</text>
-<line x1="380" y1="245" x2="262.7" y2="151.5" stroke="#d9d8d3" stroke-width="1"/>
-<text x="253.3" y="148.0" text-anchor="end" font-size="12" fill="#0b0b0b">Economia (1)</text>
-<polygon points="380.0,95.0 497.3,151.5 526.2,278.4 432.1,353.1 314.9,380.1 233.8,278.4 262.7,151.5" fill="#2a78d6" fill-opacity="0.08" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
+<line x1="380" y1="245" x2="486.1" y2="138.9" stroke="#d9d8d3" stroke-width="1"/>
+<text x="494.6" y="134.4" text-anchor="start" font-size="12" fill="#0b0b0b">Aderência ao problema (3)</text>
+<line x1="380" y1="245" x2="530.0" y2="245.0" stroke="#d9d8d3" stroke-width="1"/>
+<text x="542.0" y="249.0" text-anchor="start" font-size="12" fill="#0b0b0b">Confiabilidade (3)</text>
+<line x1="380" y1="245" x2="486.1" y2="351.1" stroke="#d9d8d3" stroke-width="1"/>
+<text x="494.6" y="363.6" text-anchor="start" font-size="12" fill="#0b0b0b">Desempenho (2)</text>
+<line x1="380" y1="245" x2="380.0" y2="395.0" stroke="#d9d8d3" stroke-width="1"/>
+<text x="380.0" y="411.0" text-anchor="middle" font-size="12" fill="#0b0b0b">Operabilidade (2)</text>
+<line x1="380" y1="245" x2="273.9" y2="351.1" stroke="#d9d8d3" stroke-width="1"/>
+<text x="265.4" y="363.6" text-anchor="end" font-size="12" fill="#0b0b0b">Simplicidade (2)</text>
+<line x1="380" y1="245" x2="230.0" y2="245.0" stroke="#d9d8d3" stroke-width="1"/>
+<text x="218.0" y="249.0" text-anchor="end" font-size="12" fill="#0b0b0b">Economia (1)</text>
+<line x1="380" y1="245" x2="273.9" y2="138.9" stroke="#d9d8d3" stroke-width="1"/>
+<text x="265.4" y="134.4" text-anchor="end" font-size="12" fill="#0b0b0b">Segurança (2)</text>
+<polygon points="380.0,95.0 486.1,138.9 530.0,245.0 464.9,329.9 380.0,395.0 273.9,351.1 230.0,245.0 273.9,138.9" fill="#2a78d6" fill-opacity="0.08" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
 <circle cx="380.0" cy="95.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Idempotency-Key guardada no banco, Alinhamento com o negócio: 5</title></circle>
-<circle cx="497.3" cy="151.5" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Idempotency-Key guardada no banco, Aderência ao problema: 5</title></circle>
-<circle cx="526.2" cy="278.4" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Idempotency-Key guardada no banco, Confiabilidade: 5</title></circle>
-<circle cx="432.1" cy="353.1" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Idempotency-Key guardada no banco, Desempenho: 4</title></circle>
-<circle cx="314.9" cy="380.1" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Idempotency-Key guardada no banco, Operabilidade: 5</title></circle>
-<circle cx="233.8" cy="278.4" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Idempotency-Key guardada no banco, Simplicidade: 5</title></circle>
-<circle cx="262.7" cy="151.5" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Idempotency-Key guardada no banco, Economia: 5</title></circle>
+<circle cx="486.1" cy="138.9" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Idempotency-Key guardada no banco, Aderência ao problema: 5</title></circle>
+<circle cx="530.0" cy="245.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Idempotency-Key guardada no banco, Confiabilidade: 5</title></circle>
+<circle cx="464.9" cy="329.9" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Idempotency-Key guardada no banco, Desempenho: 4</title></circle>
+<circle cx="380.0" cy="395.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Idempotency-Key guardada no banco, Operabilidade: 5</title></circle>
+<circle cx="273.9" cy="351.1" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Idempotency-Key guardada no banco, Simplicidade: 5</title></circle>
+<circle cx="230.0" cy="245.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Idempotency-Key guardada no banco, Economia: 5</title></circle>
+<circle cx="273.9" cy="138.9" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Idempotency-Key guardada no banco, Segurança: 5</title></circle>
 <line x1="24" y1="465" x2="60" y2="465" stroke="#2a78d6" stroke-width="2"/>
 <circle cx="42.0" cy="465.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"></circle>
-<text x="70" y="469" font-size="13" fill="#0b0b0b">Idempotency-Key guardada no banco (escolhida): 4,88</text>
+<text x="70" y="469" font-size="13" fill="#0b0b0b">Idempotency-Key guardada no banco (escolhida): 4,89</text>
 <text x="24" y="495" font-size="12" fill="#52514e">Eliminadas por veto: Idempotency-Key guardada no Redis, Deduplicar por conteúdo do lançamento</text>
 </svg>

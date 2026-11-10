@@ -1,7 +1,7 @@
 // @anchors
 //   code: LDFKS
 //   layer: test
-//   updated_at: 2026-11-06
+//   updated_at: 2026-11-09
 using Ledger.Core;
 
 namespace Ledger.Tests;
@@ -80,9 +80,9 @@ internal sealed class InMemoryEntryStore : IEntryStore
             .Take(batchSize)
             .ToList());
 
-    public Task RequeueAsync(EntryRecorded recorded, CancellationToken cancellationToken)
+    public Task RequeueAsync(IReadOnlyList<EntryRecorded> recorded, CancellationToken cancellationToken)
     {
-        Requeued.Add(recorded);
+        Requeued.AddRange(recorded);
         return Task.CompletedTask;
     }
 }

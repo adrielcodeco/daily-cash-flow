@@ -1,7 +1,7 @@
 // @anchors
 //   code: PGBST
 //   ref: APENT
-//   updated_at: 2026-11-06
+//   updated_at: 2026-11-09
 using Consolidation.Core;
 using Dapper;
 using Npgsql;
@@ -24,6 +24,7 @@ public sealed class PostgresBalanceStore : IBalanceStore
     {
         await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
         await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
+        await SetMerchantAsync(connection, transaction, change.MerchantId, cancellationToken);
 
         var registered = await connection.ExecuteAsync(new CommandDefinition(
             "INSERT INTO processed_event (event_id, processed_at) VALUES (@EventId, @ProcessedAt) ON CONFLICT DO NOTHING",
@@ -115,16 +116,20 @@ public sealed class PostgresBalanceStore : IBalanceStore
     {
         await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
         await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
-        await connection.ExecuteAsync(new CommandDefinition(
-            "SELECT set_config('app.merchant_id', @MerchantId, true)",
-            new { MerchantId = merchantId.ToString() },
-            transaction,
-            cancellationToken: cancellationToken));
+        await SetMerchantAsync(connection, transaction, merchantId, cancellationToken);
 
         var result = await query(connection, transaction);
         await transaction.CommitAsync(cancellationToken);
         return result;
     }
+
+    /// <summary>The consumer also writes as the event's merchant, so row-level security holds for it too.</summary>
+    private static Task SetMerchantAsync(NpgsqlConnection connection, NpgsqlTransaction transaction, Guid merchantId, CancellationToken cancellationToken) =>
+        connection.ExecuteAsync(new CommandDefinition(
+            "SELECT set_config('app.merchant_id', @MerchantId, true)",
+            new { MerchantId = merchantId.ToString() },
+            transaction,
+            cancellationToken: cancellationToken));
 
     private static DateTimeOffset? ToOffset(DateTime? value) => value is null ? null : new DateTimeOffset(value.Value);
 

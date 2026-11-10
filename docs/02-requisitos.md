@@ -15,6 +15,7 @@
 | PRE-09 | O legado da arquitetura de transição é um cenário assumido: sistema único com banco compartilhado |
 | PRE-10 | A arquitetura-alvo roda no GCP, em `southamerica-east1` |
 | PRE-11 | A solução considera exigências de uma instituição financeira. A aplicabilidade exata deve ser validada com a área de conformidade |
+| PRE-12 | A operação fica com uma equipe reduzida, sem especialista dedicado em infraestrutura. O desafio não define isso; é uma premissa assumida |
 
 ## Requisitos funcionais
 

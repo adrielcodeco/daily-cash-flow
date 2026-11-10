@@ -1,7 +1,8 @@
 // @anchors
 //   code: LDSEC
+//   ref: LDSCP
 //   layer: host
-//   updated_at: 2026-11-06
+//   updated_at: 2026-11-09
 using System.Security.Claims;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -79,7 +80,9 @@ public static class ApiSecurity
             return RateLimitPartition.GetNoLimiter("health");
         }
 
-        var key = context.User.FindFirstValue(MerchantClaim) ?? context.Connection.RemoteIpAddress?.ToString() ?? "anonymous";
+        // Prefixes keep a claim from landing in another kind of partition, such as one named after an address.
+        var merchant = context.User.FindFirstValue(MerchantClaim);
+        var key = merchant is not null ? $"merchant:{merchant}" : $"address:{context.Connection.RemoteIpAddress?.ToString() ?? "unknown"}";
         return RateLimitPartition.GetTokenBucketLimiter(key, _ => new TokenBucketRateLimiterOptions
         {
             TokenLimit = permitsPerSecond,

@@ -1,7 +1,7 @@
 // @anchors
 //   code: PGOBX
 //   ref: OBRLY
-//   updated_at: 2026-11-06
+//   updated_at: 2026-11-09
 using Dapper;
 using Ledger.Core;
 using Npgsql;
@@ -29,12 +29,12 @@ public sealed class PostgresOutbox : IOutbox
             """
             SELECT id, type, payload::text AS payload, trace_context
             FROM outbox
-            WHERE published_at IS NULL
+            WHERE published_at IS NULL AND next_attempt_at <= @Now
             ORDER BY created_at
             LIMIT @Limit
             FOR UPDATE SKIP LOCKED
             """,
-            new { Limit = limit },
+            new { Limit = limit, Now = clock.GetUtcNow() },
             transaction,
             cancellationToken: cancellationToken));
 
@@ -73,10 +73,25 @@ public sealed class PostgresOutbox : IOutbox
     {
         public IReadOnlyList<OutboxMessage> Messages => messages;
 
-        public Task MarkPublishedAsync(Guid id, CancellationToken cancellationToken) =>
+        public Task MarkPublishedAsync(IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken) =>
+            ids.Count == 0
+                ? Task.CompletedTask
+                : connection.ExecuteAsync(new CommandDefinition(
+                    "UPDATE outbox SET published_at = @PublishedAt WHERE id = ANY(@Ids)",
+                    new { PublishedAt = clock.GetUtcNow(), Ids = ids.ToArray() },
+                    transaction,
+                    cancellationToken: cancellationToken));
+
+        /// <summary>Waits 1, 2, 4… seconds after each failure, up to one minute.</summary>
+        public Task DeferAsync(Guid id, CancellationToken cancellationToken) =>
             connection.ExecuteAsync(new CommandDefinition(
-                "UPDATE outbox SET published_at = @PublishedAt WHERE id = @Id",
-                new { PublishedAt = clock.GetUtcNow(), Id = id },
+                """
+                UPDATE outbox
+                SET attempts = attempts + 1,
+                    next_attempt_at = @Now + make_interval(secs => least(power(2, attempts), 60))
+                WHERE id = @Id
+                """,
+                new { Now = clock.GetUtcNow(), Id = id },
                 transaction,
                 cancellationToken: cancellationToken));
 

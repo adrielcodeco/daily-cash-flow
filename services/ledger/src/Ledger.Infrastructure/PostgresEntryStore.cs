@@ -1,7 +1,7 @@
 // @anchors
 //   code: PGEST
 //   ref: RCENT
-//   updated_at: 2026-11-06
+//   updated_at: 2026-11-09
 using System.Diagnostics;
 using System.Text.Json;
 using Dapper;
@@ -143,20 +143,22 @@ public sealed class PostgresEntryStore : IEntryStore
         return rows.Select(row => row.ToEntry()).ToList();
     }
 
-    public async Task RequeueAsync(EntryRecorded recorded, CancellationToken cancellationToken)
+    public async Task RequeueAsync(IReadOnlyList<EntryRecorded> recorded, CancellationToken cancellationToken)
     {
         await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
         await connection.ExecuteAsync(Command(
             """
-            INSERT INTO outbox (id, type, payload, created_at) VALUES (@EventId, @Type, @Payload::jsonb, @OccurredAt)
-            ON CONFLICT (id) DO UPDATE SET published_at = NULL
+            INSERT INTO outbox (id, type, payload, created_at)
+            SELECT id, type, payload::jsonb, created_at
+            FROM unnest(@Ids, @Types, @Payloads, @OccurredAts) AS pending(id, type, payload, created_at)
+            ON CONFLICT (id) DO UPDATE SET published_at = NULL, attempts = 0, next_attempt_at = '-infinity'
             """,
             new
             {
-                recorded.EventId,
-                recorded.Type,
-                Payload = JsonSerializer.Serialize(recorded, EventJson),
-                OccurredAt = recorded.OccurredAt.ToUniversalTime(),
+                Ids = recorded.Select(r => r.EventId).ToArray(),
+                Types = recorded.Select(r => r.Type).ToArray(),
+                Payloads = recorded.Select(r => JsonSerializer.Serialize(r, EventJson)).ToArray(),
+                OccurredAts = recorded.Select(r => r.OccurredAt.ToUniversalTime()).ToArray(),
             },
             null,
             cancellationToken));

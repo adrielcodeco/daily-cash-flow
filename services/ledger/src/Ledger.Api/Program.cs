@@ -1,7 +1,8 @@
 // @anchors
 //   code: LDAPI
+//   ref: LDHTP
 //   layer: host
-//   updated_at: 2026-11-06
+//   updated_at: 2026-11-09
 using Ledger.Api;
 using Ledger.Core;
 using Ledger.Infrastructure;
@@ -67,6 +68,8 @@ app.UseExceptionHandler(handler => handler.Run(async context =>
     await Results.Problem(title: title, statusCode: status, type: (failure as DomainRuleException)?.Code).ExecuteAsync(context);
 }));
 
+// Refusals that carry no body of their own (a malformed request, a missing token, a missing scope) answer in the problem format too.
+app.UseStatusCodePages();
 app.UseApiSecurity();
 
 app.MapHealthChecks("/health/live", new HealthCheckOptions { Predicate = check => check.Name == "live" });

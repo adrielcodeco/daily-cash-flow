@@ -1,12 +1,16 @@
 // @anchors
 //   code: CNAUD
+//   ref: CNADS
 //   layer: host
-//   updated_at: 2026-11-06
+//   updated_at: 2026-11-09
 using System.Security.Claims;
 
 namespace Consolidation.Api;
 
-/// <summary>Records writes and refused access in the Audit log category, kept apart from operational logs.</summary>
+/// <summary>
+/// Records writes and refused access in the Audit log category, kept apart from operational logs.
+/// Every 404 is recorded too, as in the ledger API, where a read of another merchant's data answers 404.
+/// </summary>
 public sealed class AuditMiddleware(RequestDelegate next, ILoggerFactory loggers)
 {
     private readonly ILogger logger = loggers.CreateLogger("Audit");
@@ -16,7 +20,7 @@ public sealed class AuditMiddleware(RequestDelegate next, ILoggerFactory loggers
         await next(context);
 
         var status = context.Response.StatusCode;
-        var refused = status is StatusCodes.Status401Unauthorized or StatusCodes.Status403Forbidden or StatusCodes.Status429TooManyRequests;
+        var refused = status is StatusCodes.Status401Unauthorized or StatusCodes.Status403Forbidden or StatusCodes.Status404NotFound or StatusCodes.Status429TooManyRequests;
         if (refused || !HttpMethods.IsGet(context.Request.Method))
         {
             logger.LogInformation(

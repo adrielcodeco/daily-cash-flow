@@ -1,7 +1,7 @@
 // @anchors
 //   code: CBSTS
 //   ref: CBSTR
-//   updated_at: 2026-11-06
+//   updated_at: 2026-11-09
 //   layer: test
 // Refs:
 //   feature : services/consolidation/src/Consolidation.Core/CachedBalanceStore.feature
@@ -78,7 +78,7 @@ public sealed class CachedBalanceStoreTests
     [Fact(DisplayName = "CBSTR-R04 a cached value skips the store")]
     public async Task ReadsFromCache()
     {
-        await cache.SetAsync(Merchant, $"daily:{Day:O}", "0", new DailyBalance(Day, 100, 0, 0, null), None);
+        await cache.SetAsync(Merchant, $"daily:{Day:O}", "0.0", new DailyBalance(Day, 100, 0, 0, null), None);
 
         var balance = await Store("daily_balance").GetDailyAsync(Merchant, Day, None);
 
@@ -150,11 +150,28 @@ public sealed class CachedBalanceStoreTests
         Assert.Equal(2, inner.DailyQueries);
     }
 
-    [Theory(DisplayName = "CBSTR-R01 blank targets keep the cache off")]
+    [Theory(DisplayName = "CBSTR-R02 one route target is enough to turn the cache on")]
+    [InlineData("balances.daily")]
+    [InlineData("balances.period")]
+    public void TurnsOnForOneRoute(string targets) =>
+        Assert.True(CachedBalanceStore.IsOn(CachePolicy.Parse(targets)));
+
+    [Theory(DisplayName = "CBSTR-R01 blank targets and targets of another service keep the cache off")]
     [InlineData(null)]
     [InlineData(" , ,")]
-    public void TreatsBlankTargetsAsOff(string? targets) =>
-        Assert.True(CachePolicy.Parse(targets).IsEmpty);
+    [InlineData("ledger_entry,entries.get")]
+    public void TreatsForeignTargetsAsOff(string? targets) =>
+        Assert.False(CachedBalanceStore.IsOn(CachePolicy.Parse(targets)));
+
+    [Theory(DisplayName = "CBSTR-R01 without a target the event does not touch the cache")]
+    [InlineData(null)]
+    [InlineData("ledger_entry")]
+    public async Task SkipsInvalidationByDefault(string? targets)
+    {
+        await Store(targets).ApplyOnceAsync(Change(), None);
+
+        Assert.Empty(cache.Invalidated);
+    }
 
     [Fact(DisplayName = "CBSTR-R03 targets are trimmed and blanks are ignored")]
     public void ParsesTargets()
@@ -207,6 +224,26 @@ public sealed class CachedBalanceStoreTests
         await Assert.ThrowsAsync<OperationCanceledException>(() => Store("daily_balance", new CancelledQueryCache()).ApplyOnceAsync(Change(), None));
 
     [Fact(DisplayName = "CBSTR-R01 the reset reaches the store")]
-    public async Task ForwardsReset() =>
-        await Assert.ThrowsAsync<NotSupportedException>(() => Store(null).ResetAsync(None));
+    public async Task ForwardsReset()
+    {
+        await Store(null).ResetAsync(None);
+
+        Assert.Equal(1, inner.Resets);
+    }
+
+    [Fact(DisplayName = "CBSTR-R09 the reset discards the cached balances of every merchant")]
+    public async Task DiscardsCacheOnReset()
+    {
+        var store = Store("daily_balance");
+        await store.GetDailyAsync(Merchant, Day, None);
+
+        await store.ResetAsync(None);
+        await store.GetDailyAsync(Merchant, Day, None);
+
+        Assert.Equal(2, inner.DailyQueries);
+    }
+
+    [Fact(DisplayName = "CBSTR-R09 a cache failure fails the reset")]
+    public async Task FailsResetWithoutCache() =>
+        await Assert.ThrowsAsync<InvalidOperationException>(() => Store("daily_balance", new BrokenQueryCache()).ResetAsync(None));
 }

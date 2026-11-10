@@ -10,7 +10,7 @@ Os eventos gravados na outbox precisam chegar à mensageria sem perda e sem exig
 
 ## Decisão
 
-Consultar a outbox em lotes, com `FOR UPDATE SKIP LOCKED`, publicar cada evento e marcar `published_at` na mesma transação da leitura. Eventos são publicados em sequência, e a falha interrompe o lote.
+Consultar a outbox em lotes, com `FOR UPDATE SKIP LOCKED`, publicar cada evento e marcar `published_at` na mesma transação da leitura. Eventos são publicados em sequência. A falha interrompe o lote, e o evento que falhou espera 1, 2, 4… segundos, até 1 minuto, antes de nova tentativa (D-143, migração V006).
 
 ## Opções
 
@@ -34,7 +34,7 @@ As perguntas e a evidência de cada nota estão na [avaliação dos radares](../
 
 ## Leitura do radar
 
-LISTEN/NOTIFY reduz a espera, mas ainda precisa da consulta para não perder avisos, então acrescenta um caminho sem remover o outro. CDC tem a melhor vazão, mas pede outra plataforma para operar. A consulta periódica tem a menor vazão, que é suficiente: a defasagem medida é de segundos, e o `SKIP LOCKED` permite mais de um publicador.
+LISTEN/NOTIFY reduz a espera, mas ainda precisa da consulta para não perder avisos, então acrescenta um caminho sem remover o outro e perde em simplicidade e aderência. CDC empata com a consulta periódica em desempenho, mas escala pior aqui e pede outra plataforma para operar. A consulta periódica atende às metas: a defasagem medida é de segundos, e o `SKIP LOCKED` permite mais de um publicador.
 
 ## Consequências
 
@@ -47,8 +47,13 @@ LISTEN/NOTIFY reduz a espera, mas ainda precisa da consulta para não perder avi
 
 - A transação e a conexão ficam abertas durante a publicação do lote, então um broker lento prende recursos
 - A publicação em sequência limita a vazão
-- Quando a fila está vazia, a consulta roda a cada 200 ms mesmo sem eventos
+- Quando o lote vem incompleto ou vazio, a consulta roda a cada 200 ms mesmo sem eventos
 - Se o commit falhar depois de publicar, os eventos saem de novo, por isso o consumidor é idempotente
+- A ordem de publicação pode diferir da de criação, o que o consolidado tolera porque soma valores
+
+## Revisão de 2026-11-09
+
+Na primeira versão, o evento que falhava voltava ao início do lote, e um evento sempre recusado travava a outbox. A migração V006 acrescentou a espera crescente por evento (D-143).
 
 ## Gatilho de revisão
 

@@ -1,7 +1,7 @@
 // @anchors
 //   code: LDREG
 //   layer: infrastructure
-//   updated_at: 2026-11-06
+//   updated_at: 2026-11-09
 using Ledger.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,13 +11,13 @@ namespace Ledger.Infrastructure;
 
 public static class EntryStoreRegistration
 {
-    /// <summary>The cache is off by default. Without targets, there is no connection to Redis.</summary>
+    /// <summary>The cache is off by default. Without a target of this service, there is no connection to Redis.</summary>
     public static void AddEntryStore(this IHostApplicationBuilder builder)
     {
         builder.Services.AddSingleton<PostgresEntryStore>();
 
         var policy = CachePolicy.Parse(builder.Configuration["Cache:Targets"]);
-        if (policy.IsEmpty)
+        if (!CachedEntryStore.IsOn(policy))
         {
             builder.Services.AddSingleton<IEntryStore>(services => services.GetRequiredService<PostgresEntryStore>());
             return;

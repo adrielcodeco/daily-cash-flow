@@ -1,7 +1,7 @@
 // @anchors
 //   code: CESCD
 //   ref: CESTR
-//   updated_at: 2026-11-06
+//   updated_at: 2026-11-09
 namespace Ledger.Core;
 
 /// <summary>Puts the optional cache in front of the store, so the use cases do not know it exists.</summary>
@@ -11,10 +11,13 @@ public sealed class CachedEntryStore(IEntryStore inner, IQueryCache cache, Cache
     public const string ListRoute = "entries.list";
     public const string Table = "ledger_entry";
 
+    /// <summary>True when the policy names a route or the table of this store; targets of other services do not count.</summary>
+    public static bool IsOn(CachePolicy policy) => policy.Covers(GetRoute, Table) || policy.Covers(ListRoute, Table);
+
     public async Task<AddOutcome> AddAsync(LedgerEntry entry, EntryRecorded recorded, IdempotencyClaim claim, CancellationToken cancellationToken)
     {
         var outcome = await inner.AddAsync(entry, recorded, claim, cancellationToken);
-        if (outcome == AddOutcome.Added)
+        if (outcome == AddOutcome.Added && IsOn(policy))
         {
             await TryInvalidateAsync(entry.MerchantId, cancellationToken);
         }
@@ -48,7 +51,7 @@ public sealed class CachedEntryStore(IEntryStore inner, IQueryCache cache, Cache
     public Task<IReadOnlyList<LedgerEntry>> ReadBatchAsync(Guid? after, int batchSize, CancellationToken cancellationToken) =>
         inner.ReadBatchAsync(after, batchSize, cancellationToken);
 
-    public Task RequeueAsync(EntryRecorded recorded, CancellationToken cancellationToken) =>
+    public Task RequeueAsync(IReadOnlyList<EntryRecorded> recorded, CancellationToken cancellationToken) =>
         inner.RequeueAsync(recorded, cancellationToken);
 
     private async Task<T?> ReadThroughAsync<T>(Guid merchantId, string key, Func<Task<T?>> load, CancellationToken cancellationToken)

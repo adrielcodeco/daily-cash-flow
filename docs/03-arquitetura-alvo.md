@@ -22,7 +22,7 @@ flowchart TB
 flowchart TB
     COM[Comerciante]
     subgraph SIS[Sistema de Fluxo de Caixa]
-        GW["Gateway<br/>Cloud Load Balancing, Cloud Armor, API Gateway"]
+        LB["Borda<br/>Cloud Load Balancing e Cloud Armor"]
         subgraph LS[Serviço Lançamentos]
             LA["API de Lançamentos<br/>ASP.NET Core"]
             LP["Publicador da outbox<br/>Worker .NET"]
@@ -36,9 +36,9 @@ flowchart TB
             CR[("Cache opcional<br/>Redis")]
         end
     end
-    COM -- "HTTPS" --> GW
-    GW -- "Escrita e consulta" --> LA
-    GW -- "Saldo" --> CA
+    COM -- "HTTPS" --> LB
+    LB -- "Escrita e consulta" --> LA
+    LB -- "Saldo" --> CA
     LA -- "Lançamento e outbox na mesma transação" --> LD
     LP -- "Lê pendentes" --> LD
     LP -- "Publica evento" --> MQ
@@ -242,7 +242,7 @@ O estado é derivado. O registro original nunca muda, e "Estornado" significa qu
 stateDiagram-v2
     [*] --> Pendente: gravado com o lançamento
     Pendente --> Publicado: broker confirmou
-    Pendente --> Pendente: falha e nova tentativa
+    Pendente --> Pendente: falha, espera de 1 a 60 s e nova tentativa
     Publicado --> [*]: removido após a retenção
 ```
 
@@ -266,6 +266,9 @@ erDiagram
         jsonb payload
         timestamptz created_at
         timestamptz published_at
+        text trace_context
+        integer attempts
+        timestamptz next_attempt_at
     }
     IDEMPOTENCY_KEY {
         uuid merchant_id PK
@@ -290,12 +293,14 @@ erDiagram
 
 `LEDGER_ENTRY`, `OUTBOX` e `IDEMPOTENCY_KEY` ficam no banco de lançamentos. `DAILY_BALANCE` e `PROCESSED_EVENT` ficam no banco do consolidado. Um índice único em `reversal_of` garante RN-05 mesmo com requisições concorrentes.
 
+Na `OUTBOX`, `trace_context` guarda o contexto W3C do traço da requisição, para o publicador continuar o mesmo traço. `attempts` e `next_attempt_at` controlam a nova tentativa: cada falha dobra a espera daquele evento, em 1, 2, 4… segundos, até 60 s, e o publicador só lê eventos cuja hora de nova tentativa já passou. Assim, um evento que a mensageria sempre recusa não trava os que vêm depois.
+
 ## Tratamento de falhas
 
 | Se falhar | Efeito | Recuperação |
 |---|---|---|
 | Consolidado | Lançamentos segue normal, e os eventos ficam retidos | O serviço volta e processa a fila |
-| Mensageria | Lançamentos segue normal, e os eventos ficam na outbox | O publicador retoma o envio |
+| Mensageria | Lançamentos segue normal, e os eventos ficam na outbox | O publicador retoma o envio. Cada evento que falhou espera de 1 a 60 s antes de nova tentativa |
 | Publicador | Lançamentos segue normal, e a outbox cresce | Nova instância retoma do pendente |
 | Banco de lançamentos | Escrita indisponível, e o saldo calculado segue consultável | Failover do Cloud SQL |
 | Banco do consolidado | Consultas sem cache falham, e os eventos ficam retidos | Failover e processamento da fila |

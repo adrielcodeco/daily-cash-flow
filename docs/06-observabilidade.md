@@ -22,7 +22,7 @@ A instrumentação usa OpenTelemetry, conforme o [ADR-0009](adr/0009-observabili
 | Dashboards "Visão de serviço" e "Fluxo de eventos" | Implementado. Os outros três são proposta |
 | Alertas locais, em `infra/prometheus/alerts.yaml` | Implementado, sem envio de notificações |
 | Alertas sobre sinais do Pub/Sub e do Cloud SQL | Proposta: o emulador não expõe esses sinais |
-| Métrica de reconciliação | Proposta, porque a reconciliação ainda não existe |
+| Reconciliação | O script `scripts/reconcile.sh` compara os totais e roda no smoke e ao fim da reconstrução. A métrica e a execução automática são proposta |
 | Exportação para o Google Cloud Observability | Proposta, sem deploy |
 
 | Ferramenta local | Endereço |
@@ -80,7 +80,7 @@ As métricas HTTP seguem as convenções do OpenTelemetry. As demais são própr
 | `http.server.request.duration` | Histograma | Rota, método e status | APIs | Taxa, erros e latência |
 | `outbox.pending.events` | Medidor | Nenhum | Publicador | Mostra fila acumulada |
 | `outbox.oldest.age` | Medidor, em segundos | Nenhum | Publicador | Mostra falha no publicador ou na mensageria |
-| `outbox.published.events` | Contador | Resultado | Publicador | Mostra a vazão do envio |
+| `outbox.published.events` | Contador | Nenhum. Conta só os eventos confirmados pela mensageria | Publicador | Mostra a vazão do envio |
 | `consumer.processed.events` | Contador | Resultado: aplicado, repetido ou erro | Consumidor | Mostra repetição e falha |
 | `balance.lag` | Histograma, em segundos | Nenhum | Consumidor | Tempo entre `occurredAt` e a aplicação ao saldo |
 | `cache.requests` | Contador | Resultado: `hit`, `miss` ou `disconnected` | APIs, com o cache ligado | Mostra a taxa de acerto e a degradação silenciosa |
@@ -113,7 +113,9 @@ sequenceDiagram
     C->>C: Continua o traço e aplica ao saldo
 ```
 
-O contexto usa o padrão W3C Trace Context. Como a publicação acontece depois do fim da requisição, a `outbox` precisa guardar esse contexto em uma nova coluna, `trace_context`. Sem isso, o traço termina na transação da escrita.
+O contexto usa o padrão W3C Trace Context. Como a publicação acontece depois do fim da requisição, a `outbox` guarda esse contexto na coluna `trace_context`, criada pela migração `V004`. Sem isso, o traço terminaria na transação da escrita.
+
+Um evento que a mensageria recusa espera de 1 a 60 s antes de nova tentativa, com a espera dobrando a cada falha. Cada tentativa gera um novo span `outbox publish`, ligado ao mesmo traço da requisição.
 
 | Span | Processo | Atributos |
 |---|---|---|
@@ -145,11 +147,11 @@ O nome do processo vem do contêiner, e não de um campo do log. Os logs ficam n
 | `Warning` | Degradação tolerada, como cache desconectado |
 | `Information` | Início, parada e operações de manutenção |
 
-Requisições bem-sucedidas não geram log. As métricas e os traços já as cobrem, e isso controla o custo.
+Requisições bem-sucedidas não geram log operacional. As métricas e os traços já as cobrem, e isso controla o custo. Escritas e estornos bem-sucedidos vão só para a categoria `Audit`.
 
-**Nunca registrar:** descrição do lançamento, token, cabeçalho `Authorization`, senha ou corpo de requisição. Uma verificação manual no M6 não achou descrição nem token nos logs. Ainda falta um teste automatizado.
+**Nunca registrar:** descrição do lançamento, token, cabeçalho `Authorization`, senha ou corpo de requisição. Uma verificação manual, feita quando a telemetria entrou, não achou descrição nem token nos logs. Ainda falta um teste automatizado.
 
-**Trilha de auditoria:** escritas, estornos, acessos negados e as operações `--reset` e `--republish` são registrados na categoria `Audit`, com cliente, comerciante, operação e resultado. Hoje ela sai junto dos demais logs. Em produção, um coletor de logs deve levá-la a um armazenamento separado, com a retenção definida pela conformidade.
+**Trilha de auditoria:** escritas, estornos, requisições recusadas com 401, 403, 404 ou 429 e as operações `--reset` e `--republish` são registrados na categoria `Audit`, com cliente, comerciante, operação e resultado. Hoje ela sai junto dos demais logs. Em produção, um coletor de logs deve levá-la a um armazenamento separado, com a retenção definida pela conformidade.
 
 ## Verificações de saúde
 
@@ -182,7 +184,7 @@ Cada alerta precisa exigir uma ação. Se não houver ação, ele vira informaç
 | Outbox parada | Evento pendente há mais de 2 minutos | Alta | [Outbox parada](12-operacao.md#outbox-parada) |
 | Consumidor atrasado | Mensagem mais antiga há mais de 2 minutos | Alta | [Consumidor atrasado](12-operacao.md#consumidor-atrasado) |
 | Mensagens mortas | Qualquer mensagem no tópico | Alta | [Mensagens mortas](12-operacao.md#mensagens-mortas) |
-| Saldo divergente | Diferença na reconciliação, quando existir | Crítica | [Saldo divergente](12-operacao.md#saldo-divergente) |
+| Saldo divergente | Diferença na métrica de reconciliação, quando ela existir | Crítica | [Saldo divergente](12-operacao.md#saldo-divergente) |
 | Acessos negados em alta | 401 e 403 acima do normal por 10 minutos | Média | Avaliar com segurança |
 | Conexões do banco | Uso acima de 80% por 5 minutos | Média | Revisar pools e instâncias |
 | Cache fora | Sem conexão por 5 minutos, com o cache ligado | Baixa | Verificar o Redis. A API segue pelo banco |

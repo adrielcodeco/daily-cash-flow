@@ -1,7 +1,7 @@
 // @anchors
 //   code: CESTS
 //   ref: CESTR
-//   updated_at: 2026-11-06
+//   updated_at: 2026-11-09
 //   layer: test
 // Refs:
 //   feature : services/ledger/src/Ledger.Core/CachedEntryStore.feature
@@ -158,11 +158,28 @@ public sealed class CachedEntryStoreTests
         Assert.Equal(2, inner.Finds);
     }
 
-    [Theory(DisplayName = "CESTR-R01 blank targets keep the cache off")]
+    [Theory(DisplayName = "CESTR-R02 one route target is enough to turn the cache on")]
+    [InlineData("entries.get")]
+    [InlineData("entries.list")]
+    public void TurnsOnForOneRoute(string targets) =>
+        Assert.True(CachedEntryStore.IsOn(CachePolicy.Parse(targets)));
+
+    [Theory(DisplayName = "CESTR-R01 blank targets and targets of another service keep the cache off")]
     [InlineData(null)]
     [InlineData(" , ,")]
-    public void TreatsBlankTargetsAsOff(string? targets) =>
-        Assert.True(CachePolicy.Parse(targets).IsEmpty);
+    [InlineData("daily_balance,balances.daily")]
+    public void TreatsForeignTargetsAsOff(string? targets) =>
+        Assert.False(CachedEntryStore.IsOn(CachePolicy.Parse(targets)));
+
+    [Theory(DisplayName = "CESTR-R01 without a target the write does not touch the cache")]
+    [InlineData(null)]
+    [InlineData("daily_balance")]
+    public async Task SkipsInvalidationByDefault(string? targets)
+    {
+        await Add(Store(targets), NewEntry());
+
+        Assert.Empty(cache.Invalidated);
+    }
 
     [Fact(DisplayName = "CESTR-R03 targets are trimmed and blanks are ignored")]
     public void ParsesTargets()
@@ -227,7 +244,7 @@ public sealed class CachedEntryStoreTests
         Assert.NotNull(await store.FindClaimAsync(Merchant, "request-0001", None));
         Assert.Single(await store.ReadBatchAsync(null, 10, None));
 
-        await store.RequeueAsync(EntryRecorded.From(entry), None);
+        await store.RequeueAsync([EntryRecorded.From(entry)], None);
         Assert.Single(inner.Requeued);
     }
 }

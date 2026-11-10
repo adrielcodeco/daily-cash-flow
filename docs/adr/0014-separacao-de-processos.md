@@ -33,7 +33,7 @@ As perguntas e a evidência de cada nota estão na [avaliação dos radares](../
 
 ## Leitura do radar
 
-Colocar o worker dentro da API custa menos e é mais simples, mas uma fila acumulada tiraria recursos das requisições, e a escala por requisição multiplicaria consumidores sem controle. Um job agendado aumentaria a defasagem do saldo. Pagamos mais por isolar as falhas, o que atende ao requisito central.
+Colocar o worker dentro da API é mais simples e custa o mesmo, mas uma fila acumulada tiraria recursos das requisições, e a escala por requisição multiplicaria consumidores sem controle. Um job agendado empata em quase todos os critérios, mas aumentaria a defasagem do saldo, o que pesa no alinhamento com o negócio. Aceitamos um processo a mais para implantar em troca de isolar as falhas, o que atende ao requisito central.
 
 ## Consequências
 

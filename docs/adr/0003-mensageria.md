@@ -26,14 +26,15 @@ Usar Pub/Sub, com tópico de mensagens mortas. O ambiente local usa o emulador. 
 | Escalabilidade | 2 | 5 | 4 | 2 |
 | Simplicidade | 2 | 4 | 3 | 4 |
 | Portabilidade | 1 | 2 | 5 | 5 |
-| **Resultado** | | **4,16** | **4,00** | **3,21** |
+| Segurança | 2 | 5 | 5 | 2 |
+| **Resultado** | | **4,24** | **4,10** | **3,10** |
 
 As perguntas e a evidência de cada nota estão na [avaliação dos radares](../21-avaliacao-dos-radares.md#adr-0003).
 <!-- radar:end -->
 
 ## Leitura do radar
 
-Pub/Sub é gerenciado e integrado ao IAM do GCP, o que explica as notas em segurança e operabilidade. RabbitMQ exigiria operar um cluster próprio. Kafka tem o melhor desempenho e permite reprocessar histórico, mas custa e pesa mais do que esse volume justifica.
+Pub/Sub e Kafka gerenciado empatam em confiabilidade, operabilidade e economia. Pub/Sub vence em escalabilidade, simplicidade e aderência ao problema, e Kafka vence em portabilidade e permite reprocessar histórico, o que esse volume não pede. RabbitMQ exigiria operar um cluster próprio, o que explica a nota mais baixa em operabilidade. Em segurança, Pub/Sub e Kafka gerenciado empatam, com acesso por IAM, e RabbitMQ fica atrás, com usuários próprios fora do IAM e VMs a proteger.
 
 ## Consequências
 

@@ -1,7 +1,7 @@
 // @anchors
 //   code: RDQCH
 //   ref: CBSTR
-//   updated_at: 2026-11-06
+//   updated_at: 2026-11-09
 using System.Diagnostics.Metrics;
 using System.Text.Json;
 using Consolidation.Core;
@@ -10,7 +10,8 @@ using StackExchange.Redis;
 namespace Consolidation.Infrastructure;
 
 /// <summary>
-/// Keys carry a version per merchant, so one increment invalidates every cached value of that merchant.
+/// Keys carry a version per merchant, so one increment invalidates every cached value of that merchant,
+/// and a global epoch, so a reset invalidates the values of every merchant at once.
 /// While disconnected, every call is skipped: waiting for Redis timeouts would make a cache outage slower than no cache.
 /// </summary>
 public sealed class RedisQueryCache(IConnectionMultiplexer redis) : IQueryCache
@@ -37,8 +38,8 @@ public sealed class RedisQueryCache(IConnectionMultiplexer redis) : IQueryCache
         }
 
         var database = redis.GetDatabase();
-        var stored = await database.StringGetAsync(VersionKey(merchantId));
-        var version = stored.HasValue ? stored.ToString() : "0";
+        var stored = await database.StringGetAsync([EpochKey, VersionKey(merchantId)]);
+        var version = $"{(stored[0].HasValue ? stored[0] : "0")}.{(stored[1].HasValue ? stored[1] : "0")}";
 
         var cached = await database.StringGetAsync(ValueKey(merchantId, version, key));
         Count(cached.HasValue ? "hit" : "miss");
@@ -57,9 +58,21 @@ public sealed class RedisQueryCache(IConnectionMultiplexer redis) : IQueryCache
     public Task InvalidateAsync(Guid merchantId, CancellationToken cancellationToken) =>
         redis.IsConnected ? redis.GetDatabase().StringIncrementAsync(VersionKey(merchantId)) : Task.CompletedTask;
 
+    public async Task InvalidateAllAsync(CancellationToken cancellationToken)
+    {
+        if (!redis.IsConnected)
+        {
+            throw new RedisConnectionException(ConnectionFailureType.UnableToConnect, "The cache is disconnected.");
+        }
+
+        await redis.GetDatabase().StringIncrementAsync(EpochKey);
+    }
+
     private static void Count(string result) => Requests.Add(1, new KeyValuePair<string, object?>("result", result));
 
     private static RedisKey ValueKey(Guid merchantId, string version, string key) => $"{Prefix}:{merchantId}:{version}:{key}";
+
+    private static readonly RedisKey EpochKey = $"{Prefix}-epoch";
 
     private static RedisKey VersionKey(Guid merchantId) => $"{Prefix}-version:{merchantId}";
 }

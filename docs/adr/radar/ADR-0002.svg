@@ -3,55 +3,59 @@
 <rect width="760" height="551" fill="#fcfcfb"/>
 <text x="24" y="30" font-size="16" font-weight="600" fill="#0b0b0b">Integração entre serviços</text>
 <text x="24" y="50" font-size="12" fill="#52514e">Quanto mais longe do centro, melhor</text>
-<polygon points="380.0,215.0 401.2,223.8 410.0,245.0 401.2,266.2 380.0,275.0 358.8,266.2 350.0,245.0 358.8,223.8" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<polygon points="380.0,215.0 399.3,222.0 409.5,239.8 406.0,260.0 390.3,273.2 369.7,273.2 354.0,260.0 350.5,239.8 360.7,222.0" fill="none" stroke="#d9d8d3" stroke-width="1"/>
 <text x="390.0" y="227.0" font-size="10" fill="#52514e">1</text>
-<polygon points="380.0,185.0 422.4,202.6 440.0,245.0 422.4,287.4 380.0,305.0 337.6,287.4 320.0,245.0 337.6,202.6" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<polygon points="380.0,185.0 418.6,199.0 439.1,234.6 432.0,275.0 400.5,301.4 359.5,301.4 328.0,275.0 320.9,234.6 341.4,199.0" fill="none" stroke="#d9d8d3" stroke-width="1"/>
 <text x="390.0" y="197.0" font-size="10" fill="#52514e">2</text>
-<polygon points="380.0,155.0 443.6,181.4 470.0,245.0 443.6,308.6 380.0,335.0 316.4,308.6 290.0,245.0 316.4,181.4" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<polygon points="380.0,155.0 437.9,176.1 468.6,229.4 457.9,290.0 410.8,329.6 349.2,329.6 302.1,290.0 291.4,229.4 322.1,176.1" fill="none" stroke="#d9d8d3" stroke-width="1"/>
 <text x="390.0" y="167.0" font-size="10" fill="#52514e">3</text>
-<polygon points="380.0,125.0 464.9,160.1 500.0,245.0 464.9,329.9 380.0,365.0 295.1,329.9 260.0,245.0 295.1,160.1" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<polygon points="380.0,125.0 457.1,153.1 498.2,224.2 483.9,305.0 421.0,357.8 339.0,357.8 276.1,305.0 261.8,224.2 302.9,153.1" fill="none" stroke="#d9d8d3" stroke-width="1"/>
 <text x="390.0" y="137.0" font-size="10" fill="#52514e">4</text>
-<polygon points="380.0,95.0 486.1,138.9 530.0,245.0 486.1,351.1 380.0,395.0 273.9,351.1 230.0,245.0 273.9,138.9" fill="none" stroke="#d9d8d3" stroke-width="1"/>
+<polygon points="380.0,95.0 476.4,130.1 527.7,219.0 509.9,320.0 431.3,386.0 328.7,386.0 250.1,320.0 232.3,219.0 283.6,130.1" fill="none" stroke="#d9d8d3" stroke-width="1"/>
 <text x="390.0" y="107.0" font-size="10" fill="#52514e">5</text>
 <line x1="380" y1="245" x2="380.0" y2="95.0" stroke="#d9d8d3" stroke-width="1"/>
 <text x="380.0" y="87.0" text-anchor="middle" font-size="12" fill="#0b0b0b">Alinhamento com o negócio (4)</text>
-<line x1="380" y1="245" x2="486.1" y2="138.9" stroke="#d9d8d3" stroke-width="1"/>
-<text x="494.6" y="134.4" text-anchor="start" font-size="12" fill="#0b0b0b">Aderência ao problema (3)</text>
-<line x1="380" y1="245" x2="530.0" y2="245.0" stroke="#d9d8d3" stroke-width="1"/>
-<text x="542.0" y="249.0" text-anchor="start" font-size="12" fill="#0b0b0b">Confiabilidade (3)</text>
-<line x1="380" y1="245" x2="486.1" y2="351.1" stroke="#d9d8d3" stroke-width="1"/>
-<text x="494.6" y="363.6" text-anchor="start" font-size="12" fill="#0b0b0b">Operabilidade (3)</text>
-<line x1="380" y1="245" x2="380.0" y2="395.0" stroke="#d9d8d3" stroke-width="1"/>
-<text x="380.0" y="411.0" text-anchor="middle" font-size="12" fill="#0b0b0b">Desempenho (2)</text>
-<line x1="380" y1="245" x2="273.9" y2="351.1" stroke="#d9d8d3" stroke-width="1"/>
-<text x="265.4" y="363.6" text-anchor="end" font-size="12" fill="#0b0b0b">Escalabilidade (2)</text>
-<line x1="380" y1="245" x2="230.0" y2="245.0" stroke="#d9d8d3" stroke-width="1"/>
-<text x="218.0" y="249.0" text-anchor="end" font-size="12" fill="#0b0b0b">Simplicidade (2)</text>
-<line x1="380" y1="245" x2="273.9" y2="138.9" stroke="#d9d8d3" stroke-width="1"/>
-<text x="265.4" y="134.4" text-anchor="end" font-size="12" fill="#0b0b0b">Economia (1)</text>
-<polygon points="380.0,155.0 464.9,160.1 470.0,245.0 443.6,308.6 380.0,395.0 316.4,308.6 290.0,245.0 316.4,181.4" fill="#eb6834" fill-opacity="0.08" stroke="#eb6834" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 4"/>
+<line x1="380" y1="245" x2="476.4" y2="130.1" stroke="#d9d8d3" stroke-width="1"/>
+<text x="484.1" y="124.9" text-anchor="start" font-size="12" fill="#0b0b0b">Aderência ao problema (3)</text>
+<line x1="380" y1="245" x2="527.7" y2="219.0" stroke="#d9d8d3" stroke-width="1"/>
+<text x="539.5" y="220.9" text-anchor="start" font-size="12" fill="#0b0b0b">Confiabilidade (3)</text>
+<line x1="380" y1="245" x2="509.9" y2="320.0" stroke="#d9d8d3" stroke-width="1"/>
+<text x="520.3" y="330.0" text-anchor="start" font-size="12" fill="#0b0b0b">Operabilidade (3)</text>
+<line x1="380" y1="245" x2="431.3" y2="386.0" stroke="#d9d8d3" stroke-width="1"/>
+<text x="435.4" y="401.2" text-anchor="start" font-size="12" fill="#0b0b0b">Desempenho (2)</text>
+<line x1="380" y1="245" x2="328.7" y2="386.0" stroke="#d9d8d3" stroke-width="1"/>
+<text x="324.6" y="401.2" text-anchor="end" font-size="12" fill="#0b0b0b">Escalabilidade (2)</text>
+<line x1="380" y1="245" x2="250.1" y2="320.0" stroke="#d9d8d3" stroke-width="1"/>
+<text x="239.7" y="330.0" text-anchor="end" font-size="12" fill="#0b0b0b">Simplicidade (2)</text>
+<line x1="380" y1="245" x2="232.3" y2="219.0" stroke="#d9d8d3" stroke-width="1"/>
+<text x="220.5" y="220.9" text-anchor="end" font-size="12" fill="#0b0b0b">Economia (1)</text>
+<line x1="380" y1="245" x2="283.6" y2="130.1" stroke="#d9d8d3" stroke-width="1"/>
+<text x="275.9" y="124.9" text-anchor="end" font-size="12" fill="#0b0b0b">Segurança (2)</text>
+<polygon points="380.0,155.0 457.1,153.1 468.6,229.4 457.9,290.0 431.3,386.0 349.2,329.6 302.1,290.0 291.4,229.4 341.4,199.0" fill="#eb6834" fill-opacity="0.08" stroke="#eb6834" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 4"/>
 <rect x="375.0" y="150.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>CDC do banco, Alinhamento com o negócio: 3</title></rect>
-<rect x="459.9" y="155.1" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>CDC do banco, Aderência ao problema: 4</title></rect>
-<rect x="465.0" y="240.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>CDC do banco, Confiabilidade: 3</title></rect>
-<rect x="438.6" y="303.6" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>CDC do banco, Operabilidade: 3</title></rect>
-<rect x="375.0" y="390.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>CDC do banco, Desempenho: 5</title></rect>
-<rect x="311.4" y="303.6" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>CDC do banco, Escalabilidade: 3</title></rect>
-<rect x="285.0" y="240.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>CDC do banco, Simplicidade: 3</title></rect>
-<rect x="311.4" y="176.4" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>CDC do banco, Economia: 3</title></rect>
-<polygon points="380.0,95.0 486.1,138.9 530.0,245.0 464.9,329.9 380.0,395.0 273.9,351.1 320.0,245.0 316.4,181.4" fill="#2a78d6" fill-opacity="0.08" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
+<rect x="452.1" y="148.1" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>CDC do banco, Aderência ao problema: 4</title></rect>
+<rect x="463.6" y="224.4" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>CDC do banco, Confiabilidade: 3</title></rect>
+<rect x="452.9" y="285.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>CDC do banco, Operabilidade: 3</title></rect>
+<rect x="426.3" y="381.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>CDC do banco, Desempenho: 5</title></rect>
+<rect x="344.2" y="324.6" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>CDC do banco, Escalabilidade: 3</title></rect>
+<rect x="297.1" y="285.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>CDC do banco, Simplicidade: 3</title></rect>
+<rect x="286.4" y="224.4" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>CDC do banco, Economia: 3</title></rect>
+<rect x="336.4" y="194.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>CDC do banco, Segurança: 2</title></rect>
+<polygon points="380.0,95.0 476.4,130.1 527.7,219.0 483.9,305.0 431.3,386.0 328.7,386.0 328.0,275.0 291.4,229.4 283.6,130.1" fill="#2a78d6" fill-opacity="0.08" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
 <circle cx="380.0" cy="95.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Outbox na transação e mensageria, Alinhamento com o negócio: 5</title></circle>
-<circle cx="486.1" cy="138.9" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Outbox na transação e mensageria, Aderência ao problema: 5</title></circle>
-<circle cx="530.0" cy="245.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Outbox na transação e mensageria, Confiabilidade: 5</title></circle>
-<circle cx="464.9" cy="329.9" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Outbox na transação e mensageria, Operabilidade: 4</title></circle>
-<circle cx="380.0" cy="395.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Outbox na transação e mensageria, Desempenho: 5</title></circle>
-<circle cx="273.9" cy="351.1" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Outbox na transação e mensageria, Escalabilidade: 5</title></circle>
-<circle cx="320.0" cy="245.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Outbox na transação e mensageria, Simplicidade: 2</title></circle>
-<circle cx="316.4" cy="181.4" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Outbox na transação e mensageria, Economia: 3</title></circle>
+<circle cx="476.4" cy="130.1" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Outbox na transação e mensageria, Aderência ao problema: 5</title></circle>
+<circle cx="527.7" cy="219.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Outbox na transação e mensageria, Confiabilidade: 5</title></circle>
+<circle cx="483.9" cy="305.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Outbox na transação e mensageria, Operabilidade: 4</title></circle>
+<circle cx="431.3" cy="386.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Outbox na transação e mensageria, Desempenho: 5</title></circle>
+<circle cx="328.7" cy="386.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Outbox na transação e mensageria, Escalabilidade: 5</title></circle>
+<circle cx="328.0" cy="275.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Outbox na transação e mensageria, Simplicidade: 2</title></circle>
+<circle cx="291.4" cy="229.4" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Outbox na transação e mensageria, Economia: 3</title></circle>
+<circle cx="283.6" cy="130.1" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Outbox na transação e mensageria, Segurança: 5</title></circle>
 <line x1="24" y1="465" x2="60" y2="465" stroke="#2a78d6" stroke-width="2"/>
 <circle cx="42.0" cy="465.0" r="5.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"></circle>
-<text x="70" y="469" font-size="13" fill="#0b0b0b">Outbox na transação e mensageria (escolhida): 4,45</text>
+<text x="70" y="469" font-size="13" fill="#0b0b0b">Outbox na transação e mensageria (escolhida): 4,50</text>
 <line x1="24" y1="491" x2="60" y2="491" stroke="#eb6834" stroke-width="2" stroke-dasharray="7 4"/>
 <rect x="37.0" y="486.0" width="10" height="10" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"></rect>
-<text x="70" y="495" font-size="13" fill="#0b0b0b">CDC do banco: 3,35</text>
+<text x="70" y="495" font-size="13" fill="#0b0b0b">CDC do banco: 3,23</text>
 <text x="24" y="521" font-size="12" fill="#52514e">Eliminadas por veto: Publicar na mensageria durante a requisição, HTTP síncrono entre os serviços</text>
 </svg>

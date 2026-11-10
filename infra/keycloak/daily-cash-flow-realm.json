@@ -1,7 +1,30 @@
 {
   "realm": "daily-cash-flow",
   "enabled": true,
+  "sslRequired": "none",
   "accessTokenLifespan": 900,
+  "clients": [
+    {
+      "clientId": "local-admin",
+      "secret": "local-only",
+      "serviceAccountsEnabled": true,
+      "publicClient": false,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false
+    }
+  ],
+  "users": [
+    {
+      "username": "service-account-local-admin",
+      "enabled": true,
+      "serviceAccountClientId": "local-admin",
+      "clientRoles": {
+        "realm-management": [
+          "manage-clients"
+        ]
+      }
+    }
+  ],
   "clientScopes": [
     {
       "name": "api-audience",

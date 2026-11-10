@@ -62,6 +62,8 @@ layers:
         tags:
             - code
             - host
+        exclude:
+            - '**/*.test.cs'
     test:
         pattern: '**/*.test.*'
         kind: test

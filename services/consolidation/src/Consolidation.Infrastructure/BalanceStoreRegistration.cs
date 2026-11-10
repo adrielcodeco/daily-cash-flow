@@ -1,7 +1,7 @@
 // @anchors
 //   code: CNREG
 //   layer: infrastructure
-//   updated_at: 2026-11-06
+//   updated_at: 2026-11-09
 using Consolidation.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,13 +11,13 @@ namespace Consolidation.Infrastructure;
 
 public static class BalanceStoreRegistration
 {
-    /// <summary>The cache is off by default. Without targets, there is no connection to Redis.</summary>
+    /// <summary>The cache is off by default. Without a target of this service, there is no connection to Redis.</summary>
     public static void AddBalanceStore(this IHostApplicationBuilder builder)
     {
         builder.Services.AddSingleton<PostgresBalanceStore>();
 
         var policy = CachePolicy.Parse(builder.Configuration["Cache:Targets"]);
-        if (policy.IsEmpty)
+        if (!CachedBalanceStore.IsOn(policy))
         {
             builder.Services.AddSingleton<IBalanceStore>(services => services.GetRequiredService<PostgresBalanceStore>());
             return;

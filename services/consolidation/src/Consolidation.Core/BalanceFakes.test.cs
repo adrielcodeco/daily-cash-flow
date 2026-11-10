@@ -1,7 +1,7 @@
 // @anchors
 //   code: CNFKS
 //   layer: test
-//   updated_at: 2026-11-06
+//   updated_at: 2026-11-09
 using Consolidation.Core;
 
 namespace Consolidation.Tests;
@@ -56,13 +56,22 @@ internal sealed class InMemoryBalanceStore : IBalanceStore
         return Task.FromResult(new PeriodTotals(0, days, null));
     }
 
-    public Task ResetAsync(CancellationToken cancellationToken) => throw new NotSupportedException();
+    public int Resets { get; private set; }
+
+    public Task ResetAsync(CancellationToken cancellationToken)
+    {
+        Resets++;
+        applied.Clear();
+        totals.Clear();
+        return Task.CompletedTask;
+    }
 }
 
 internal sealed class InMemoryQueryCache : IQueryCache
 {
     private readonly Dictionary<(Guid, string, string), object> entries = [];
     private readonly Dictionary<Guid, int> versions = [];
+    private int epoch;
 
     public List<Guid> Invalidated { get; } = [];
 
@@ -72,7 +81,7 @@ internal sealed class InMemoryQueryCache : IQueryCache
         where T : class
     {
         Reads++;
-        var version = versions.GetValueOrDefault(merchantId).ToString();
+        var version = $"{epoch}.{versions.GetValueOrDefault(merchantId)}";
         return Task.FromResult(new CacheLookup<T>(entries.GetValueOrDefault((merchantId, version, key)) as T, version));
     }
 
@@ -89,6 +98,12 @@ internal sealed class InMemoryQueryCache : IQueryCache
         versions[merchantId] = versions.GetValueOrDefault(merchantId) + 1;
         return Task.CompletedTask;
     }
+
+    public Task InvalidateAllAsync(CancellationToken cancellationToken)
+    {
+        epoch++;
+        return Task.CompletedTask;
+    }
 }
 
 internal sealed class BrokenQueryCache : IQueryCache
@@ -101,6 +116,9 @@ internal sealed class BrokenQueryCache : IQueryCache
 
     public Task InvalidateAsync(Guid merchantId, CancellationToken cancellationToken) =>
         throw new InvalidOperationException("Cache unavailable");
+
+    public Task InvalidateAllAsync(CancellationToken cancellationToken) =>
+        throw new InvalidOperationException("Cache unavailable");
 }
 
 internal sealed class WriteFailingQueryCache : IQueryCache
@@ -112,6 +130,9 @@ internal sealed class WriteFailingQueryCache : IQueryCache
         where T : class => throw new InvalidOperationException("Cache unavailable");
 
     public Task InvalidateAsync(Guid merchantId, CancellationToken cancellationToken) => Task.CompletedTask;
+
+    public Task InvalidateAllAsync(CancellationToken cancellationToken) =>
+        Task.CompletedTask;
 }
 
 internal sealed class CancelledQueryCache : IQueryCache
@@ -123,6 +144,9 @@ internal sealed class CancelledQueryCache : IQueryCache
         where T : class => throw new OperationCanceledException();
 
     public Task InvalidateAsync(Guid merchantId, CancellationToken cancellationToken) =>
+        throw new OperationCanceledException();
+
+    public Task InvalidateAllAsync(CancellationToken cancellationToken) =>
         throw new OperationCanceledException();
 }
 
@@ -141,4 +165,7 @@ internal sealed class RecordingQueryCache : IQueryCache
         where T : class => Task.CompletedTask;
 
     public Task InvalidateAsync(Guid merchantId, CancellationToken cancellationToken) => Task.CompletedTask;
+
+    public Task InvalidateAllAsync(CancellationToken cancellationToken) =>
+        Task.CompletedTask;
 }

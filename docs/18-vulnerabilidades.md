@@ -2,7 +2,7 @@
 
 Este registro acompanha as fraquezas conhecidas da solução, do achado à correção. O [documento de segurança](07-seguranca.md) trata do desenho e das ameaças. Aqui ficam os problemas concretos.
 
-**Revisão:** 2026-11-06, por leitura do código e da configuração, com testes na API local. Não houve pentest nem análise de imagens, então a lista não é completa. Ausência de um item não prova ausência do problema.
+**Revisão:** 2026-11-09, por leitura do código e da configuração, com testes na API local. Não houve pentest nem análise de imagens, então a lista não é completa. Ausência de um item não prova ausência do problema.
 
 ## Resumo
 
@@ -13,7 +13,7 @@ Este registro acompanha as fraquezas conhecidas da solução, do achado à corre
 | Média | 8 | 0 |
 | Baixa | 5 | 2 |
 
-Já foram corrigidos V-01 a V-05. A V-06 está parcial e ainda bloqueia produção.
+Já foram corrigidos V-01 a V-05 e V-24 a V-28. A V-06 está parcial e ainda bloqueia produção.
 
 **Nenhuma vulnerabilidade Crítica ou Alta pode ir para produção.**
 
@@ -35,7 +35,7 @@ Já foram corrigidos V-01 a V-05. A V-06 está parcial e ainda bloqueia produç�
 | Situação | Significado |
 |---|---|
 | Aberta | Conhecida e sem correção |
-| Planejada | Com marco definido |
+| Planejada | Com prazo definido |
 | Parcial | Reduzida, mas ainda com risco |
 | Corrigida | Corrigida, com teste que impede a volta |
 | Aceita | Risco assumido, com motivo registrado |
@@ -49,7 +49,7 @@ Já foram corrigidos V-01 a V-05. A V-06 está parcial e ainda bloqueia produç�
 | V-03 | Lançamento sem `entryType` vira crédito | CWE-20 | Alta | Testada | Corrigida | Enum começa em 1, então o valor ausente é recusado. Regra `LEDEN-R09` |
 | V-04 | Valor sem limite estoura a soma do saldo | CWE-190 | Alta | Testada | Corrigida | Limite de R$ 1 bilhão no domínio e no banco, e estouro gera erro. Regras `LEDEN-R08` e `DYBAL-R03` |
 | V-05 | Não há limite de requisições | API4, CWE-770 | Alta | Testada | Corrigida | 100 requisições por segundo por comerciante, com resposta 429. Passo 12 de `smoke.sh`. Ver a V-19 |
-| V-06 | Não há trilha de auditoria | CWE-778 | Alta | Testada | Parcial | Categoria `Audit` nos logs. Falta armazenamento separado, à prova de alteração |
+| V-06 | Não há trilha de auditoria | CWE-778 | Alta | Testada | Parcial | Categoria `Audit` nos logs, com escritas e respostas 401, 403, 404 e 429, provada por testes na fronteira HTTP (`LDADS`, `CNADS`). Falta armazenamento separado, à prova de alteração |
 | V-07 | Contêineres rodam como root | CWE-250 | Média | Testada | Aberta | Declarar `USER` sem privilégio nas imagens |
 | V-08 | Durante a reconstrução, a API responde 200 com saldo parcial | Integridade | Média | Testada | Aberta | Modo de manutenção, com resposta 503 |
 | V-09 | `--reset` apaga o consolidado e está na imagem de produção | CWE-749 | Média | Código | Aberta | Separar a manutenção da imagem de produção e exigir aprovação |
@@ -62,11 +62,16 @@ Já foram corrigidos V-01 a V-05. A V-06 está parcial e ainda bloqueia produç�
 | V-16 | Portas das APIs ficam abertas em todas as interfaces da máquina | CWE-1327 | Baixa | Código | Aberta | Publicar só em `127.0.0.1` |
 | V-17 | Senha fixa `local-only` no `docker-compose.yml` | CWE-798 | Baixa | Código | Aceita | Vale só no ambiente local. Nunca reutilizar |
 | V-18 | UUID v7 revela o momento da criação | CWE-200 | Baixa | Código | Aceita | Dado de baixo valor, já presente na resposta |
-| V-19 | O limite de requisições é por instância, então cresce com a escala | CWE-770 | Média | Código | Aberta | Limite global no Cloud Armor ou no gateway |
+| V-19 | O limite de requisições é por instância, então cresce com a escala | CWE-770 | Média | Código | Aberta | Limite global por regras de taxa do Cloud Armor |
 | V-20 | Keycloak local em modo de desenvolvimento, com senha fixa de administrador | CWE-798 | Baixa | Código | Aberta | Só no ambiente local. Em produção, usar o provedor de identidade do cliente |
-| V-21 | A API aceita `traceparent` de quem chama | CWE-345 | Baixa | Testada | Aberta | Remover o cabeçalho no gateway |
+| V-21 | A API aceita `traceparent` de quem chama | CWE-345 | Baixa | Testada | Aberta | O balanceador remove o cabeçalho antes de encaminhar a requisição |
 | V-22 | Resultados do k6 guardavam tokens de teste | CWE-312 | Baixa | Testada | Corrigida | `load-test.sh` remove o `setup_data`, e `gitleaks` verifica o histórico |
 | V-23 | `sbom.json` gerado entrou no Git, com caminhos locais | CWE-200 | Baixa | Código | Corrigida | Fora do versionamento e removido do histórico, que foi reescrito antes da publicação |
+| V-24 | Um evento que a mensageria sempre recusa trava a outbox inteira | CWE-400 | Média | Código | Corrigida | O evento que falha espera 1, 2, 4… segundos, até 1 minuto, e os outros seguem. Regra `OBRLY-R04` e migração V006 |
+| V-25 | Token com `merchant_id` todo em zeros é aceito como comerciante | CWE-20 | Baixa | Código | Corrigida | Recusado com 401. Regras `LDMRC-R02` e `CNHTP-R01` |
+| V-26 | Depois do reset do consolidado, o cache serve saldos antigos por até 60 segundos | Integridade | Média | Código | Corrigida | O reset invalida o cache de todos os comerciantes, ou falha. Regra `CBSTR-R09` |
+| V-27 | Fora do ambiente de desenvolvimento, 401, 403 e corpo inválido respondem sem corpo | API8, CWE-209 | Baixa | Testada | Corrigida | Toda recusa responde ProblemDetails. Regras `LDHTP-R02` e `CNHTP-R04` |
+| V-28 | O Redis pode despejar a chave de versão e ressuscitar um valor antigo | Integridade | Baixa | Código | Corrigida | Política `volatile-lru`: só valores com prazo são despejados |
 
 As classes usam a [OWASP API Security Top 10 2023](https://owasp.org/API-Security/editions/2023/en/0x11-t10/) e a [CWE](https://cwe.mitre.org/).
 
@@ -126,7 +131,7 @@ Além disso, o cálculo do fechamento em C# não verifica estouro, então a soma
 | Achado novo | Entra aqui, com ID, evidência e severidade |
 | Correção | Muda a situação, com a regra e o teste que impedem a volta |
 | Risco aceito | Registra o motivo e quem aceitou |
-| Fim de cada marco | Nova revisão do que mudou |
+| Cada entrega | Nova revisão do que mudou |
 | Antes de produção | Pentest e análise de imagens |
 
 IDs não são reutilizados. Item corrigido continua no registro, porque a história também serve de evidência.

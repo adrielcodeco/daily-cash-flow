@@ -10,6 +10,8 @@ const DATE = __ENV.DATE;
 const DURATION = __ENV.DURATION || '5m';
 const MERCHANTS = 50;
 const READS_PER_SECOND = 50;
+// Optional fixed merchants, so a script can give them a long history before the test.
+const MERCHANT_IDS = (__ENV.MERCHANT_IDS || '').split(',').filter(Boolean);
 
 export const options = {
   scenarios: {
@@ -45,14 +47,13 @@ function uuid() {
 }
 
 function adminToken() {
-  const response = http.post(`${KEYCLOAK}/realms/master/protocol/openid-connect/token`, {
-    grant_type: 'password', client_id: 'admin-cli', username: 'admin', password: 'local-only',
+  const response = http.post(`${KEYCLOAK}/realms/daily-cash-flow/protocol/openid-connect/token`, {
+    grant_type: 'client_credentials', client_id: 'local-admin', client_secret: 'local-only',
   });
   return response.json('access_token');
 }
 
-function newMerchantToken(admin) {
-  const merchant = uuid();
+function newMerchantToken(admin, merchant = uuid()) {
   const clientId = `merchant-${merchant}`;
   http.post(
     `${KEYCLOAK}/admin/realms/daily-cash-flow/clients`,
@@ -88,7 +89,7 @@ function postEntry(token) {
 
 export function setup() {
   const admin = adminToken();
-  const tokens = Array.from({ length: MERCHANTS }, () => newMerchantToken(admin));
+  const tokens = Array.from({ length: MERCHANTS }, (_, i) => newMerchantToken(admin, MERCHANT_IDS[i]));
   tokens.forEach((token) => postEntry(token));
   return { tokens };
 }

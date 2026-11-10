@@ -35,7 +35,7 @@ As perguntas e a evidência de cada nota estão na [avaliação dos radares](../
 
 ## Leitura do radar
 
-Spanner tem a melhor escala e confiabilidade, mas seu custo não se justifica para esse volume. Firestore escala bem, mas agregações por período e restrições relacionais ficariam na aplicação. PostgreSQL oferece transações, restrições e SQL com a menor complexidade.
+Em confiabilidade, as quatro opções empatam. Spanner tem a melhor escala, mas seu custo não se justifica para esse volume. Firestore escala bem, mas agregações por período e restrições relacionais ficariam na aplicação. AlloyDB empata com o Cloud SQL em simplicidade e economia e é melhor em operabilidade e escala, mas tem capacidade acima da necessidade atual. PostgreSQL no Cloud SQL oferece transações, restrições e SQL com a maior aderência ao problema. A margem sobre o AlloyDB vem do critério de negócio: sem ele, o AlloyDB venceria. A decisão, portanto, depende do julgamento de que a capacidade a mais não se paga hoje, e do preço do AlloyDB, ainda por confirmar.
 
 ## Consequências
 

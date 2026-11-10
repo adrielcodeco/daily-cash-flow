@@ -1,6 +1,6 @@
 <!-- @anchors
   code: OBRLY
-  updated_at: 2026-11-05
+  updated_at: 2026-11-09
 -->
 
 # OutboxRelay — o envio dos eventos pendentes
@@ -28,6 +28,12 @@ Parar evita insistir contra uma mensageria fora do ar. A próxima rodada retoma 
 
 ### OBRLY-R03 — o que foi confirmado antes da falha continua marcado
 
+Vale também quando o publicador é encerrado no meio do lote. Desmarcar o que já foi confirmado só causaria envios repetidos.
+
+### OBRLY-R04 — o evento que falhou espera mais a cada falha antes de nova tentativa
+
+Sem isso, um evento que a mensageria sempre recusa voltaria ao início de cada lote e travaria os que vêm depois. A espera dobra a cada falha, até um minuto. A ordem entre eventos não importa, porque o consolidado soma valores.
+
 ## Uso das regras
 
 | Regra | Usa |
@@ -35,6 +41,7 @@ Parar evita insistir contra uma mensageria fora do ar. A próxima rodada retoma 
 | `OBRLY-R01` | `Messages`, `publisher` |
 | `OBRLY-R02` | `Messages`, `publisher` |
 | `OBRLY-R03` | `Messages`, `publisher` |
+| `OBRLY-R04` | `Messages`, `publisher` |
 
 ## Decisões em aberto
 

@@ -5,7 +5,7 @@ Este documento explica o que significam as notas dos gráficos de radar e como e
 ## Em resumo
 
 - **A escala vai de 1 a 5 e sai de fatos.** Cada critério tem 4 perguntas de sim ou não, e a nota é 1 mais o número de "sim".
-- **Cada decisão tem seus critérios, pesos e opções.** Hoje são de 4 a 10 critérios, e de 2 a 4 opções por decisão.
+- **Cada decisão tem seus critérios, pesos e opções.** Hoje são de 5 a 10 critérios, e de 2 a 4 opções por decisão.
 - **Alinhamento com o negócio é o critério de maior peso.** Ele é a forma de o arquiteto aproximar o resultado do que o negócio precisa.
 - **Veto elimina a opção.** Uma opção que quebra uma restrição sai da comparação, sem importar a média.
 - **O resultado apoia a decisão, mas não a substitui.** A decisão final é do arquiteto, e todo ajuste fica registrado.
@@ -39,6 +39,11 @@ A nota compara a opção com a necessidade deste sistema. Ela não mede o produt
 | 2 | Relevante para esta decisão |
 | 1 | Secundário |
 
+Duas regras completam a tabela:
+
+- **Segurança pesa no mínimo 2** em toda decisão em que é critério, porque este é um sistema financeiro. Ela entra em toda decisão cujas opções mudam a exposição dos dados, e pesa 3 quando a decisão afeta diretamente o isolamento entre comerciantes ou as exigências de uma instituição financeira (PRE-11).
+- **A equipe reduzida é premissa, e não restrição do desafio.** A premissa PRE-12 diz que a operação fica com uma equipe reduzida, sem especialista dedicado em infraestrutura, e ela pesa em Operabilidade.
+
 ## Catálogo de critérios
 
 | Critério | Perguntas | Veto |
@@ -68,6 +73,9 @@ A avaliação não é a palavra final. Estes ajustes foram decididos pelo autor,
 | 0007 | Go | Alinhamento com o negócio | Veto | 2 | C# é a stack da empresa, mas é preferência de negócio, e não restrição. A opção perde em Alinhamento, sem ser eliminada. |
 | 0007 | Java com Spring Boot | Alinhamento com o negócio | Veto | 2 | C# é a stack da empresa, mas é preferência de negócio, e não restrição. A opção perde em Alinhamento, sem ser eliminada. |
 | 0007 | TypeScript com Node.js | Alinhamento com o negócio | Veto | 2 | C# é a stack da empresa, mas é preferência de negócio, e não restrição. A opção perde em Alinhamento, sem ser eliminada. |
+| 0008 | OIDC e JWT, validados em cada serviço | Desempenho | 4 | 5 | Revisão de 2026-11-09, sem API Gateway: o salto do gateway saiu do caminho, e a validação do JWT é local, então a opção não acrescenta chamada de rede. As 4 perguntas passam a ter resposta sim. |
+| 0008 | OIDC e JWT, validados em cada serviço | Economia | 3 | 4 | Revisão de 2026-11-09, sem API Gateway: acabou a cobrança por chamada, e o custo passa a crescer menos que a carga. O provedor de identidade segue como componente pago, então uma pergunta continua com resposta não. |
+| 0008 | OIDC e JWT, validados em cada serviço | Portabilidade | 4 | 5 | Revisão de 2026-11-09, sem API Gateway: a borda não faz mais parte da autenticação, e a mesma validação de JWT roda no local e na nuvem. As 4 perguntas passam a ter resposta sim. |
 
 A avaliação também mudou a arquitetura em três decisões:
 
@@ -82,21 +90,21 @@ A avaliação também mudou a arquitetura em três decisões:
 | ADR | Decisão | Escolhida | Nota | Melhor alternativa | Nota | Margem | Eliminadas |
 |---|---|---|---|---|---|---|---|
 | [0001](adr/0001-estilo-arquitetural.md) | Estilo arquitetural | Dois serviços orientados a eventos | 4,24 | Funções serverless | 4,06 | 0,18 | 1 |
-| [0002](adr/0002-integracao-entre-servicos.md) | Integração entre serviços | Outbox na transação e mensageria | 4,45 | CDC do banco | 3,35 | 1,10 | 2 |
-| [0003](adr/0003-mensageria.md) | Mensageria | Pub/Sub | 4,16 | Kafka gerenciado | 4,00 | 0,16 | 0 |
+| [0002](adr/0002-integracao-entre-servicos.md) | Integração entre serviços | Outbox na transação e mensageria | 4,50 | CDC do banco | 3,23 | 1,27 | 2 |
+| [0003](adr/0003-mensageria.md) | Mensageria | Pub/Sub | 4,24 | Kafka gerenciado | 4,10 | 0,14 | 0 |
 | [0004](adr/0004-banco-de-dados.md) | Banco de dados | Cloud SQL para PostgreSQL | 4,28 | AlloyDB | 4,16 | 0,12 | 0 |
 | [0005](adr/0005-modelo-de-leitura.md) | Modelo de leitura do saldo | Agregado diário sem cache | 4,63 | Agregado diário com cache Redis | 3,53 | 1,11 | 0 |
-| [0006](adr/0006-computacao.md) | Plataforma de computação | Cloud Run | 4,50 | GKE Autopilot | 4,35 | 0,15 | 0 |
+| [0006](adr/0006-computacao.md) | Plataforma de computação | Cloud Run | 4,48 | GKE Autopilot | 4,29 | 0,19 | 0 |
 | [0007](adr/0007-linguagem.md) | Linguagem e plataforma | C# com .NET 10 | 4,92 | Go | 3,25 | 1,67 | 0 |
-| [0008](adr/0008-autenticacao-e-autorizacao.md) | Autenticação e autorização | Gateway, OIDC e JWT | 4,36 | Chaves de API | 3,36 | 1,00 | 0 |
-| [0009](adr/0009-observabilidade.md) | Observabilidade | OpenTelemetry | 4,57 | SDK do provedor de nuvem | 3,71 | 0,86 | 0 |
+| [0008](adr/0008-autenticacao-e-autorizacao.md) | Autenticação e autorização | OIDC e JWT, validados em cada serviço | 4,57 | Chaves de API | 3,36 | 1,21 | 0 |
+| [0009](adr/0009-observabilidade.md) | Observabilidade | OpenTelemetry | 4,53 | SDK do provedor de nuvem | 3,73 | 0,80 | 0 |
 | [0010](adr/0010-estrategia-de-migracao.md) | Estratégia de migração | Strangler fig, por fases | 4,13 | Migração de uma vez | 2,93 | 1,20 | 1 |
 | [0011](adr/0011-isolamento-de-comerciantes.md) | Isolamento entre comerciantes | Tabelas compartilhadas com row-level security | 4,32 | Tabelas compartilhadas com filtro no código | 3,79 | 0,53 | 0 |
-| [0012](adr/0012-acesso-a-dados.md) | Acesso a dados | Dapper | 5,00 | Npgsql com SQL explícito | 4,82 | 0,18 | 0 |
-| [0013](adr/0013-migracoes-de-esquema.md) | Migrações de esquema | DbUp com SQL | 5,00 | Flyway | 4,31 | 0,69 | 0 |
+| [0012](adr/0012-acesso-a-dados.md) | Acesso a dados | Dapper | 5,00 | Npgsql com SQL explícito | 4,85 | 0,15 | 0 |
+| [0013](adr/0013-migracoes-de-esquema.md) | Migrações de esquema | DbUp com SQL | 5,00 | Flyway | 4,40 | 0,60 | 0 |
 | [0014](adr/0014-separacao-de-processos.md) | Separação de processos | Processos separados | 4,65 | Job agendado | 4,41 | 0,24 | 0 |
 | [0015](adr/0015-envio-da-outbox.md) | Envio da outbox | Consulta periódica com SKIP LOCKED | 5,00 | LISTEN/NOTIFY com consulta de segurança | 4,21 | 0,79 | 0 |
-| [0016](adr/0016-idempotencia-da-escrita.md) | Idempotência da escrita | Idempotency-Key guardada no banco | 4,88 | Nenhuma restante | — | — | 2 |
+| [0016](adr/0016-idempotencia-da-escrita.md) | Idempotência da escrita | Idempotency-Key guardada no banco | 4,89 | Nenhuma restante | — | — | 2 |
 | [0017](adr/0017-vazao-do-consumidor.md) | Vazão do consumidor | Limite fixo de eventos em processamento | 4,76 | Pooler de conexões | 3,18 | 1,59 | 1 |
 | [0018](adr/0018-reconstrucao-do-saldo.md) | Reconstrução do saldo | Reenvio dos lançamentos pela outbox | 3,89 | Restaurar backup do consolidado e reprocessar o que faltou | 3,84 | 0,05 | 2 |
 | [0019](adr/0019-paginacao.md) | Paginação de lançamentos | Keyset com cursor | 4,86 | Offset e limite | 2,71 | 2,14 | 0 |

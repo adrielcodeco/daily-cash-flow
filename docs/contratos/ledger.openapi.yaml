@@ -2,7 +2,10 @@ openapi: 3.1.0
 info:
   title: API de Lançamentos
   version: 1.0.0
-  description: Registra, consulta e estorna débitos e créditos. O comerciante vem do token.
+  description: >-
+    Registra, consulta e estorna débitos e créditos. O comerciante vem da claim `merchant_id` do token.
+    Um token sem essa claim recebe 403. Com valor que não é UUID ou com o UUID todo em zeros, recebe 401.
+    Lançamento de outro comerciante responde 404, como se não existisse.
   license:
     name: MIT
     identifier: MIT
@@ -69,8 +72,10 @@ paths:
             format: date
         - name: cursor
           in: query
+          description: Valor de `nextCursor` da página anterior
           schema:
             type: string
+            format: uuid
         - name: limit
           in: query
           schema:
@@ -130,10 +135,17 @@ paths:
       responses:
         '201':
           description: Estorno registrado
+          headers:
+            Location:
+              description: Endereço do estorno
+              schema:
+                type: string
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Entry'
+        '400':
+          $ref: '#/components/responses/Error'
         '401':
           $ref: '#/components/responses/Error'
         '403':
@@ -194,7 +206,7 @@ components:
           format: date
           examples: ['2026-11-05']
         description:
-          type: string
+          type: [string, 'null']
           maxLength: 200
     Entry:
       allOf:
@@ -221,6 +233,8 @@ components:
             $ref: '#/components/schemas/Entry'
         nextCursor:
           type: [string, 'null']
+          format: uuid
+          description: Cursor da próxima página, ou nulo na última
     Problem:
       type: object
       required: [title, status]

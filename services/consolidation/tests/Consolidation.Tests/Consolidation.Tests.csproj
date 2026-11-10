@@ -7,8 +7,10 @@
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
     <PackageReference Include="Testcontainers.PostgreSql" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
     <ProjectReference Include="../../src/Consolidation.Core/Consolidation.Core.csproj" />
     <ProjectReference Include="../../src/Consolidation.Infrastructure/Consolidation.Infrastructure.csproj" />
+    <ProjectReference Include="../../src/Consolidation.Api/Consolidation.Api.csproj" />
     <Compile Include="../../src/**/*.test.cs" LinkBase="Linked" />
     <Using Include="Xunit" />
   </ItemGroup>
